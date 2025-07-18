@@ -164,7 +164,7 @@ u8 f_menu_ui_data_get_app_num(void)
             break;
     }
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
-    if(!uteModuleMenstrualCycleIsOpen())
+    if(!uteModuleMenstrualCycleIsOpen() && MENU_APP_MAX_CNT==app_num)
     {
         app_num--;
     }
@@ -181,7 +181,7 @@ f_menu_ui_data f_menu_find_ui_data(u8 func_sta)
     memset(&ui_data, 0, sizeof(f_menu_ui_data));
     for (int index = 0; index < MENU_APP_MAX_CNT; index++)
     {
-        printf("index:[%d] sta:[%d,%d]\n",index,f_menu_ui_data_all[index].func_sta,func_sta);
+        // printf("index:[%d] sta:[%d,%d]\n",index,f_menu_ui_data_all[index].func_sta,func_sta);
         if(f_menu_ui_data_all[index].func_sta == func_sta)
         {
             ui_data.func_sta    = func_sta;
@@ -197,44 +197,58 @@ f_menu_ui_data f_menu_find_ui_data(u8 func_sta)
 /**
  * @brief 最近任务列表资源
  * @param[in] num : 获取最近任务资源数量
- * @return 获取最近任务资源结构体
+ * @return 获取最近任务资源结构体数组
  **/
 void func_get_latest_task_data(u8 num,f_menu_ui_data *ui_data)
 {
-    u8 func_sta = FUNC_NULL;
-    u8 latest_cnt = latest_task_count();
-    u8 index = 0;
-    f_menu_ui_data_init();
-
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     if(!uteModuleMenstrualCycleIsOpen())
     {
         if (latest_task_find(FUNC_WOMEN_HEALTH) != -1)
         {
-            uteTaskGuiStackRemoveScreenId(FUNC_WOMEN_HEALTH);
+            latest_task_del(FUNC_WOMEN_HEALTH);
         }
     }
 #endif
+    u8 func_sta = 0;
+    u8 func_sta_id[LATEST_TASK_MAX]= {0};
+    u8 latest_cnt = latest_task_count();
+    bool find_flag=false;
+    f_menu_ui_data_init();
 
     for (u8 index = 0; index < num; index++)
     {
         if(latest_cnt > index)
         {
-            func_sta = latest_task_get(index);
+            func_sta = latest_task_get(index);//获取最近任务应用号
         }
         else
         {
-            for (index; index <= num; index++)
+            for (u8 i=0; i < num; i++)//无最近任务时，从菜单中获取应用号
             {
-                if (latest_task_find(f_menu_data[index].func_sta) == -1)
+                find_flag = false;
+                for (u8 j = 0; j <= index; j++)
                 {
-                    func_sta = f_menu_data[index].func_sta;
-                    break;
+                    if(func_sta_id[j]==f_menu_data[i].func_sta)//查找是否重复
+                    {
+                        find_flag = true;
+                    }
+                }
+                if(!find_flag)//筛选重复
+                {
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+                    if(!uteModuleMenstrualCycleIsOpen() && f_menu_data[i].func_sta==FUNC_WOMEN_HEALTH)//男性默认不放入
+                    {
+                        break;
+                    }
+#endif
+                    func_sta = f_menu_data[i].func_sta;
+                    i=num;
                 }
             }
         }
-        printf("func_sta = %d\n", func_sta);
-        ui_data[index] = f_menu_find_ui_data(func_sta);
+        func_sta_id[index] = func_sta;
+        ui_data[index] = f_menu_find_ui_data(func_sta_id[index]);
     }
 }
 

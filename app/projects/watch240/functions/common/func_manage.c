@@ -1152,18 +1152,24 @@ void latest_task_add(u8 func_sta)
  **/
 void latest_task_del(u8 idx)
 {
-    u8 i = idx;
-    if (i < latest_list.num)
+    printf("%s:[", __func__);
+    u8 write_idx = 0;
+    for (u8 i = 0; i < latest_list.num; i++)
     {
-        latest_list.num--;
-        for ( ; i < latest_list.num; i++)
+        if (latest_list.task_tbl[i] != idx)
         {
-            latest_list.task_tbl[i] = latest_list.task_tbl[i + 1];
+            latest_list.task_tbl[write_idx] = latest_list.task_tbl[i];
+            printf("%d ", latest_list.task_tbl[write_idx]);
+            write_idx++;
         }
-#if (TRACE_EN == 0)
-        printf("%s[idx:%d num:%d]\n", __func__, idx, latest_list.num);
-#endif
     }
+    printf("]");
+    if (latest_list.num > write_idx)
+    {
+        printf("-->[%d]", idx);
+    }
+    printf("\n");
+    latest_list.num = write_idx;
 
 #if TRACE_EN
     TRACE("%s[%d]:", __func__, idx);

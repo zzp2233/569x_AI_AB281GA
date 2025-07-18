@@ -239,7 +239,7 @@
                                                UI_BUF_DIALPLATE_D20226001_BIN,\
                                                UI_BUF_DIALPLATE_D20225001_BIN,\
                                                UI_BUF_DIALPLATE_D20280001_BIN,\
-                                               UI_BUF_DIALPLATE_D18720001_BIN, \
+                                               UI_BUF_DIALPLATE_D20350001_BIN, \
                                               }
 //     UI_BUF_DIALPLATE_CUBE_BIN
 

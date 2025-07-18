@@ -1278,7 +1278,7 @@ void uteModuleCallUpdateRecordsData(void)
         tempData.nameUnicodeLen = uteModuleCallData.callData.nameSize;
         UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,nameSize=%d", __func__,uteModuleCallData.callData.nameSize);
     }
-    if(uteModuleCallData.callData.numberSize==0 && uteModuleCallData.callData.nameSize == 0)
+    if((uteModuleCallData.callData.numberSize==0 && uteModuleCallData.callData.nameSize == 0) || !strcmp(uteModuleCallData.callData.number, "10000000")) //连接BT拨打微信电话APP会下发"10000000"号码 原因不明 先暂时过滤处理
     {
         goto CALL_UPDATE_END;
     }

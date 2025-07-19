@@ -10,19 +10,20 @@
 __STATIC_INLINE void drvScreenBoeHkoe1912534b01PowerOn(void)
 {
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x11,NULL,0);
-    uteModulePlatformDelayUs(120000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x29,NULL,0);
-    uteModulePlatformDelayUs(20000);
-    // UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
+    uteModulePlatformDelayMs(10);
+    UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
 __STATIC_INLINE void drvScreenBoeHkoe1912534b01PowerOff(void)
 {
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x28,NULL,0);
-    uteModulePlatformDelayUs(20000);
+    uteModulePlatformDelayMs(120);
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x10,NULL,0);
-    uteModulePlatformDelayUs(50000);
-    // UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
+    uteModulePlatformDelayMs(50);
+    uteDrvScreenCommonSetPowerEnable(false);
+    UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
 __STATIC_INLINE void drvScreenBoeHkoe1912534b01SetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
@@ -50,15 +51,13 @@ __STATIC_INLINE void drvScreenBoeHkoe1912534b01Init(void)
 {
     uteDrvScreenCommonSetPowerEnable(true);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(20000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(false);
-    uteModulePlatformDelayUs(20000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(20000);
-    // 定义临时缓冲区
-    uint8_t tmp[256];
+    uteModulePlatformDelayMs(50);
 
-    delay_ms(50);
+    uint8_t tmp[34];
 
     // SSD_CMD(0xDF) + 2个SSD_PAR
     memcpy(&tmp[0], "\x98\x53", 2);
@@ -207,7 +206,6 @@ __STATIC_INLINE void drvScreenBoeHkoe1912534b01Init(void)
 
     // SSD_CMD(0x29) + 0个SSD_PAR
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, &tmp[0], 0);
-    uteModulePlatformDelayMs(10);
 
     // SSD_CMD(0xDF) + 2个SSD_PAR
     memcpy(&tmp[0], "\x00\x00", 2);

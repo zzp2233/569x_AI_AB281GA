@@ -39,6 +39,8 @@
 #define PROJECT_AB281AF_SUPPORT      0 /*! 共鑫W23Z，TFT 240x296 NV3030B,CHIP_5691C_F,qiquan.cai 2025-4-21*/
 #define PROJECT_AB281JB_SUPPORT      0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-05-19 G28Z中性项目 */
 #define PROJECT_AB281AG_SUPPORT      0 /*! 同乐达 T75-定制,在T75-AB281AE基础上修改蓝牙名F3 Stream、Gloryfit、开关机logo,TFT 240X284 NV3030B,CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
+#define PROJECT_AB281DD_SUPPORT      0 /*! 共鑫W31,在AB281DA基础上更改蓝牙名、开关机logo、高压电池, TP:SPT5113C 240x284 CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
+
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -100,6 +102,8 @@
 #include"ute_project_config_ab281jb.h"
 #elif PROJECT_AB281AG_SUPPORT
 #include"ute_project_config_ab281ag.h"
+#elif PROJECT_AB281DD_SUPPORT
+#include"ute_project_config_ab281dd.h"
 #endif
 
 /** Log模块控制开关*/

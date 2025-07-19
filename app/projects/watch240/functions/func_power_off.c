@@ -62,8 +62,11 @@ static void func_power_off_disp_process(void)
 #if GUI_SCREEN_SIZE_240X284RGB_I335005_SUPPORT
 /*! 默认开机动画logo图片数量 */
 #ifndef DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER
-#define DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER 0
+#define DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER 5
 #endif
+
+#define DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER_TIME 500
+
 //创建关机窗体
 compo_form_t *func_power_off_form_create(void)
 {
@@ -79,7 +82,7 @@ compo_form_t *func_power_off_form_create(void)
 static void func_power_off_disp_process(void)
 {
     f_power_off_t* f_power_off = (f_power_off_t*)func_cb.f_cb;
-    if(tick_check_expire(f_power_off->tick,200))
+    if(tick_check_expire(f_power_off->tick,DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER_TIME))
     {
         compo_picturebox_t *pic  = compo_getobj_byid(COMPO_PIC_ID);
 
@@ -87,12 +90,32 @@ static void func_power_off_disp_process(void)
         f_power_off->pic_num_disp ++;
         f_power_off->animation_second++;
 #if DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER
-        if(f_power_off->pic_num_disp < DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER)
+        if(f_power_off->pic_num_disp <= DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER)
         {
+            if(f_power_off->pic_num_disp == 1)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_00_BIN);
+            }
+            else if(f_power_off->pic_num_disp == 2)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_01_BIN);
+            }
+            else if(f_power_off->pic_num_disp == 3)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_02_BIN);
+            }
+            else if(f_power_off->pic_num_disp == 4)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_03_BIN);
+            }
+            else if(f_power_off->pic_num_disp == 5)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_04_BIN);
+            }
         }
-        else if(f_power_off->pic_num_disp == DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER)
+        else if(f_power_off->pic_num_disp == DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER + 1)
 #else
-        if(f_power_off->animation_second == DEFAULT_POWEROFF_ANIMATION_SECOND*1000/200)
+        if(f_power_off->animation_second == DEFAULT_POWEROFF_ANIMATION_SECOND*1000/DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER_TIME)
 #endif
         {
             uteApplicationCommonPoweroff();

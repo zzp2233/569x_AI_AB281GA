@@ -59,8 +59,6 @@ typedef struct f_activity_t_
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
-const u8 week_sort[7]= {1,2,3,4,5,6,0};
-
 static u32 get_step_max(u32 *temp,u8 len)
 {
     u32 max = 0;
@@ -325,7 +323,7 @@ compo_form_t *func_activity_form_create(void)
     {
         // week_step_date[i] =18000;
         chart_info.x = i*chart_info.width + i*22;
-        chart_info.height = week_step_date[week_sort[i]]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
+        chart_info.height = week_step_date[i]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(0,236,203));
     }
 
@@ -459,7 +457,7 @@ static void func_activity_disp_handle(void)
     for (int i=0; i<7; i++)
     {
         chart_info.x = i*chart_info.width + i*22;
-        chart_info.height = week_step_date[week_sort[i]]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
+        chart_info.height = week_step_date[i]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart_week, i, chart_info, make_color(0,236,203));
     }
 
@@ -1253,7 +1251,7 @@ compo_form_t *func_activity_form_create(void)
     compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR, 24);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+170,306,104);
     compo_chartbox_set_pixel(chart, 1);
-    compo_setid(textbox,STEP_DAY_CAHRT_VALUE_ID);
+    compo_setid(chart,STEP_DAY_CAHRT_VALUE_ID);
 
     chart_t chart_info;
     chart_info.y = 0;
@@ -1299,7 +1297,7 @@ compo_form_t *func_activity_form_create(void)
     chart = compo_chartbox_create(frm, CHART_TYPE_BAR, 7);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+5,GUI_SCREEN_HEIGHT*2+170,312-13,100);
     compo_chartbox_set_pixel(chart, 1);
-    compo_setid(textbox,STEP_WEEK_CAHRT_VALUE_ID);
+    compo_setid(chart,STEP_WEEK_CAHRT_VALUE_ID);
 
     chart_info;
     chart_info.y = 0;
@@ -1495,9 +1493,9 @@ compo_form_t *func_activity_form_create(void)
     {
         // printf("step:%ld\n",step_date[i]);
         // step_date[i] =8000;
-        chart_info.x = i*chart_info.width + i*5;
-        chart_info.height = step_date[i]*(123*1000/target_step)/1000;///心率数据转换为柱形条显示数据
-        compo_chartbox_set_value(chart, i, chart_info, make_color(85,238,151));
+        chart_info.x = i*chart_info.width + i*7;
+        chart_info.height = step_date[i]*(104*1000/target_step)/1000;///心率数据转换为柱形条显示数据
+        compo_chartbox_set_value(chart, i, chart_info, make_color(0,242,214));
     }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1529,12 +1527,13 @@ compo_form_t *func_activity_form_create(void)
     chart_info;
     chart_info.y = 0;
     chart_info.width = 16;   ///像素点
+    const u8 week_sort[7]= {1,2,3,4,5,6,0};
+
     for (int i=0; i<7; i++)
     {
-        // week_step_date[i] =18000;
-        chart_info.x = i*chart_info.width + i*29;
-        chart_info.height = week_step_date[i]*(126*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
-        compo_chartbox_set_value(chart, i, chart_info, make_color(85,238,151));
+        chart_info.x = i*chart_info.width+i*25;
+        chart_info.height = (target_week_step != 0) ? (week_step_date[week_sort[i]] * (100 * 1000 / target_week_step) / 1000) : 0;
+        compo_chartbox_set_value(chart, i, chart_info,  make_color(0,242,214));
     }
 #endif
 

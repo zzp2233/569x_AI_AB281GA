@@ -484,7 +484,11 @@ static compo_listbox_item_t tbl_menu_list[] =
     {STR_HEART_RATE,             UI_BUF_I340001_THEME_ICON1_HEART_BIN,             .func_sta = FUNC_HEARTRATE},            //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_GUI_SCREEN_TITLE_SUPPORT
+    {STR_BLOOD_OXYGEN_UINT,           UI_BUF_I340001_THEME_ICON1_SPO2_BIN,              .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
+#else
     {STR_BLOOD_OXYGEN,           UI_BUF_I340001_THEME_ICON1_SPO2_BIN,              .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
+#endif
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {STR_MESSAGE,                UI_BUF_I340001_THEME_ICON1_MESSAGE_BIN,           .func_sta = FUNC_MESSAGE},              //消息

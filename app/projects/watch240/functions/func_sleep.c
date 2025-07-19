@@ -2746,8 +2746,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_location(title,20,20,300,0);
     compo_textbox_set_right_align(title, false);
     compo_textbox_set_align_center(title,false);
-    // compo_textbox_set(title, i18n[STR_SLEEP]);
-    compo_textbox_set(title, "Sleep");
+    compo_textbox_set(title, i18n[STR_SLEEP]);
 #endif
     memset(buf,0,sizeof(buf));
     if(sleep_data->totalSleepMin) ///是否有睡眠时长

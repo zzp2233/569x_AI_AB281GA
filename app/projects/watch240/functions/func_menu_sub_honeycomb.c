@@ -379,9 +379,6 @@ static menu_hc_item_t tbl_menu_honeycomb[] =
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {.func_sta=FUNC_CALENDAER,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALENDAR_BIN,      },            //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-#if UTE_MODULE_SCREENS_GAME_SUPPORT
-    {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                },                //游戏
-#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_COMPASS_SUPPORT
     {.func_sta=FUNC_COMPASS,                 .res_addr = UI_BUF_I335003_SETTING_COMPASS_BIN,                },      //指南针
 #endif

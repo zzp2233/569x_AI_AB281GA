@@ -46,11 +46,11 @@
 // #define GUI_SELECT                      GUI_TFT_240_JD9853W3//DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 // #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
 // #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT
-// #define GUI_SELECT                      GUI_TFT_320_ST77916//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
-// #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
-// #define GUI_MODE_SELECT                 MODE_QSPI
-#define GUI_SELECT                      GUI_TFT_SPI//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
-#define CTP_SELECT                      CTP_CST8X                   //CTP Select
+#define GUI_SELECT                      GUI_TFT_320_ST77916//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+#define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
+#define GUI_MODE_SELECT                 MODE_QSPI
+// #define GUI_SELECT                      GUI_TFT_SPI//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+// #define CTP_SELECT                      CTP_CST8X                   //CTP Select
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
 #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT             //屏幕接口选择

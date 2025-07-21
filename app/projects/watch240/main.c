@@ -1,5 +1,5 @@
 #include "include.h"
-
+#include "api_iis.h"
 #if (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
 //样机只能到20M以下
 const u8 tbl_despi_clk1[] =
@@ -202,4 +202,11 @@ void update_complete(int mode)
         while (1);
     }
     WDT_RST();
+}
+bool opus_enc_init(u32 spr, u32 nch, u32 bitrate);
+bool opus_dec_init(u32 spr, u32 nch);
+void keep_symbol(void)
+{
+    opus_enc_init(SPR_16000, 1, 16000);
+    opus_dec_init(16000, 1);
 }

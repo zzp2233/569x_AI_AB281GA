@@ -134,6 +134,7 @@
 			<Add library="../../../ute/drv/gsensor/libSL_Acc_Mtp_WR.a" />
 			<Add library="../../platform/modules/asr_using/libasr.a" />
 			<Add library="../../platform/modules/asr_using/libasr_air.a" />
+			<Add library="../../platform/libs/libchatbot.a" />
 			<Add directory="../../platform/libs" />
 		</Linker>
 		<ExtraCommands>
@@ -1262,9 +1263,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/bsp/bsp_sleep.h" />
-		<Unit filename="../../platform/bsp/bsp_speech/chatbot.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../platform/bsp/bsp_speech/chatbot.h" />
 		<Unit filename="../../platform/bsp/bsp_spi1flash.c">
 			<Option compilerVar="CC" />

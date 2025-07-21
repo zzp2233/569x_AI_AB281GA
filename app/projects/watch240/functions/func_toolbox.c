@@ -268,7 +268,7 @@ static const compo_listbox_item_t tbl_toolbox_list[] =
     {STR_CALCULATOR,             UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,         .func_sta = FUNC_CALCULATOR}, //计算器
 #endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-    {STR_STYLE,                          UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_04_CAMERA_BIN,            .func_sta = FUNC_STYLE}, //日历
+    {STR_CALENDAR,               UI_BUF_I338001_2_HONEYCOMB_CALENDAR_BIN,           .func_sta = FUNC_CALENDAER},            //日历
 #endif
 };
 

@@ -4066,16 +4066,19 @@ compo_form_t *func_sport_sub_run_form_create(void)
         return frm;
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    u16 accrual_y = 0;
+#if (UTE_MODULE_SCREENS_SPORT_KM_OFF==0)
+    accrual_y+=113;
     txt = compo_textbox_create(frm, strlen(i18n[STR_DISTANCE]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,45,281+113, 130, 30);
+    compo_textbox_set_location(txt,45,281+accrual_y, 130, 30);
     compo_textbox_set(txt, i18n[STR_DISTANCE]);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%s%s",uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///公里文本
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,45,323+113, 130, 30);
+    compo_textbox_set_location(txt,45,323+accrual_y, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     compo_setid(txt,COMPO_ID_UINT_SPORT_KM);
@@ -4084,7 +4087,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+113, GUI_SCREEN_CENTER_X-51, 50);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+accrual_y, GUI_SCREEN_CENTER_X-51, 50);
     u8 km_integer = data->saveData.sportDistanceInteger;                 //距离 整数
     u8 km_decimals = data->saveData.sportDistanceDecimals;               //距离 小数
     if(uteModuleSystemtimeGetDistanceMiType())//英里
@@ -4099,15 +4102,17 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, txt_buf);
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_KM);
+#endif
 //////////////////////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=113;
     txt = compo_textbox_create(frm, strlen(i18n[STR_STEPS]));///步数文本
-    compo_textbox_set_location(txt,45,281+113*2, 130, 30);
+    compo_textbox_set_location(txt,45,281+accrual_y, 130, 30);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, i18n[STR_STEPS]);
 
     txt = compo_textbox_create(frm, strlen( i18n[STR_STEP]));///步数文本
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,45,323+113*2, 130, 30);
+    compo_textbox_set_location(txt,45,323+accrual_y, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, i18n[STR_STEP]);
 
@@ -4115,14 +4120,15 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+113*2, GUI_SCREEN_CENTER_X-51, 50);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+accrual_y, GUI_SCREEN_CENTER_X-51, 50);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_STEP);
 //////////////////////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=113;
     txt = compo_textbox_create(frm, strlen(i18n[STR_PACE]));///配速文本
-    compo_textbox_set_location(txt,45,281+113*3, 130, 30);
+    compo_textbox_set_location(txt,45,281+accrual_y, 130, 30);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, i18n[STR_PACE]);
 
@@ -4130,7 +4136,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"/%s", uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///配速文本
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,45,323+113*3, 130, 30);
+    compo_textbox_set_location(txt,45,323+accrual_y, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_UINT_SPORT_SPEED);
@@ -4139,7 +4145,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+113*3, GUI_SCREEN_CENTER_X-51, 50);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+accrual_y, GUI_SCREEN_CENTER_X-51, 50);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%02d'%02d%c",data->saveData.avgTimeMinute,data->saveData.avgTimeSecond,'"');
     compo_textbox_set(txt, txt_buf);
@@ -4601,6 +4607,9 @@ static void func_sport_sub_run_init(void)
     {
         case MULTIPLE_DATA:
             f_sport_sub_run->page_hei = (754-GUI_SCREEN_HEIGHT+TITLE_BAR_HIGH) ;
+#if (UTE_MODULE_SCREENS_SPORT_KM_OFF)
+            f_sport_sub_run->page_hei-=113;
+#endif
             break;
         case MID_DATA:
             f_sport_sub_run->page_hei = (532-GUI_SCREEN_HEIGHT+TITLE_BAR_HIGH) ;

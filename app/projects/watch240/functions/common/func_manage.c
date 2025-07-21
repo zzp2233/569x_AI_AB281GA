@@ -591,7 +591,7 @@ const static func_item_info_t func_item_tbl[] =
 #endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_FINDPHONE,                UI_BUF_I338001_2_HONEYCOMB_FINDPHONE_BIN,                  STR_FIND_PHONE},            //寻找手机
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-    {FUNC_CALENDAER,                UI_BUF_I332001_THEME_ICON1_CALENDAR_BIN,                   STR_CALENDAR},              //日历
+    {FUNC_CALENDAER,                UI_BUF_I338001_2_HONEYCOMB_CALENDAR_BIN,                   STR_CALENDAR},              //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     // {FUNC_SET_SUB_SAV,                   UI_BUF_I338001_2_HONEYCOMB_SOUND_BIN,                     STR_VOL},                //音量//该切图没有
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT

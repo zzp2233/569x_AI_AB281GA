@@ -300,7 +300,7 @@
 #define UTE_MODULE_SCREENS_SETTING_SUPPORT            1 //设置
 #define UTE_MODULE_SCREENS_CALCULATOR_SUPPORT         1 //计算器
 #define UTE_MODULE_SCREENS_RESTART_SUPPORT            1 //重启
-#define UTE_MODULE_SCREENS_CALENDAER_SUPPORT          0 //日历
+#define UTE_MODULE_SCREENS_CALENDAER_SUPPORT          1 //日历
 #define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
 #define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
 #define UTE_MODULE_SCREENS_SYSTEM_SUPPORT             1 //系统设置列表界面
@@ -319,7 +319,8 @@
 #define UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT        1 //震动强度
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
-
+#define UTE_MODULE_SCREENS_SPORT_KM_OFF               1 //运动距离（关）
+#define UTE_MODULE_SCREENS_ALARM_CLOCK_OVERSLEEP      1 //闹钟贪睡
 
 // #define UTE_MODULE_SCREENS_MENU_DATA_BIND             1 //菜单资源绑定
 // #define UTE_MENU_STYLE_LIST_APP_MAX_NUM               16/*!  列表式菜单 显示应用最多数量*/

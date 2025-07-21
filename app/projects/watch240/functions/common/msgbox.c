@@ -2410,6 +2410,20 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             }
             else if (sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
             {
+#if UTE_MODULE_SCREENS_ALARM_CLOCK_OVERSLEEP
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_20_ALARM_CLOCK_CLOCK_BIN);
+                compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,124/2+50);
+
+                char str[100];
+                memset(str,0,sizeof(str));
+                snprintf(str,sizeof(str),"%s %s",title,msg);
+
+                //title
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X-30,195);
+                compo_textbox_set_align_center(txt_title,false);
+                compo_textbox_set(txt_title, str);
+#else
                 compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_20_ALARM_CLOCK_CLOCK_BIN);
                 compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,124/2+81);
 
@@ -2422,7 +2436,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X-30,250);
                 compo_textbox_set_align_center(txt_title,false);
                 compo_textbox_set(txt_title, str);
-
+#endif
             }
             else
             {
@@ -2565,17 +2579,23 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             break;
 
         case MSGBOX_MODE_BTN_REMIND_LATER_CLOSE:        //稍后提醒与关闭按钮
-            //btn = compo_button_create_by_image(frm, UI_BUF_POP_UP_REMIND_LATER_BIN);
-//            btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
+#if UTE_MODULE_SCREENS_ALARM_CLOCK_OVERSLEEP
+            btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_SOON_BIN);
+            compo_setid(btn, COMPO_ID_BTN_REMIND_LATER);
+            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+60, 274);
+
+            btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_CANCEL_BIN);
+            compo_setid(btn, COMPO_ID_BTN_CANCEL);
+            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-60,274);
+#else
             btn = compo_button_create_by_image(frm, 0);
             compo_setid(btn, COMPO_ID_BTN_REMIND_LATER);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20);
 
-
-            //btn = compo_button_create_by_image(frm, UI_BUF_POP_UP_CLOSE_BIN);
             btn = compo_button_create_by_image(frm, 0);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20);
+#endif
             break;
         case MSGBOX_MODE_BTN_FACTORR://工厂测试
         {

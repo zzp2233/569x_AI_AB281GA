@@ -289,7 +289,12 @@ static void func_chatbot_enter(void)
     }
     else
     {
-        func_back_to();
+        extern u8 bt_onoff_chatbot;
+        if(bt_onoff_chatbot)
+        {
+            func_back_to();
+        }
+
     }
 
     if (gcal_cb_init() == false)

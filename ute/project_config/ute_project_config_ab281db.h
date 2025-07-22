@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DB_H_
 
 #define DEFAULT_BLE_DEV_NAME "huafit S10"
-#define UTE_SW_VERSION "AB281DBV000139"
+#define UTE_SW_VERSION "AB281DBV000162"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DB"
@@ -152,20 +152,20 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      230 //mAh
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      263 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3458  //3564
-#define UTE_DRV_BATTERY_010      3679  //3698
-#define UTE_DRV_BATTERY_020      3722  //3744
-#define UTE_DRV_BATTERY_030      3755  //3765
-#define UTE_DRV_BATTERY_040      3773  //3780
-#define UTE_DRV_BATTERY_050      3798  //3807
-#define UTE_DRV_BATTERY_060      3835  //3856
-#define UTE_DRV_BATTERY_070      3903  //3908
-#define UTE_DRV_BATTERY_080      3966  //3964
-#define UTE_DRV_BATTERY_090      4058  //4045
-#define UTE_DRV_BATTERY_100      4144  //4128
+#define UTE_DRV_BATTERY_000      3500
+#define UTE_DRV_BATTERY_010      3684
+#define UTE_DRV_BATTERY_020      3739
+#define UTE_DRV_BATTERY_030      3765
+#define UTE_DRV_BATTERY_040      3790
+#define UTE_DRV_BATTERY_050      3828
+#define UTE_DRV_BATTERY_060      3902
+#define UTE_DRV_BATTERY_070      3971
+#define UTE_DRV_BATTERY_080      4071
+#define UTE_DRV_BATTERY_090      4175
+#define UTE_DRV_BATTERY_100      4250
 
 // #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 // #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标

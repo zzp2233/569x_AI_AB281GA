@@ -38,6 +38,9 @@
 #define PROJECT_AB281KA_SUPPORT      0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-06-03 */
 #define PROJECT_AB281AF_SUPPORT      0 /*! 共鑫W23Z，TFT 240x296 NV3030B,CHIP_5691C_F,qiquan.cai 2025-4-21*/
 #define PROJECT_AB281JB_SUPPORT      0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-05-19 G28Z中性项目 */
+#define PROJECT_AB281AG_SUPPORT      0 /*! 同乐达 T75-定制,在T75-AB281AE基础上修改蓝牙名F3 Stream、Gloryfit、开关机logo,TFT 240X284 NV3030B,CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
+#define PROJECT_AB281DD_SUPPORT      0 /*! 共鑫W31,在AB281DA基础上更改蓝牙名、开关机logo、高压电池, TP:SPT5113C 240x284 CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
+
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -97,6 +100,10 @@
 #include "ute_project_config_ab281af.h"
 #elif PROJECT_AB281JB_SUPPORT
 #include"ute_project_config_ab281jb.h"
+#elif PROJECT_AB281AG_SUPPORT
+#include"ute_project_config_ab281ag.h"
+#elif PROJECT_AB281DD_SUPPORT
+#include"ute_project_config_ab281dd.h"
 #endif
 
 /** Log模块控制开关*/
@@ -468,6 +475,11 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #ifndef DEFAULT_WATCH_INDEX
 #define DEFAULT_WATCH_INDEX                      0
+#endif
+
+/*! 默认菜单索引 zn.zeng, 2021-10-25  */
+#ifndef DEFAULT_THEMETYPE_INDEX
+#define DEFAULT_THEMETYPE_INDEX                      MENU_STYLE_LIST
 #endif
 
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
@@ -1737,6 +1749,10 @@
 #ifndef UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
 #define UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST 1
 #endif
+/*! 工厂模式TP测试不用跳过弹窗 yin, 2025-07-14  */
+#ifndef UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+#define UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION 0
+#endif
 
 /*! 咪头喇叭测试的时候，播放音量, 2022-06-15  */
 #ifndef UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME
@@ -1760,7 +1776,7 @@
 
 /*! hardfault静默重启,不显示蓝屏，不显示开机logo,wang.luo 2025-06-11 */
 #ifndef UTE_HARDFAULT_SILENT_RESTART_SUPPORT
-#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT UTE_MODULE_LOG_SUPPORT
+#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT (!UTE_MODULE_LOG_SUPPORT)
 #endif
 
 /*! 重置BT地址，启用后BT和BLE地址会不同,wang.luo 2025-02-08 */

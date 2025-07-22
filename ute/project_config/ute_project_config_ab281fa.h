@@ -10,11 +10,12 @@
 #define _UTE_PROJECT_CONFIG_AB281FA_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
-#define UTE_SW_VERSION "AB281FAV000137"
+#define UTE_SW_VERSION "AB281FAV000138T"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /******************客户定制功能支持开始**************************************/
+#define UTE_BT_CALL_THREE_WAY_SUPPORT 1 //三方通话功能
 #define UTE_SPORT_MODULE_SHAKE_TAKE_PICTURES_SUPPORT 1//客户要求只要点击拍照，不需要摇一摇拍照
 #define UTE_HEART_MODULE_WEAR_STATUS_ALERT_SUPPORT 1 //心率界面增加脱手
 #define UTE_CALL_MODULE_KUKEY_MUTE_SUPPORT 1 //再通话中，按键功能用于开启/关闭静音
@@ -66,7 +67,7 @@
 
 //二维码链接内容
 #ifndef UTE_BINDING_QRENCODE_LINK
-#define UTE_BINDING_QRENCODE_LINK "https://apps.apple.com/in/app/boat-crest/id1573391983"
+#define UTE_BINDING_QRENCODE_LINK "https://appstore.coveiot.com/boat-crest"
 #endif
 
 #define UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT 1 // 呼吸设置时间界面
@@ -319,7 +320,7 @@
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   1 //菜单样式预览旋转界面
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
-#define UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT        0//1 //运动暂停界面 //暂时关闭，该功能还未测试，下个版本启用测试
+#define UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT        1 //运动暂停界面 //暂时关闭，该功能还未测试，下个版本启用测试
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

@@ -10,6 +10,7 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_micrecord.h"
 #include "ute_module_compass.h"
+#include "ute_drv_temperature_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -104,6 +105,7 @@ enum
     MOTOR_BTN_ID,
     ///*充电测试*/
     CHARGE_TXT_ID,
+    CHARGE_TEMPER_TXT_ID,
     ///*录音测试*/
     TAPE_TXT_ID,
     ///*喇叭测试*/
@@ -193,7 +195,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
 #if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
     "地磁测试",
 #endif
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_KEY_FUNCTION
     "按键测试",
+#endif
 };
 #endif
 
@@ -963,7 +967,20 @@ static void func_mode_tp_click(void)
 
     if (click_num > 8)
     {
+#if UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+        test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
+        test_data->moduleType ++;//切换下一个模式
+
+        compo_form_t *frm = func_cb.frm_main;
+        if (frm != NULL)
+        {
+            compo_form_destroy(frm);
+            frm = NULL;
+        }
+        func_cb.frm_main = func_factory_testing_create();
+#else
         func_factory_testing_pass_fail_pop_click();
+#endif
         return;
     }
 
@@ -1623,6 +1640,9 @@ compo_form_t *func_factory_testing_create(void)
     if(f_factory_testing->motor_flag)
     {
         f_factory_testing->motor_flag = false;
+#if UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL
+        uteDrvMotorSetTempVibrationLevel(UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL);
+#endif
         uteDrvMotorDisable();
     }
 
@@ -1670,6 +1690,9 @@ compo_form_t *func_factory_testing_create(void)
     }
     else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
     {
+#if UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL
+        uteDrvMotorSetTempVibrationLevel(UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL);
+#endif
         frm = func_factory_testing_motor();
     }
     else if (test_data->moduleType == FACTORY_MODULE_MIC_SPEAKER)
@@ -2205,13 +2228,20 @@ compo_form_t * func_factory_testing_charging(void)
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen("充电测试"));
     compo_textbox_set(textbox, "充电测试");
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, MODE_ONE_SPACING_Y+MODE_ONE_INTIAL_SPACING_Y*2);
 
     textbox = compo_textbox_create(frm, strlen("电池:未充电"));
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - MODE_ONE_INTIAL_SPACING_Y*4);
     compo_textbox_set(textbox, "电池:未充电");
     compo_setid(textbox,CHARGE_TXT_ID);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
+
+#if UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+    textbox = compo_textbox_create(frm, strlen("温度:-100℃"));
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + MODE_ONE_INTIAL_SPACING_Y*2);
+    compo_textbox_set(textbox, "温度:0℃");
+    compo_setid(textbox,CHARGE_TEMPER_TXT_ID);
+#endif
 
     func_factory_testing_pass_fail_bnt_create(frm);
 
@@ -2401,7 +2431,20 @@ static void func_mode_tp_click(void)
 
     if (click_num > 8)
     {
+#if UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+        test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
+        test_data->moduleType ++;//切换下一个模式
+
+        compo_form_t *frm = func_cb.frm_main;
+        if (frm != NULL)
+        {
+            compo_form_destroy(frm);
+            frm = NULL;
+        }
+        func_cb.frm_main = func_factory_testing_create();
+#else
         func_factory_testing_pass_fail_pop_click();
+#endif
         return;
     }
 
@@ -2925,7 +2968,7 @@ static void func_mode_charging_process(void)
 {
     compo_textbox_t *textbox = compo_getobj_byid(CHARGE_TXT_ID);///充电状态
 
-    if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE) ///获取充电状态
+    if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE && sys_cb.chg_on == 1) ///获取充电状态
     {
         compo_textbox_set(textbox, "电池:充电中");
         compo_textbox_set_forecolor(textbox, COLOR_GREEN);
@@ -2935,7 +2978,14 @@ static void func_mode_charging_process(void)
         compo_textbox_set_forecolor(textbox, COLOR_RED);
         compo_textbox_set(textbox, "电池:未充电");
     }
-
+#if UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+    int16_t ambientTemperature = (int16_t)uteDrvTemperatureCommonGetAmbientValue();
+    char buf[32];
+    memset(buf, 0, sizeof(buf));
+    snprintf(buf, sizeof(buf), "温度:%d℃", ambientTemperature);
+    textbox = compo_getobj_byid(CHARGE_TEMPER_TXT_ID);
+    compo_textbox_set(textbox, buf);
+#endif
 }
 
 static void func_mode_mic_speaker_process(void)

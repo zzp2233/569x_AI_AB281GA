@@ -235,7 +235,6 @@ static void func_test_mode_click(void)
 
             if(ret == MSGBOX_RES_OK)
             {
-                uteModuleFactoryTestStartTestItem(TEST_ITEM_AGING,true);
 #if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
                 uteTaskGuiStartScreen(FUNC_AGEING,0,__func__);
 #else

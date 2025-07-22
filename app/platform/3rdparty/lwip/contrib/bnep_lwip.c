@@ -12,13 +12,12 @@
 #include "lwip/ethip6.h"
 #include "lwip/dns.h"
 #include "lwip/mem.h"
+
 #include "lwip/apps/sntp.h"
 #include "netif/etharp.h"
-#include "lwip/apps/sntp.h"
+
 #include "arch/sys_arch.h"
 #include "rt_thread.h"
-#define L2CAP_DEFAULT_MTU (1460)
-// #define L2CAP_DEFAULT_MTU (661)
 
 /* Short name used for netif in lwIP */
 #define IFNAME0     'b'
@@ -30,6 +29,15 @@
 
 typedef uint8_t bd_addr_t[6];
 
+typedef struct
+{
+    ip_addr_t offered_ip_addr;
+    struct acd acd;
+    u8 state;
+} staticip_check_t;
+
+#define DHCP_RETRY_CHECK 0
+
 #if BT_PANU_EN
 
 static os_mq_t bnep_lwip_outgoing_mbox = NULL;
@@ -40,7 +48,11 @@ static void *bnep_lwip_outgoing_next_packet;
 
 static u32 netif_tick;
 static bool bnep_profile_enable;
+#if DHCP_RETRY_CHECK
+static staticip_check_t staticip_check;
+#endif
 
+bool bnep_network_is_ok(void);
 void lwip_sys_init(void);
 void bt_thread_check_trigger(void);
 char *bd_addr_to_str(bd_addr_t addr);
@@ -68,7 +80,7 @@ static void bnep_lwip_free_pbuf(struct pbuf *p)
     }
 }
 
-static void dhcp_status_callback(struct netif *netif)
+static void netif_status_callback(struct netif *netif)
 {
     struct dhcp *dhcp = netif_dhcp_data(netif);
 
@@ -87,27 +99,21 @@ static void dhcp_status_callback(struct netif *netif)
             printf("IP : %s\n", ipaddr_ntoa(&netif->ip_addr));
             printf("gw : %s\n", ipaddr_ntoa(&netif->gw));
             printf("netmask : %s\n", ipaddr_ntoa(&netif->netmask));
-            // bsp_net_set_state(BSP_NET_BOUND);
-            {
-                // ip_addr_t ping_addr;
-                // IP_ADDR4(&ping_addr, 180, 76, 76, 76);
-                // void ping_init(const ip_addr_t *ping_addr);
-                // ping_init(&ping_addr);
-
-                // sys_thread_new("http_thread", http_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
-
-                ip_addr_t ntp_addr;
-                // ipaddr_aton("ntp.aliyun.com", &ntp_addr);
-                IP_ADDR4(&ntp_addr, 203, 107, 6, 88); //ntp.aliyun.com
-
-                sntp_setserver(0, &ntp_addr);
-                sntp_init();
-            }
             break;
         // 其他状态可根据需要添加
         default:
             printf("DHCP state: %d\n", dhcp->state);
             break;
+    }
+
+    if (bnep_network_is_ok())
+    {
+        ip_addr_t ntp_addr;
+        // ipaddr_aton("ntp.aliyun.com", &ntp_addr);
+        IP_ADDR4(&ntp_addr, 203, 107, 6, 88); //ntp.aliyun.com
+
+        sntp_setserver(0, &ntp_addr);
+        sntp_init();
     }
 }
 
@@ -202,25 +208,17 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
     // if (!(netif->flags & NETIF_FLAG_LINK_UP))
     //     return ERR_OK;
 
+    bt_thread_check_trigger();
     // inc refcount
     pbuf_ref(p);
 
     LWIP_ASSERT("bnep_lwip_outgoing_mbox != NULL",
                 bnep_lwip_outgoing_mbox != NULL);
 
-    // queue empty now?
-    int queue_empty = bnep_lwip_outgoing_packets_empty();
-
     // queue up
     if (!bnep_lwip_outgoing_queue_packet(p))
     {
         return ERR_MEM;
-    }
-
-    // trigger processing if queue was empty (might be new packet)
-    if (queue_empty)
-    {
-        bt_thread_check_trigger();
     }
 
     return ERR_OK;
@@ -245,7 +243,7 @@ static err_t bnep_lwip_netif_init(struct netif *netif)
     netif->name[1] = IFNAME1;
 
     // mtu
-    netif->mtu = L2CAP_DEFAULT_MTU;
+    netif->mtu = NETIF_MTU;
 
     /* device capabilities */
     netif->flags |= NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
@@ -264,6 +262,95 @@ static err_t bnep_lwip_netif_init(struct netif *netif)
     return ERR_OK;
 }
 
+err_t arp_listen_for_network_info(struct pbuf *p, struct netif *netif)
+{
+#if DHCP_RETRY_CHECK
+    struct eth_hdr *ethhdr = (struct eth_hdr *)p->payload;
+    if (ethhdr->type == PP_HTONS(ETHTYPE_ARP))
+    {
+        struct etharp_hdr *arphdr = (struct etharp_hdr *)((u8_t *)ethhdr + SIZEOF_ETH_HDR);
+
+        if (arphdr->opcode == PP_HTONS(ARP_REQUEST) || arphdr->opcode == PP_HTONS(ARP_REPLY))
+        {
+            // TODO: 169.254.x.x
+            if (staticip_check.state == 0)
+            {
+                printf("update staticip_check.offered_ip_addr\n");
+                memcpy(&staticip_check.offered_ip_addr, &arphdr->sipaddr, sizeof(ip_addr_t));
+                staticip_check.offered_ip_addr.addr = (staticip_check.offered_ip_addr.addr & 0x00ffffff) | (2 << 24);
+                printf("ARP sender IP: %s\n", ip4addr_ntoa(&staticip_check.offered_ip_addr));
+            }
+        }
+    }
+#endif
+    return tcpip_input(p, netif);
+}
+
+#if DHCP_RETRY_CHECK && LWIP_DHCP
+static void
+staticip_conflict_callback(struct netif *netif, acd_callback_enum_t state)
+{
+    printf("%s state=%d\n", __func__, state);
+    switch (state)
+    {
+        case ACD_IP_OK:
+        {
+            ip_addr_t netmask;
+            ip_addr_t gw;
+            ip_addr_copy(gw, staticip_check.offered_ip_addr);
+            gw.addr = (gw.addr & 0x00ffffff) | (1 << 24);
+
+            IP_ADDR4(&netmask, 255, 255, 255, 240);
+            dns_setserver(0, &gw);
+            printf("netmask: %s\n", ip4addr_ntoa(&netmask));
+            printf("gw: %s\n", ip4addr_ntoa(&gw));
+            printf("staticip_check.offered_ip_addr: %s\n", ip4addr_ntoa(&staticip_check.offered_ip_addr));
+            netif_set_addr(netif_default, &staticip_check.offered_ip_addr, &netmask, &gw);
+            acd_remove(netif_default, &staticip_check.acd);
+            break;
+        }
+        case ACD_RESTART_CLIENT:
+        case ACD_DECLINE:
+        {
+            if ((staticip_check.offered_ip_addr.addr & 0xff) == 0xff)
+            {
+                netif_set_addr(netif, IP4_ADDR_ANY4, IP4_ADDR_ANY4, IP4_ADDR_ANY4);
+                acd_remove(netif_default, &staticip_check.acd);
+                break;
+            }
+            u8 addr = (staticip_check.offered_ip_addr.addr & 0x00ffffff) >> 24;
+            staticip_check.offered_ip_addr.addr = (staticip_check.offered_ip_addr.addr & 0x00ffffff) | ((addr + 1) << 24);
+            acd_start(netif_default, &staticip_check.acd, staticip_check.offered_ip_addr);
+            break;
+        }
+    }
+}
+
+static void dhcp_tries_check(void *p)
+{
+    struct netif *netif = p;
+    struct dhcp *dhcp = netif_dhcp_data(netif);
+    printf("dhcp_tries_check dhcp->tries=%d %d\n", dhcp->state, dhcp->tries);
+    if (dhcp->state >= DHCP_STATE_CHECKING)
+    {
+        return;
+    }
+    if (dhcp->tries > 3)
+    {
+        dhcp_stop(netif);
+        staticip_check.state = 1;
+
+        printf("acd IP1: %s\n", ip4addr_ntoa(&staticip_check.offered_ip_addr));
+        acd_add(netif_default, &staticip_check.acd, staticip_conflict_callback);
+        acd_start(netif_default, &staticip_check.acd, staticip_check.offered_ip_addr);
+    }
+    else if (netif_is_link_up(netif))
+    {
+        sys_timeout(1000, dhcp_tries_check, netif);
+    }
+}
+#endif
+
 static void bnep_lwip_init(void)
 {
     log_debug("%s\n", __func__);
@@ -274,7 +361,7 @@ static void bnep_lwip_init(void)
 
     // input function differs for sys vs nosys
     netif_input_fn input_function;
-    input_function = tcpip_input;
+    input_function = arp_listen_for_network_info;
 
     LOCK_TCPIP_CORE();
     netif_add(&btstack_netif,
@@ -284,17 +371,14 @@ static void bnep_lwip_init(void)
               NULL,
               bnep_lwip_netif_init,
               input_function);
-
-    // 启用 IPv6 地址
-    // netif_ip6_addr_set_state(&btstack_netif, 0, IP6_ADDR_VALID);
-
-    // dhcp_start(&btstack_netif);
-    netif_set_status_callback(&btstack_netif, dhcp_status_callback);
-
-    netif_set_up(&btstack_netif);
-    dhcp_start(&btstack_netif);
-
+    // set mac address
+    btstack_netif.hwaddr_len = 6;
+    bt_get_local_bd_addr(btstack_netif.hwaddr);
     netif_set_default(&btstack_netif);
+
+    netif_set_status_callback(netif_default, netif_status_callback);
+
+    netif_set_up(netif_default);
     UNLOCK_TCPIP_CORE();
 }
 
@@ -309,13 +393,15 @@ static int bnep_lwip_netif_up(bd_addr_t network_address)
              bd_addr_to_str(network_address));
 
     LOCK_TCPIP_CORE();
-    // set mac address
-    btstack_netif.hwaddr_len = 6;
-    memcpy(btstack_netif.hwaddr, network_address, 6);
-
+#if DHCP_RETRY_CHECK
+    memset(&staticip_check, 0, sizeof(staticip_check));
+#endif
     // link is up
-    netif_set_link_up(&btstack_netif);
-
+    netif_set_link_up(netif_default);
+    dhcp_start(netif_default);
+#if DHCP_RETRY_CHECK
+    sys_timeout(1000, dhcp_tries_check, netif_default);
+#endif
     UNLOCK_TCPIP_CORE();
     return 0;
 }
@@ -325,7 +411,8 @@ static int bnep_lwip_netif_down(void)
     log_info("bnep_lwip_netif_down");
 
     LOCK_TCPIP_CORE();
-    netif_set_link_down(&btstack_netif);
+    dhcp_stop(netif_default);
+    netif_set_link_down(netif_default);
     UNLOCK_TCPIP_CORE();
     return 0;
 }
@@ -345,6 +432,7 @@ static void bnep_lwip_discard_packets(void)
 
 static void bnep_lwip_netif_process_packet(const uint8_t *packet, uint16_t size)
 {
+    bt_thread_check_trigger();
     struct pbuf *p = pbuf_alloc(PBUF_RAW, size, PBUF_POOL);
     // log_debug("%s alloc=%x\n", __func__, p);
 
@@ -369,7 +457,7 @@ static void bnep_lwip_netif_process_packet(const uint8_t *packet, uint16_t size)
     }
 
     /* pass all packets to ethernet_input, which decides what packets it supports */
-    int res = btstack_netif.input(p, &btstack_netif);
+    int res = btstack_netif.input(p, netif_default);
     if (res != ERR_OK)
     {
         log_error("bnep_lwip_netif_process_packet: IP input error %d\n", res);
@@ -423,7 +511,8 @@ void bnep_network_outgoing_process(void)
         return;
     }
 
-    void *buf = mem_malloc(L2CAP_DEFAULT_MTU);
+    bt_thread_check_trigger();
+    void *buf = mem_malloc(NETIF_MTU);
     if (buf == NULL)
     {
         log_error("%s malloc failed!\n", __func__);
@@ -442,7 +531,7 @@ void bnep_network_outgoing_process(void)
     // flatten into our buffer
     len = bnep_lwip_pbuf_copy_partial(bnep_lwip_outgoing_next_packet,
                                       buf,
-                                      L2CAP_DEFAULT_MTU);
+                                      NETIF_MTU);
 
     // request can send now
     bnep_network_send_packet(buf, len);
@@ -462,17 +551,15 @@ void bnep_network_packet_sent(uint8_t *buf)
     {
         return;
     }
-    bt_thread_check_trigger();
 }
 
 bool bnep_network_is_ok(void)
 {
-    struct netif *netif = &btstack_netif;
+    struct netif *netif = netif_default;
 
     // 检查接口状态
     if (!netif_is_up(netif) || !netif_is_link_up(netif))
     {
-        printf("1111111\r\n");
         return false;
     }
 
@@ -480,7 +567,6 @@ bool bnep_network_is_ok(void)
     const ip_addr_t* ip_addr = netif_ip_addr4(netif);
     if (ip_addr_isany(ip_addr))
     {
-        printf("222222\r\n");
         return false;
     }
 
@@ -488,26 +574,15 @@ bool bnep_network_is_ok(void)
     const ip_addr_t* gw_addr = netif_ip_gw4(netif);
     if (ip_addr_isany(gw_addr))
     {
-        printf("333333\r\n");
         return false;
     }
-
 
     // 检查DNS
     const ip_addr_t* dns_addr = dns_getserver(0);
     if (ip_addr_isany(dns_addr))
     {
-        printf("444444\r\n");
         return false;
     }
-
-#if LWIP_DHCP
-    if (!dhcp_supplied_address(netif))
-    {
-        printf("555555\r\n");
-        return false;
-    }
-#endif
 
     return true;
 }

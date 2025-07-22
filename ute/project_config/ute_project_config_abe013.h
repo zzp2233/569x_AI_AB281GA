@@ -187,7 +187,7 @@
 #define UTE_MODULE_SCREENS_RESTART_SUPPORT            1 //重启
 #define UTE_MODULE_SCREENS_CALENDAER_SUPPORT          1 //日历
 #define UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT      1 //日历一级界面
-#define UTE_MODULE_SCREENS_SCAN_SUPPORT               0 //二维码
+#define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
 
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25

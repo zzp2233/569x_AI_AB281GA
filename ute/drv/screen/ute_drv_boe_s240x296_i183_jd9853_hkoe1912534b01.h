@@ -9,20 +9,48 @@
 
 __STATIC_INLINE void drvScreenBoeHkoe1912534b01PowerOn(void)
 {
-    uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x11,NULL,0);
-    uteModulePlatformDelayUs(120000);
-    uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x29,NULL,0);
-    uteModulePlatformDelayUs(20000);
-    // UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
+    uint8_t tmp[34];
+    // SSD_CMD(0x11) + 0个SSD_PAR
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, &tmp[0], 0);
+    uteModulePlatformDelayMs(120);
+
+    // SSD_CMD(0xDE) + 1个SSD_PAR
+    memcpy(&tmp[0], "\x03", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+
+    // SSD_CMD(0xB5) + 1个SSD_PAR
+    memcpy(&tmp[0], "\x23", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB5, &tmp[0], 1);
+
+    // SSD_CMD(0xDE) + 1个SSD_PAR
+    memcpy(&tmp[0], "\x00", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+
+    // SSD_CMD(0xDE) + 1个SSD_PAR
+    memcpy(&tmp[0], "\x00", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+
+    // SSD_CMD(0x29) + 0个SSD_PAR
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, &tmp[0], 0);
+
+    // SSD_CMD(0xDF) + 2个SSD_PAR
+    memcpy(&tmp[0], "\x00\x00", 2);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDF, &tmp[0], 2);
+    // uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x11,NULL,0);
+    // uteModulePlatformDelayMs(50);
+    // uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x29,NULL,0);
+    // uteModulePlatformDelayMs(10);
+    UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
 __STATIC_INLINE void drvScreenBoeHkoe1912534b01PowerOff(void)
 {
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x28,NULL,0);
-    uteModulePlatformDelayUs(20000);
+    uteModulePlatformDelayMs(120);
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x10,NULL,0);
-    uteModulePlatformDelayUs(50000);
-    // UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
+    uteModulePlatformDelayMs(50);
+    uteDrvScreenCommonSetPowerEnable(false);
+    UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
 __STATIC_INLINE void drvScreenBoeHkoe1912534b01SetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
@@ -50,15 +78,13 @@ __STATIC_INLINE void drvScreenBoeHkoe1912534b01Init(void)
 {
     uteDrvScreenCommonSetPowerEnable(true);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(20000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(false);
-    uteModulePlatformDelayUs(20000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(20000);
-    // 定义临时缓冲区
-    uint8_t tmp[256];
+    uteModulePlatformDelayMs(50);
 
-    delay_ms(50);
+    uint8_t tmp[34];
 
     // SSD_CMD(0xDF) + 2个SSD_PAR
     memcpy(&tmp[0], "\x98\x53", 2);
@@ -177,41 +203,42 @@ __STATIC_INLINE void drvScreenBoeHkoe1912534b01Init(void)
     memcpy(&tmp[0], "\x05", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x3A, &tmp[0], 1);
 
-    // SSD_CMD(0x2A) + 4个SSD_PAR
-    memcpy(&tmp[0], "\x00\x00\x00\xEF", 4);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2A, &tmp[0], 4);
+    //删除
+    // // SSD_CMD(0x2A) + 4个SSD_PAR
+    // memcpy(&tmp[0], "\x00\x00\x00\xEF", 4);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2A, &tmp[0], 4);
 
-    // SSD_CMD(0x2B) + 4个SSD_PAR
-    memcpy(&tmp[0], "\x00\x00\x01\x27", 4);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2B, &tmp[0], 4);
+    // // SSD_CMD(0x2B) + 4个SSD_PAR
+    // memcpy(&tmp[0], "\x00\x00\x01\x27", 4);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2B, &tmp[0], 4);
 
-    // SSD_CMD(0x11) + 0个SSD_PAR
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, &tmp[0], 0);
-    uteModulePlatformDelayMs(120);
+    //移入poweron
+    // // SSD_CMD(0x11) + 0个SSD_PAR
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, &tmp[0], 0);
+    // uteModulePlatformDelayMs(120);
 
-    // SSD_CMD(0xDE) + 1个SSD_PAR
-    memcpy(&tmp[0], "\x03", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+    // // SSD_CMD(0xDE) + 1个SSD_PAR
+    // memcpy(&tmp[0], "\x03", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
 
-    // SSD_CMD(0xB5) + 1个SSD_PAR
-    memcpy(&tmp[0], "\x23", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB5, &tmp[0], 1);
+    // // SSD_CMD(0xB5) + 1个SSD_PAR
+    // memcpy(&tmp[0], "\x23", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB5, &tmp[0], 1);
 
-    // SSD_CMD(0xDE) + 1个SSD_PAR
-    memcpy(&tmp[0], "\x00", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+    // // SSD_CMD(0xDE) + 1个SSD_PAR
+    // memcpy(&tmp[0], "\x00", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
 
-    // SSD_CMD(0xDE) + 1个SSD_PAR
-    memcpy(&tmp[0], "\x00", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+    // // SSD_CMD(0xDE) + 1个SSD_PAR
+    // memcpy(&tmp[0], "\x00", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
 
-    // SSD_CMD(0x29) + 0个SSD_PAR
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, &tmp[0], 0);
-    uteModulePlatformDelayMs(10);
+    // // SSD_CMD(0x29) + 0个SSD_PAR
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, &tmp[0], 0);
 
-    // SSD_CMD(0xDF) + 2个SSD_PAR
-    memcpy(&tmp[0], "\x00\x00", 2);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDF, &tmp[0], 2);
+    // // SSD_CMD(0xDF) + 2个SSD_PAR
+    // memcpy(&tmp[0], "\x00\x00", 2);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDF, &tmp[0], 2);
 }
 const ute_drv_screen_common_config_t uteDrvScreenBoe240X296Hkoe1912534b01Config =
 {

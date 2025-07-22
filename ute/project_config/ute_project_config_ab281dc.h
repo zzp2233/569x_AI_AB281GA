@@ -111,6 +111,8 @@
 /*! 编码器gpio zn.zeng, 2021-12-06  */
 #define UTE_DRV_QDEC_Y_PHB_GPIO_PIN          IO_PB0
 #define UTE_DRV_QDEC_Y_PHA_GPIO_PIN          IO_PB1
+/*! 全码编码器 qq.cai, 2025-07-14  */
+#define  UTE_DRV_ALL_QDEC_MODE  1
 
 /*! 编码器切换表盘锁定,wang.luo 2025-04-09 */
 #define UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT  1
@@ -178,9 +180,10 @@
 #define UTE_MODULE_NEW_FACTORY_AGING_TEST_SCREENS_STRING_ENLARGEMENT 2
 #define UTE_MODULE_NEW_FACTORY_MODULE_TEST_SCREENS_STRING_ENLARGEMENT 2
 #define UTE_MODULE_NEW_FACTORY_TEST_CHAR_EN_SUPPORT  1
-#define  UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1//工厂测试音频测试
-#define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 15
-#define  UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT    1//地磁测试
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1//工厂测试音频测试
+#define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 10
+#define UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT    1//地磁测试
+#define UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL     40//工厂测试马达震动等级
 
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT     RES_BUF_RING_LET_GO_MP3 //工厂测试音频测试->音频地址
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
@@ -229,14 +232,13 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D20279001_BIN, \
                                                UI_BUF_DIALPLATE_D18724001_BIN,\
                                                UI_BUF_DIALPLATE_D20226001_BIN,\
                                                UI_BUF_DIALPLATE_D20225001_BIN,\
-                                               UI_BUF_DIALPLATE_D20280001_BIN,\
-                                               UI_BUF_DIALPLATE_D18720001_BIN, \
+                                               UI_BUF_DIALPLATE_D20350001_BIN, \
                                               }
 //     UI_BUF_DIALPLATE_CUBE_BIN
 
@@ -354,7 +356,7 @@
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
-#define UTE_MODULE_SCREENS_281DC_MENU_DEL_APP     1     //本项目删除个别菜单多余应用
+#define UTE_MODULE_SCREENS_KALEIAOSCOPE_MENU_DEL_PRESSURE_APP     1     //本项目删除个别菜单多余应用
 
 
 //未完善
@@ -377,7 +379,7 @@
 #define SCREEN_TITLE_MULTIPLE_FRENCH_LANGUAGE_SUPPORT               0 //法文 7
 #define SCREEN_TITLE_MULTIPLE_ITALIAN_LANGUAGE_SUPPORT              0 //意大利文 8
 #define SCREEN_TITLE_MULTIPLE_PORTUGUESE_LANGUAGE_SUPPORT           1 //葡萄牙文 9
-#define SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT               1 //阿拉伯文 A
+#define SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT               0 //阿拉伯文 A
 #define SCREEN_TITLE_MULTIPLE_INDIA_LANGUAGE_SUPPORT                0 //India     B
 #define SCREEN_TITLE_MULTIPLE_HINDI_LANGUAGE_SUPPORT                0 //印地语  C
 #define SCREEN_TITLE_MULTIPLE_POLISH_LANGUAGE_SUPPORT               0 //波兰语  D

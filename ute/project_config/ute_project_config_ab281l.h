@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281L_H_
 
 #define DEFAULT_BLE_DEV_NAME "T7"
-#define UTE_SW_VERSION "AB281LV000150"
+#define UTE_SW_VERSION "AB281LV000163"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281L"
@@ -149,20 +149,20 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      230 //mAh
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      263 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3458  //3564
-#define UTE_DRV_BATTERY_010      3679  //3698
-#define UTE_DRV_BATTERY_020      3722  //3744
-#define UTE_DRV_BATTERY_030      3755  //3765
-#define UTE_DRV_BATTERY_040      3773  //3780
-#define UTE_DRV_BATTERY_050      3798  //3807
-#define UTE_DRV_BATTERY_060      3835  //3856
-#define UTE_DRV_BATTERY_070      3903  //3908
-#define UTE_DRV_BATTERY_080      3966  //3964
-#define UTE_DRV_BATTERY_090      4058  //4045
-#define UTE_DRV_BATTERY_100      4144  //4128
+#define UTE_DRV_BATTERY_000      3500
+#define UTE_DRV_BATTERY_010      3684
+#define UTE_DRV_BATTERY_020      3739
+#define UTE_DRV_BATTERY_030      3765
+#define UTE_DRV_BATTERY_040      3790
+#define UTE_DRV_BATTERY_050      3828
+#define UTE_DRV_BATTERY_060      3902
+#define UTE_DRV_BATTERY_070      3971
+#define UTE_DRV_BATTERY_080      4071
+#define UTE_DRV_BATTERY_090      4175
+#define UTE_DRV_BATTERY_100      4250
 
 // #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 // #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标
@@ -322,7 +322,7 @@
 #define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 #define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
-#define UTE_MODULE_SCREENS_281L_MENU_DEL_APP     1     //本项目删除个别菜单多余应用
+#define UTE_MODULE_SCREENS_KALEIAOSCOPE_MENU_DEL_PRESSURE_APP     1     //本项目删除个别菜单多余应用
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

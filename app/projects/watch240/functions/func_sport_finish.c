@@ -2033,7 +2033,11 @@ compo_form_t *func_sport_finish_form_create(void)
     switch(func_sport_get_disp_mode())
     {
         case MULTIPLE_DATA://多数据
+#if UTE_MODULE_SCREENS_SPORT_KM_OFF
+            sport_type = 1;
+#else
             sport_type = 0;
+#endif
             break;
         case MID_DATA:     //中数据
             sport_type = 2;
@@ -2161,10 +2165,10 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING*4,88,30);
     compo_textbox_set(textbox, txt_buf);
 
+#if (UTE_MODULE_SCREENS_SPORT_KM_OFF==0)
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,317+TXT_SPACING*5,278,1);
     compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
-
 ///////////////////////////////////////////////////////////////////////////////////
     picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_DIS_BIN);
     compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231+TXT_SPACING*5);
@@ -2189,7 +2193,7 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING*5,88,30);
     compo_textbox_set(textbox, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
-
+#endif
     return frm;
 }
 
@@ -2206,6 +2210,9 @@ static void func_sport_finish_init(void)
     {
         case MULTIPLE_DATA:
             page_size = 1134;
+#if UTE_MODULE_SCREENS_SPORT_KM_OFF
+            page_size -= TXT_SPACING;
+#endif
             break;
         case MID_DATA:
             page_size = 900;

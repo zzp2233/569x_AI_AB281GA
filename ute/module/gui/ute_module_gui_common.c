@@ -332,6 +332,13 @@ void uteModuleGuiCommonReadConfig(void)
     readbuff[1] = DEFAULT_TEMPERATURE_IS_FAHRENHEIT;
     readbuff[2] = DEFAULT_SCREEN_BACKLIGHT_PERCENT;
     readbuff[3] = DEFAULT_WATCH_INDEX;
+
+    /*! 显示菜单参数zn.zeng, 2021-08-20  */
+    readbuff[4] = DEFAULT_THEMETYPE_INDEX>>24&0xff;
+    readbuff[5] = DEFAULT_THEMETYPE_INDEX>>16&0xff;
+    readbuff[6] = DEFAULT_THEMETYPE_INDEX>>8&0xff;
+    readbuff[7] = DEFAULT_THEMETYPE_INDEX&0xff;
+
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     readbuff[8] = UTE_MODULE_DIAL_SCREEN_DEFAULT_STATUS;
     readbuff[9] = 0;

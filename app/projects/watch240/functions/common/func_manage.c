@@ -591,7 +591,7 @@ const static func_item_info_t func_item_tbl[] =
 #endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_FINDPHONE,                UI_BUF_I338001_2_HONEYCOMB_FINDPHONE_BIN,                  STR_FIND_PHONE},            //寻找手机
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-    {FUNC_CALENDAER,                UI_BUF_I332001_THEME_ICON1_CALENDAR_BIN,                   STR_CALENDAR},              //日历
+    {FUNC_CALENDAER,                UI_BUF_I338001_2_HONEYCOMB_CALENDAR_BIN,                   STR_CALENDAR},              //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     // {FUNC_SET_SUB_SAV,                   UI_BUF_I338001_2_HONEYCOMB_SOUND_BIN,                     STR_VOL},                //音量//该切图没有
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
@@ -1152,18 +1152,24 @@ void latest_task_add(u8 func_sta)
  **/
 void latest_task_del(u8 idx)
 {
-    u8 i = idx;
-    if (i < latest_list.num)
+    printf("%s:[", __func__);
+    u8 write_idx = 0;
+    for (u8 i = 0; i < latest_list.num; i++)
     {
-        latest_list.num--;
-        for ( ; i < latest_list.num; i++)
+        if (latest_list.task_tbl[i] != idx)
         {
-            latest_list.task_tbl[i] = latest_list.task_tbl[i + 1];
+            latest_list.task_tbl[write_idx] = latest_list.task_tbl[i];
+            printf("%d ", latest_list.task_tbl[write_idx]);
+            write_idx++;
         }
-#if (TRACE_EN == 0)
-        printf("%s[idx:%d num:%d]\n", __func__, idx, latest_list.num);
-#endif
     }
+    printf("]");
+    if (latest_list.num > write_idx)
+    {
+        printf("-->[%d]", idx);
+    }
+    printf("\n");
+    latest_list.num = write_idx;
 
 #if TRACE_EN
     TRACE("%s[%d]:", __func__, idx);

@@ -3004,7 +3004,7 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set_location(title,20,20,300,0);
     compo_textbox_set_right_align(title, false);
     compo_textbox_set_align_center(title,false);
-    compo_textbox_set(title, "Weather");
+    compo_textbox_set(title, i18n[STR_WEATHER]);
 #endif
 
     //第二页

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-07-07 16:15:27
+*@date   2025-07-10 16:23:55
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -312,16 +312,16 @@ enum
     STR_VIETNAMESE, // Tiếng Việt
     STR_MALAYSIA, // Melayu
     STR_PLEASE_REMOTE, // 请前往APP打开遥控拍照
+    STR_KEY_SET, // 下键设置
+    STR_OPERATION_FUNC, // 为手表下键设置操作功能。
 };
 
 extern const char * const *i18n;
 extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
-extern const char * const i18n_ar_ril[];
 extern const char * const i18n_ru_rru[];
 extern const char * const i18n_tr_rtr[];
 extern const char * const i18n_ms_rmy[];
-extern const char * const i18n_ja_rjp[];
 extern const char * const i18n_de_rde[];
 extern const char * const i18n_es_res[];
 extern const char * const i18n_fr_rfr[];

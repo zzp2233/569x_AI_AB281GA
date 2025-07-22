@@ -231,7 +231,7 @@ compo_form_t *func_activity_form_create(void)
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"/%ld",target_step);///步数数据目标
-    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    textbox = compo_textbox_create(frm, 7);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,594,GUI_SCREEN_CENTER_X-13,25);
     compo_textbox_set_forecolor(textbox, make_color(153,153,153));

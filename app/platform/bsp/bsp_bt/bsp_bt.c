@@ -14,6 +14,7 @@ static bool bt_onoff_timer_sta;
 static bool bt_onoff_timer_falg;
 static u8 bt_onoff_timer_cnt = 0;
 
+u8 bt_onoff_chatbot = 0;
 void bsp_bt_init(void)
 {
     //更新配置工具的设置
@@ -448,6 +449,7 @@ void bsp_bt_trun_on(void)
     else
     {
         printk("on 111 a2dp[%d] hfp[%d] hid[%d] \n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
+        bt_onoff_chatbot = 1;
         if (bt_onoff_timer_sta == 0)
         {
             printk("on 222 a2dp[%d] hfp[%d] hid[%d] bt_get_status_do[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), bt_get_status_do());
@@ -479,6 +481,7 @@ void bsp_bt_trun_off(void)
     else
     {
         printk("off 111 \n");
+        bt_onoff_chatbot = 0;
         if (bt_onoff_timer_sta == 0)
         {
             printk("off 222 a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), uteModuleCallIsEntertranmentVoiceOn());

@@ -13,6 +13,57 @@
 
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
 
+// 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
+static int music_is_complete_utf8_char(const char *str, int pos)
+{
+    unsigned char byte = str[pos];
+    if ((byte & 0x80) == 0)
+    {
+        // 单字节字符，肯定是完整的
+        return 1;
+    }
+    int num_bytes = 0;
+    if ((byte & 0xE0) == 0xC0)
+    {
+        num_bytes = 2;
+    }
+    else if ((byte & 0xF0) == 0xE0)
+    {
+        num_bytes = 3;
+    }
+    else if ((byte & 0xF8) == 0xF0)
+    {
+        num_bytes = 4;
+    }
+    for (int i = 1; i < num_bytes; i++)
+    {
+        if ((str[pos + i] & 0xC0)!= 0x80)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// 截取有用数据并在尾部补上三个...
+static void music_truncate_and_append(const char *src, char *dst, int dst_size)
+{
+    int i = 0;
+    int j = 0;
+    while (i < strlen(src) && j < dst_size - 1)
+    {
+        if (music_is_complete_utf8_char(src, i))
+        {
+            dst[j++] = src[i++];
+        }
+        else
+        {
+            break;
+        }
+    }
+    dst[j] = '\0';
+}
+
 /*****************************************************************************
  * 1.当BT连接时，优先同步id3信息，控制通道走BT
  * 2.当只连接BLE时，IOS走AMS服务，安卓走私有协议
@@ -151,11 +202,12 @@ compo_form_t *func_bt_form_create(void)
         }
         else
         {
-            str_txt = title_buf;
+            char title_buf2[TITLE_BUF_LEN];
+            music_truncate_and_append(title_buf, title_buf2,TITLE_BUF_LEN);
+            str_txt = title_buf2;
         }
         str_leng = TITLE_BUF_LEN;
     }
-
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -287,7 +339,9 @@ static void func_bt_music_refresh_disp(void)
     if(strcmp(title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
     {
         memcpy(f_bt->title_buf_old, title_buf, TITLE_BUF_LEN);
-        compo_textbox_set(tilte_txt, title_buf);
+        char title_buf2[TITLE_BUF_LEN];
+        music_truncate_and_append(title_buf, title_buf2,TITLE_BUF_LEN);
+        compo_textbox_set(tilte_txt, title_buf2);
         if(title_size_leng == 0)
         {
             compo_textbox_set(tilte_txt, i18n[STR_UNKNOWN]);

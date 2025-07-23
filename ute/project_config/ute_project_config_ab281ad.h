@@ -22,7 +22,7 @@
 /*gesnsor 采集原始数据*/
 #define APP_DBG_GSENSOR_DATA 1
 /*! 心率sensor选择,wang.luo 2025-04-16 */
-#define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VC30FX
+#define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VCLC09A
 
 #define UTE_DRV_DSPI_FOR_SCREEN_SUPPORT 0
 #define UTE_DRV_QSPI_FOR_SCREEN_SUPPORT 1

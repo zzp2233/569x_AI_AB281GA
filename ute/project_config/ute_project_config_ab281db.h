@@ -152,20 +152,21 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      263 //mAh
-
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      258 //mAh
+/*! 电池最大电压值zn.zeng, 2021-11-09  */
+#define UTE_DRV_BATTERY_MAX_VOLTAGE 4350
 /* 电池曲线 zn.zeng 2022-01-03*/
 #define UTE_DRV_BATTERY_000      3500
-#define UTE_DRV_BATTERY_010      3684
+#define UTE_DRV_BATTERY_010      3683
 #define UTE_DRV_BATTERY_020      3739
-#define UTE_DRV_BATTERY_030      3765
-#define UTE_DRV_BATTERY_040      3790
-#define UTE_DRV_BATTERY_050      3828
-#define UTE_DRV_BATTERY_060      3902
-#define UTE_DRV_BATTERY_070      3971
-#define UTE_DRV_BATTERY_080      4071
-#define UTE_DRV_BATTERY_090      4175
-#define UTE_DRV_BATTERY_100      4250
+#define UTE_DRV_BATTERY_030      3764
+#define UTE_DRV_BATTERY_040      3788
+#define UTE_DRV_BATTERY_050      3824
+#define UTE_DRV_BATTERY_060      3892
+#define UTE_DRV_BATTERY_070      3965
+#define UTE_DRV_BATTERY_080      4060
+#define UTE_DRV_BATTERY_090      4156
+#define UTE_DRV_BATTERY_100      4274
 
 // #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 // #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标
@@ -314,8 +315,8 @@
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 //#define UTE_MODULE_KEY_SET_FUNCTION_SUPPORT           1 //下按键功能设置
-
-
+#define UTE_MODULE_SCREENS_KALEIAOSCOPE_MENU_DEL_PRESSURE_APP     1     //本项目删除个别菜单多余应用
+#define UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION  1   //未绑定开机始终显示语言选择界面
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动

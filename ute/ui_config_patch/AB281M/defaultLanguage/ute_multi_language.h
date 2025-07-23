@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-07-14 09:49:03
+*@date   2025-07-22 16:37:44
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -314,6 +314,96 @@ enum
     STR_PLEASE_REMOTE, // 请前往APP打开遥控拍照
     STR_KEY_SET, // 下键设置
     STR_OPERATION_FUNC, // 为手表下键设置操作功能。
+    STR_INDOOR_WALKING, // 室内走路
+    STR_INDOOR_RUNNING, // 室内跑步
+    STR_STRENGTH_TRAINING, // 力量训练
+    STR_STEPPING, // 踏步
+    STR_HORSE_RIDING, // 骑马
+    STR_ELLIPTICAL_MACHINE, // 椭圆机
+    STR_TAI_CHI, // 太极
+    STR_SHUTTLECOCK, // 毽球
+    STR_BOXING, // 拳击
+    STR_OUTDOOR_WALKING, // 户外健走
+    STR_TRAIL_RUNNING, // 越野跑
+    STR_SKIING, // 滑雪
+    STR_ICE_HOCKEY, // 冰球
+    STR_TAEKWONDO, // 跆拳道
+    STR_MAX_OXYGEN_UPTAKE_TEST, // 最大摄氧量测试
+    STR_ROWING_MACHINE, // 划船机
+    STR_STROLLING_MACHINE, // 漫步机
+    STR_HIKING, // 徒步
+    STR_TRACK_AND_FIELD, // 田径
+    STR_ABDOMINAL_TRAINING, // 腰腹训练
+    STR_KARATE, // 空手道
+    STR_RELAXATION, // 整理放松
+    STR_CROSS_TRAINING, // 交叉训练
+    STR_PILATES, // 普拉提
+    STR_CROSS_COORDINATION, // 交叉配合
+    STR_FUNCTIONAL_TRAINING, // 功能性训练
+    STR_PHYSICAL_TRAINING, // 体能训练
+    STR_ARCHERY, // 射箭
+    STR_FLEXIBILITY, // 柔韧度
+    STR_MIXED_AEROBICS, // 混合有氧
+    STR_LATIN_DANCE, // 拉丁舞
+    STR_HIP_HOP, // 街舞
+    STR_KICKBOXING, // 自由搏击
+    STR_BALLET, // 芭蕾
+    STR_AUSTRALIAN_FOOTBALL, // 澳式足球
+    STR_MARTIAL_ARTS, // 武术
+    STR_STAIR_CLIMBING, // 爬楼
+    STR_HANDBALL, // 手球
+    STR_BOWLING, // 保龄球
+    STR_SQUASH, // 壁球
+    STR_CURLING, // 冰壶
+    STR_HUNTING, // 打猎
+    STR_SNOWBOARDING, // 单板滑雪
+    STR_LEISURE_SPORTS, // 休闲运动
+    STR_AMERICAN_FOOTBALL, // 美式橄榄球
+    STR_HAND_CRANKED_VEHICLE, // 手摇车
+    STR_FISHING, // 钓鱼
+    STR_FRISBEE, // 飞盘
+    STR_RUGBY, // 橄榄球
+    STR_GOLF, // 高尔夫
+    STR_FOLK_DANCE, // 民族舞
+    STR_ALPINE_SKIING, // 高山滑雪
+    STR_SNOW_SPORTS, // 雪上运动
+    STR_RELAXING_MEDITATION_SPORTS, // 舒缓冥想类运动
+    STR_CORE_TRAINING, // 核心训练
+    STR_SKATING, // 滑冰
+    STR_FITNESS_GAMES, // 健身游戏
+    STR_FITNESS_EXERCISE, // 健身操
+    STR_GROUP_GYMNASTICS, // 团体操
+    STR_KICKBOXING_EXERCISE, // 搏击操
+    STR_LACROSSE, // 长曲棍球
+    STR_FOAM_ROLLER_FASCIA_RELAXATION, // 泡沫轴筋膜放松
+    STR_WRESTLING, // 摔跤
+    STR_FENCING, // 击剑
+    STR_SOFTBALL, // 垒球
+    STR_HORIZONTAL_BAR, // 单杠
+    STR_PARALLEL_BARS, // 双杠
+    STR_ROLLER_SKATING, // 轮滑
+    STR_HULA_HOOP, // 呼啦圈
+    STR_DARTS, // 飞镖
+    STR_PICKLEBALL, // 匹克球
+    STR_HIIT, // HIIT
+    STR_SHOOTING, // 射击
+    STR_JUDO, // 柔道
+    STR_TRAMPOLINE, // 蹦床
+    STR_SKATEBOARDING, // 滑板
+    STR_BALANCE_BIKE, // 平衡车
+    STR_ROLLERBLADING, // 溜旱冰
+    STR_PARKOUR, // 跑酷
+    STR_DIVING, // 跳水
+    STR_SURFING, // 冲浪
+    STR_SNORKELING, // 浮潜
+    STR_PULL_UPS, // 引体向上
+    STR_PUSH_UPS, // 俯卧撑
+    STR_PLANK, // 平板支撑
+    STR_ROCK_CLIMBING, // 攀岩
+    STR_HIGH_JUMP, // 跳高
+    STR_BUNGEE_JUMPING, // 蹦极
+    STR_LONG_JUMP, // 跳远
+    STR_MARATHON, // 马拉松
 };
 
 extern const char * const *i18n;

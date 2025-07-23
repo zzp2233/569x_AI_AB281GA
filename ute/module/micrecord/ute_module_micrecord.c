@@ -23,6 +23,97 @@
 #define TRACE(...)
 #endif
 
+static bool uteModuleMicRecordMode = true;
+
+#if UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+
+#define MIC_PCM_FILTER_CNT 5
+#define USE_TIMER_FILTER 1
+
+bool pcm_put_flags = false;
+AT(.com_text.func.mic_test)
+bool is_mic_pcm_filtered(void)
+{
+    return pcm_put_flags;
+}
+
+AT(.com_text.func.mic_test)
+void set_mic_pcm_filtered(bool flag)
+{
+    pcm_put_flags = flag;
+}
+
+void mic_pcm_filter_process(void)
+{
+    static u32 mic_pow_buf[MIC_PCM_FILTER_CNT] = {0};
+    static u32 currnet_idx = 0;
+    u32 total_mic_pow = 0;
+    mic_pow_buf[currnet_idx] = bt_get_mic_pmaxow();
+    if (currnet_idx < sizeof(mic_pow_buf) / sizeof(mic_pow_buf[0]) - 1)
+    {
+        currnet_idx++;
+    }
+    else
+    {
+        currnet_idx = 0;
+    }
+    for (int i = 0; i < sizeof(mic_pow_buf) / sizeof(mic_pow_buf[0]); i++)
+    {
+        total_mic_pow += mic_pow_buf[i];
+    }
+    if ((total_mic_pow / (sizeof(mic_pow_buf) / sizeof(mic_pow_buf[0]))) > 10000)
+    {
+        set_mic_pcm_filtered(true);
+    }
+    else
+    {
+        set_mic_pcm_filtered(false);
+    }
+}
+
+#if USE_TIMER_FILTER
+static co_timer_t mic_timer;
+void mic_pcm_filter_proc(co_timer_t *timer, void *param)
+{
+    mic_pcm_filter_process();
+}
+#endif
+
+void mic_pcm_filter_start(void)
+{
+#if USE_TIMER_FILTER
+    co_timer_set(&mic_timer, 10, TIMER_REPEAT, LEVEL_LOW_PRI, mic_pcm_filter_proc, NULL);
+    co_timer_enable(&mic_timer, true);
+#endif
+}
+
+void mic_pcm_filter_stop(void)
+{
+    set_mic_pcm_filtered(false);
+#if USE_TIMER_FILTER
+    co_timer_del(&mic_timer);
+#endif
+}
+
+void uteModuleMicRecordFactoryDirectOut(void)
+{
+    uteModuleMicRecordMode = false;
+    mic_pcm_filter_start();
+    audio_path_init(AUDIO_PATH_SPEAKER);
+    audio_path_start(AUDIO_PATH_SPEAKER);
+    bsp_change_volume(UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME);
+    if (bsp_get_mute_sta())
+    {
+        bsp_sys_unmute();
+    }
+    else
+    {
+        dac_fade_in();
+    }
+    dac_spr_set(SPR_16000);
+}
+#endif
+
 #define FACTORY_RECORD_DATA_START (UTE_OTA_TMP_ADDRESS + 100 * 1024)
 #define FACTORY_RECORD_DATA_LENGTH (128 * 1024)
 #define FACTORY_RECORD_DATA_END (FACTORY_RECORD_DATA_START + FACTORY_RECORD_DATA_LENGTH)
@@ -185,7 +276,25 @@ char mic_test_str[] = "data full!!!\n";
 AT(.com_text.func.mic_test)
 void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode)
 {
-    factory_test_write_record_data(ptr, samples * 2);
+#if UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+    if (!uteModuleMicRecordMode)
+    {
+        if (is_mic_pcm_filtered() == false)
+        {
+            return;
+        }
+        for (int i = 0; i < samples * 2; i += 2)
+        {
+            // 阻塞播放
+            s16 *ptr16 = (s16 *)&ptr[i];
+            obuf_put_one_sample(*ptr16, *ptr16);
+        }
+    }
+    else
+#endif
+    {
+        factory_test_write_record_data(ptr, samples * 2);
+    }
 }
 
 void mic_test_init(void)
@@ -194,16 +303,13 @@ void mic_test_init(void)
     bt_audio_bypass(); // 复用aram，bypass蓝牙音乐
 }
 
-void mic_test_start(void)
-{
-    TRACE("-->%s\n", __func__);
-    audio_path_init(AUDIO_PATH_SPEAKER);
-    audio_path_start(AUDIO_PATH_SPEAKER);
-}
-
 void mic_test_exit(void)
 {
     TRACE("-->%s\n", __func__);
+#if UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+    mic_pcm_filter_stop();
+    uteModuleMicRecordMode = false;
+#endif
     audio_path_exit(AUDIO_PATH_SPEAKER);
     bt_audio_enable();
     bsp_change_volume(sys_cb.vol);
@@ -329,7 +435,9 @@ void uteModuleMicRecordFactoryStart(void)
         uteModulePlatformCreateTimer(&uteModuleMicRecordTimerPointer, "MicRecord", 1, UTE_MODULE_MIC_FACTORY_TEST_RECORDING_TIME * 1000, false, uteModuleMicRecordFactoryTimerCallback);
     }
     uteModulePlatformRestartTimer(&uteModuleMicRecordTimerPointer, UTE_MODULE_MIC_FACTORY_TEST_RECORDING_TIME * 1000);
-    mic_test_start();
+    uteModuleMicRecordMode = true;
+    audio_path_init(AUDIO_PATH_SPEAKER);
+    audio_path_start(AUDIO_PATH_SPEAKER);
 }
 
 /**

@@ -22,11 +22,11 @@
 #define PROJECT_AB281EA_SUPPORT      0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-04-21 */
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
-#define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
+#define PROJECT_AB281DB_SUPPORT      1 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
 #define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-05-19 G28Z项目 */
 #define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
-#define PROJECT_AB281M_SUPPORT       1 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
+#define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
 #define PROJECT_AB281N_SUPPORT       0 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
 #define PROJECT_AB281DC_SUPPORT      0 /*! 恒鑫HX01定制,双按键+编码器+手电筒,TFT 240x296 JD9853,CHIP_5691C_F,wang.luo 2025-06-13 */
 #define PROJECT_AB281GA_SUPPORT      0 /*! 传音815N,amoled 368x448,wang.luo,CHIP_5691G 2025-06-13 */
@@ -1171,6 +1171,19 @@
 /*!呼吸率最大数字，zn.zeng 2023-01-12  */
 #define UTE_MODULE_BREATHRATE_MAX_VALUE 50
 
+/*! 关闭心率自动测量时使用wear模式优化佩戴检测,wang.luo 2025-07-21 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
+#define UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT 0
+#endif
+/*! 佩戴检测时间间隔,wang.luo 2025-07-22 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_AUTO_INTERVAL_MIN
+#define UTE_MODULE_HEART_WEAR_DETECTION_AUTO_INTERVAL_MIN 10
+#endif
+/*! 佩戴检测时长,wang.luo 2025-07-22 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_TIMEOUT_SECOND
+#define UTE_MODULE_HEART_WEAR_DETECTION_TIMEOUT_SECOND 10
+#endif
+
 //二维码链接内容
 #ifndef UTE_BINDING_QRENCODE_LINK
 #define UTE_BINDING_QRENCODE_LINK "https://app.uteasy.com/gloryme/download/index.html"
@@ -1744,6 +1757,11 @@
 /*! 咪头喇叭测试的时候，播放音量, 2022-06-15  */
 #ifndef UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME
 #define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 10
+#endif
+
+/*! 工厂测试咪头测试改为边录边播，如果啸叫需要改小播放音量,wang.luo 2025-07-23 */
+#ifndef UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+#define UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT 0
 #endif
 
 /*! 咪头喇叭测试录音时长,wang.luo 2025-05-10 */

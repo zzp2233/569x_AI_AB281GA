@@ -197,6 +197,10 @@ void vcHr11Init(vcHr11_t *pVcHr11,vcHr11Mode_t vcHr11WorkMode)
         vcHr11StartSample(pVcHr11);
         // vcSpo2AlgoInit();
     }
+    else if (vcHr11WorkMode == VCWORK_MODE_LPDETECTION)
+    {
+        vcHr11StartSample(pVcHr11);
+    }
 
     cc_time_init();
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
@@ -472,6 +476,10 @@ void vcHr11_process(sport_mode_type vcSportMode)
 #endif
                 }
             }
+        }
+        else if(vcHr11.workMode == VCWORK_MODE_LPDETECTION)
+        {
+            vcHr11Ret_t ret = vcHr11GetSampleValues(&vcHr11,&ppgLength);
         }
     }
 }

@@ -1114,7 +1114,7 @@ compo_form_t *func_disturd_sub_set_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
+    compo_form_set_title(frm,sys_cb.disturd_sel ? i18n[STR_DISTURD_TIM_END] : i18n[STR_DISTURD_TIM_START]);
 
     u8 hour ;
     u8 min  ;

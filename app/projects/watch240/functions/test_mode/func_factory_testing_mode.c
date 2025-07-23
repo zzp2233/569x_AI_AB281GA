@@ -831,14 +831,18 @@ compo_form_t * func_factory_testing_charging(void)
 ///创建咪喇叭测试窗体   模式十二*/
 compo_form_t * func_factory_testing_mic_speaker(void)
 {
+#if UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+    uteModuleMicRecordFactoryDirectOut();
+#else
     uteModuleMicRecordFactoryEnter();
+#endif
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen("Mic Head Speaker Test"));
     compo_textbox_set(textbox, "Mic Head Speaker Test");
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
-
+#if !UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
     textbox = compo_textbox_create(frm, strlen("Click recording")+10);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
     compo_textbox_set(textbox, "Click recording");
@@ -848,7 +852,7 @@ compo_form_t * func_factory_testing_mic_speaker(void)
     compo_button_t *btn = compo_button_create(frm); // 录音
     compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
     compo_setid(btn, RECORDING_BTN_ID);
-
+#endif
     func_factory_testing_pass_fail_bnt_create(frm);
 
     return frm;
@@ -1166,12 +1170,14 @@ static void func_mode_mic_speaker_click(void)
             uteModuleMicRecordFactoryExit();
         }
         break;
+#if !UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
         case RECORDING_BTN_ID:
             if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
             {
                 uteModuleMicRecordFactoryStart();
             }
             break;
+#endif
     }
 }
 
@@ -1513,6 +1519,7 @@ static void func_mode_charging_process(void)
 
 static void func_mode_mic_speaker_process(void)
 {
+#if !UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
     compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
     static bool isNeedPlay = false;
     if (textbox == NULL)
@@ -1545,6 +1552,9 @@ static void func_mode_mic_speaker_process(void)
             isNeedPlay = false;
         }
     }
+#else
+    return;
+#endif
 }
 
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
@@ -2250,14 +2260,18 @@ compo_form_t * func_factory_testing_charging(void)
 ///创建咪喇叭测试窗体   模式十二*/
 compo_form_t * func_factory_testing_mic_speaker(void)
 {
+#if UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+    uteModuleMicRecordFactoryDirectOut();
+#else
     uteModuleMicRecordFactoryEnter();
+#endif
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen("咪头喇叭测试"));
     compo_textbox_set(textbox, "咪头喇叭测试");
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
-
+#if !UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
     textbox = compo_textbox_create(frm, strlen("点击开始录音"));
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
     compo_textbox_set(textbox, "点击开始录音");
@@ -2267,7 +2281,7 @@ compo_form_t * func_factory_testing_mic_speaker(void)
     compo_button_t *btn = compo_button_create(frm); // 录音
     compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
     compo_setid(btn, RECORDING_BTN_ID);
-
+#endif
     func_factory_testing_pass_fail_bnt_create(frm);
 
     return frm;
@@ -2630,12 +2644,14 @@ static void func_mode_mic_speaker_click(void)
             uteModuleMicRecordFactoryExit();
         }
         break;
+#if !UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
         case RECORDING_BTN_ID:
             if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
             {
                 uteModuleMicRecordFactoryStart();
             }
             break;
+#endif
     }
 }
 
@@ -2990,6 +3006,7 @@ static void func_mode_charging_process(void)
 
 static void func_mode_mic_speaker_process(void)
 {
+#if !UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
     compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
     static bool isNeedPlay = false;
     if (textbox == NULL)
@@ -3022,6 +3039,9 @@ static void func_mode_mic_speaker_process(void)
             isNeedPlay = false;
         }
     }
+#else
+    return;
+#endif
 }
 
 ///地磁显示刷新 /

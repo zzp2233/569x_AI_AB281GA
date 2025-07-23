@@ -111,6 +111,10 @@ typedef struct
     uint8_t minHourheartValue;
 #endif
     ute_module_heart_test_time_t lastTestTime;
+#if UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
+    uint8_t wearTestSecond;
+    bool isWearTesting;
+#endif
 } ute_module_heart_data_t;
 
 void uteModuleHeartInit(void);

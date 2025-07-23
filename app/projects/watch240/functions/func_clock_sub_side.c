@@ -230,48 +230,7 @@ static void func_clock_sub_side_form_create(void)
     f_clk->masklayer = masklayer;
 }
 
-static void func_clock_sub_side_reflash(void)
-{
-    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_WEA_DATA);
 
-    uint8_t txt_buf[20]= {0};
-    ute_module_weather_data_t  weather_date;
-    ute_display_ctrl_t displayInfo;
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);//获取系统时间
-    uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
-    if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
-    {
-        uteModuleWeatherGetData(&weather_date);//获取天气状态
-
-        if(displayInfo.isFahrenheit)    //是否为华氏度
-        {
-            weather_date.fristDayCurrTemperature= weather_date.fristDayCurrTemperature*9/5+32;
-            /*pcm 2022-09-19 */
-            if(weather_date.fristDayCurrTemperature<(-99))
-            {
-                weather_date.fristDayCurrTemperature=-99;
-            }
-            snprintf(txt_buf,sizeof(txt_buf),"%d℉",weather_date.fristDayCurrTemperature);
-        }
-        else
-        {
-            snprintf(txt_buf,sizeof(txt_buf),"%d℃",weather_date.fristDayCurrTemperature);
-        }
-    }
-    else
-    {
-        if(displayInfo.isFahrenheit)    //是否为华氏度
-        {
-            snprintf(txt_buf,sizeof(txt_buf),"%s℉","--");
-        }
-        else
-        {
-            snprintf(txt_buf,sizeof(txt_buf),"%s℃","--");
-        }
-    }
-    compo_textbox_set(txt,txt_buf);
-}
 
 //单击按钮
 static void func_clock_sub_side_button_click(void)
@@ -1128,7 +1087,7 @@ static void func_clock_sub_side_button_click(void)
 //时钟表盘主要事件流程处理
 static void func_clock_sub_side_process(void)
 {
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+#if  GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
     func_clock_sub_side_reflash();
 #endif
     func_clock_sub_process();

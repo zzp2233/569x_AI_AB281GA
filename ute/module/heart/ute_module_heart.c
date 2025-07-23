@@ -269,7 +269,14 @@ void uteModuleHeartEverySecond(void)
                 uteModuleHeartData.autoTestSecond++;
             }
         }
-
+#if UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
+        if (uteModuleHeartData.isWearTesting)
+        {
+            uteModuleHeartStopSingleTesting(TYPE_WEAR);
+            uteModuleHeartData.isWearTesting = false;
+            uteModuleHeartData.wearTestSecond = 0;
+        }
+#endif
 #if !DUG_VCXX_HEART_SUPPORT
         /*! 心率界面每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
         if(uteModuleHeartIsWear()&&(uteModuleHeartData.type == TYPE_HEART))
@@ -288,6 +295,46 @@ void uteModuleHeartEverySecond(void)
         }
 #endif
     }
+#if UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
+    else
+    {
+        uint16_t oneDayMin = 0;
+        oneDayMin = time.hour * 60 + time.min;
+        bool isNeedAutoTest = false;
+        if (((oneDayMin % UTE_MODULE_HEART_WEAR_DETECTION_AUTO_INTERVAL_MIN) == 0) && (time.sec == 0))
+        {
+            isNeedAutoTest = true;
+        }
+        if (
+            (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE) || (uteModuleFactoryTestGetCurrTestItem() != TEST_ITEM_NONE)
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+            || (uteModuleNewFactoryTestGetMode() != FACTORY_TEST_MODE_NULL)
+#endif
+            || bsp_sensor_hr_work_status())
+        {
+            isNeedAutoTest = false;
+        }
+        if (isNeedAutoTest && !uteModuleHeartData.isWearTesting)
+        {
+            uteModuleHeartStartSingleTesting(TYPE_WEAR);
+            uteModuleHeartData.isWearTesting = true;
+            uteModuleHeartData.wearTestSecond = 0;
+        }
+        if (uteModuleHeartData.isWearTesting)
+        {
+            if (uteModuleHeartData.wearTestSecond >= UTE_MODULE_HEART_WEAR_DETECTION_TIMEOUT_SECOND)
+            {
+                uteModuleHeartStopSingleTesting(TYPE_WEAR);
+                uteModuleHeartData.isWearTesting = false;
+                uteModuleHeartData.wearTestSecond = 0;
+            }
+            else
+            {
+                uteModuleHeartData.wearTestSecond++;
+            }
+        }
+    }
+#endif
     /*! 单次测试逻辑zn.zeng, 2021-07-16  */
     if(uteModuleHeartData.isSingleTesting)
     {
@@ -627,6 +674,12 @@ void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
         // bsp_sensor_hr_init(WORK_MODE_HR);
         bsp_sensor_hr_stop();
 #endif
+#if UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
+        if(!uteModuleHeartIsAutoTesting())
+        {
+            uteModuleHeartData.heartValue = 0;
+        }
+#endif
     }
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
     else if(uteModuleHeartData.type==TYPE_EMOTION_PRESSURE)
@@ -637,6 +690,10 @@ void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
         uteDrvHeartVcxxStartSample();
 #endif
         Algo_Init();
+        if(!uteModuleHeartIsAutoTesting())
+        {
+            uteModuleHeartData.heartValue = 0;
+        }
     }
 #endif
     else
@@ -740,11 +797,13 @@ bool uteModuleHeartIsWear(void)
     else
     {
         isWear = uteModuleHeartData.lastIsWear;
+#if !UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
         if(!uteModuleHeartData.isAutoTesting)
         {
             isWear= true;
             uteModuleHeartData.lastIsWear = isWear;
         }
+#endif
     }
 #endif
     UTE_MODULE_LOG(0,"%s,isWear:%d",__func__,isWear);

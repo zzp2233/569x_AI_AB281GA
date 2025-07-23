@@ -64,6 +64,10 @@ u8 bsp_sensor_hr_init(u8 mode)
     {
         vcMode = VCWORK_MODE_CROSSTALKTEST;
     }
+    else if (mode == HR_WORK_MODE_WEAR)
+    {
+        vcMode = VCWORK_MODE_LPDETECTION;
+    }
     else
     {
         vcMode = VCWORK_MODE_HRWORK;

@@ -1171,6 +1171,19 @@
 /*!呼吸率最大数字，zn.zeng 2023-01-12  */
 #define UTE_MODULE_BREATHRATE_MAX_VALUE 50
 
+/*! 关闭心率自动测量时使用wear模式优化佩戴检测,wang.luo 2025-07-21 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
+#define UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT 0
+#endif
+/*! 佩戴检测时间间隔,wang.luo 2025-07-22 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_AUTO_INTERVAL_MIN
+#define UTE_MODULE_HEART_WEAR_DETECTION_AUTO_INTERVAL_MIN 10
+#endif
+/*! 佩戴检测时长,wang.luo 2025-07-22 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_TIMEOUT_SECOND
+#define UTE_MODULE_HEART_WEAR_DETECTION_TIMEOUT_SECOND 10
+#endif
+
 //二维码链接内容
 #ifndef UTE_BINDING_QRENCODE_LINK
 #define UTE_BINDING_QRENCODE_LINK "https://app.uteasy.com/gloryme/download/index.html"
@@ -1744,6 +1757,11 @@
 /*! 咪头喇叭测试的时候，播放音量, 2022-06-15  */
 #ifndef UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME
 #define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 10
+#endif
+
+/*! 工厂测试咪头测试改为边录边播，如果啸叫需要改小播放音量,wang.luo 2025-07-23 */
+#ifndef UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+#define UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT 0
 #endif
 
 /*! 咪头喇叭测试录音时长,wang.luo 2025-05-10 */

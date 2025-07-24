@@ -371,7 +371,7 @@ SECTIONS
         *(.nr_buf*)
 #endif // BT_SCO_APP_DBG_EN
         *(.dnn_data*)
-#if BT_PANU_EN
+#if 0//BT_PANU_EN
         *(.btmem.bb.buf)
         *(.ble_cache.sm)
 #endif

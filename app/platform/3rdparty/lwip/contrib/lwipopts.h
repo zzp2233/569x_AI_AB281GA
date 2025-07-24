@@ -225,17 +225,17 @@ a lot of data that needs to be copied, this should be set high. */
 #define LWIP_ALTCP_TLS_MBEDTLS  (LWIP_TCP)
 #endif
 
-#define NETIF_MTU                 665
+#define NETIF_MTU 679
 
 /* Controls if TCP should queue segments that arrive out of
    order. Define to 0 if your device is low on memory. */
 #define TCP_QUEUE_OOSEQ         1
 
 /* TCP Maximum segment size. */
-#define TCP_MSS                 (NETIF_MTU - 40)
+#define TCP_MSS                 (NETIF_MTU - 54)
 
 /* TCP sender buffer space (bytes). */
-#define TCP_SND_BUF             (8 * TCP_MSS)
+#define TCP_SND_BUF             (6 * TCP_MSS)
 
 /* TCP sender buffer space (pbufs). This must be at least = 2 *
    TCP_SND_BUF/TCP_MSS for things to work. */
@@ -246,10 +246,8 @@ a lot of data that needs to be copied, this should be set high. */
    available in the tcp snd_buf for select to return writable */
 #define TCP_SNDLOWAT           (TCP_MSS - 1)
 
-#define TCP_SNDQUEUELOWAT       (4)
-
 /* TCP receive window. */
-#define TCP_WND                 (20 * TCP_MSS)
+#define TCP_WND                 (12 * TCP_MSS)
 
 /* Maximum number of retransmissions of data segments. */
 #define TCP_MAXRTX              6

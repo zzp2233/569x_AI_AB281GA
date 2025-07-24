@@ -43,9 +43,9 @@ void port_tft_reset(void)
     gpio.sfr[GPIOxDIR] &= ~BIT(gpio.num);
     delay_ms(10);
     gpio.sfr[GPIOxCLR] = BIT(gpio.num);
-    delay_ms(20);
+    delay_ms(60);
     gpio.sfr[GPIOxSET] = BIT(gpio.num);
-    delay_ms(50);
+    delay_ms(60);
 }
 
 void port_tft_exit(void)

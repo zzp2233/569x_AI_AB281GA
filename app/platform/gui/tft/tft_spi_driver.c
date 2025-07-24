@@ -355,6 +355,7 @@ void tft_spi_gc9307_init(void)
     WriteComm(0xFD);
     WriteData(0x06);
     WriteData(0x08);
+
     WriteComm(0x61);
     WriteData(0x07);
     WriteData(0x07);
@@ -392,10 +393,12 @@ void tft_spi_gc9307_init(void)
     WriteData(0x30);
     WriteData(0x1C);
     WriteData(0x27);
+
     WriteComm(0xb1);
     WriteData(0x0F);
     WriteData(0x02);
     WriteData(0x01);
+
     WriteComm(0xB4);
     WriteData(0x01);
 ////porch
@@ -404,6 +407,7 @@ void tft_spi_gc9307_init(void)
     WriteData(0x02);
     WriteData(0x0a);
     WriteData(0x14);
+
     WriteComm(0xB6);
     WriteData(0x44);
     WriteData(0x01);
@@ -413,48 +417,55 @@ void tft_spi_gc9307_init(void)
 ////gamme sel
     WriteComm(0xdf);
     WriteData(0x11);
+
     WriteComm(0xE2);
     WriteData(0x0d);
-    WriteData(0x0F);
-    WriteData(0x11);
-    WriteData(0x33);
+    WriteData(0x13);
+    WriteData(0x18);
+    WriteData(0x34);
     WriteData(0x36);
     WriteData(0x3f);
+
     WriteComm(0xE5);
     WriteData(0x3f);
     WriteData(0x37);
-    WriteData(0x33);
+    WriteData(0x34);
+    WriteData(0x19);
+    WriteData(0x14);
+    WriteData(0x04);
+
+    WriteComm(0xE1);
+    WriteData(0x2d);
+    WriteData(0x72);
+
+    WriteComm(0xE4);
+    WriteData(0x72);
+    WriteData(0x2c);
+
+    WriteComm(0xE0);
+    WriteData(0x09);
+    WriteData(0x09);
+    WriteData(0x11);
+    WriteData(0x12);
+    WriteData(0x13);
     WriteData(0x12);
     WriteData(0x10);
-    WriteData(0x04);
-    WriteComm(0xE1);
-    WriteData(0x2C);
-    WriteData(0x74);
-    WriteComm(0xE4);
-    WriteData(0x74);
-    WriteData(0x2B);
-    WriteComm(0xE0);
-    WriteData(0x08);
-    WriteData(0x07);
-    WriteData(0x0D);
-    WriteData(0x13);
-    WriteData(0x11);
-    WriteData(0x13);
-    WriteData(0x0E);
     WriteData(0x14);
+
     WriteComm(0xE3);
     WriteData(0x17);
-    WriteData(0x0F);
-    WriteData(0x14);
+    WriteData(0x11);
     WriteData(0x11);
     WriteData(0x13);
-    WriteData(0x0C);
+    WriteData(0x13);
+    WriteData(0x10);
+    WriteData(0x08);
     WriteData(0x06);
-    WriteData(0x04);
 //GAMMA---------------------
     WriteComm(0xE6);
     WriteData(0x00);
     WriteData(0xff);
+
     WriteComm(0xE7);
     WriteData(0x01);
     WriteData(0x04);
@@ -462,6 +473,7 @@ void tft_spi_gc9307_init(void)
     WriteData(0x03);
     WriteData(0x00);
     WriteData(0x12);
+
     WriteComm(0xE8);
     WriteData(0x00);
     WriteData(0x70);
@@ -469,26 +481,32 @@ void tft_spi_gc9307_init(void)
 ////gate
     WriteComm(0xEc);
     WriteData(0x52);
+
     WriteComm(0xF1);
     WriteData(0x01);
     WriteData(0x01);
     WriteData(0x02);
+
     WriteComm(0xF6);
     WriteData(0x01);
     WriteData(0x30);
     WriteData(0x00);
     WriteData(0x00);
+
     WriteComm(0xfd);
     WriteData(0xfa);
     WriteData(0xfc);
+
     WriteComm(0x3a);
     WriteData(0x55);
+
     WriteComm(0x35);
     WriteData(0x00);
+
     WriteComm(0x36);
     WriteData(0x00);
     WriteComm(0x11);
-    delay_ms(200);
+    delay_ms(120);
     WriteComm(0x29);
     delay_ms(20);
 #endif

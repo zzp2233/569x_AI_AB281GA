@@ -43,18 +43,18 @@ compo_form_t *func_chatbot_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     compo_picturebox_t *picbox;
 
-    picbox = compo_picturebox_create(frm, UI_BUF_I330001_AI_SPEAKED1_BIN);
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_AI_SPEAKED_BIN);
     compo_picturebox_cut(picbox, 0, 38);
     compo_picturebox_set_pos(picbox, 120, 148);
 
-    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKING1_BIN);
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKING_BIN);
     compo_animation_set_pos(animation, 120, 148);
     compo_animation_set_radix(animation, 38);
     compo_animation_set_interval(animation, 15);
     compo_setid(animation, COMPO_ID_BTN_SPEAKING);
     compo_animation_set_visible(animation, false);
 
-    animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKED1_BIN);
+    animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKED_BIN);
     compo_animation_set_pos(animation, 120, 148);
     compo_animation_set_radix(animation, 38);
     compo_animation_set_interval(animation, 15);

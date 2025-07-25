@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-07-08 11:19:14
+*@date   2025-07-24 11:05:15
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -293,6 +293,7 @@ enum
     STR_YN, // 越南语
     STR_XBYY, // 西班牙语
     STR_BLY, // 波兰语
+    STR_CHATBOT, // 聊天机器人
 };
 
 extern const char * const *i18n;

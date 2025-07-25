@@ -6,7 +6,7 @@
 #else
 #define TRACE(...)
 #endif
-
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
 #if (USE_APP_TYPE == USE_AB_APP)
 #define ALARM_EDIT(...)                 alarm_clock_edit(__VA_ARGS__)
 #define ALARM_SET(...)                  alarm_clock_set(__VA_ARGS__)
@@ -425,6 +425,7 @@ static void func_alarm_clock_sub_repeat_exit(void)
 //闹钟--重复功能
 void func_alarm_clock_sub_repeat(void)
 {
+
     printf("%s\n", __func__);
     func_alarm_clock_sub_repeat_enter();
     while (func_cb.sta == FUNC_ALARM_CLOCK_SUB_REPEAT)
@@ -433,4 +434,7 @@ void func_alarm_clock_sub_repeat(void)
         func_alarm_clock_sub_repeat_message(msg_dequeue());
     }
     func_alarm_clock_sub_repeat_exit();
+
+
 }
+#endif

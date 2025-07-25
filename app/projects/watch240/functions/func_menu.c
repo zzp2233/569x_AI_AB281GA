@@ -13,6 +13,8 @@
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_form_create(void)
 {
+
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
     switch (func_cb.menu_style)
     {
         case MENU_STYLE_CUM_HONEYGRID:
@@ -59,6 +61,10 @@ compo_form_t *func_menu_form_create(void)
             halt(HALT_FUNC_MENU_SUBSTA);
             return NULL;
     }
+#else
+    func_menu_sub_list_form_create();
+#endif
+
 }
 
 ////切换菜单样式
@@ -138,7 +144,9 @@ void func_menu_sub_message(size_msg_t msg)
         case KD_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
                 func_cb.sta = FUNC_MENUSTYLE;
+#endif
                 //func_menu_switch_style();
             }
             break;
@@ -178,6 +186,9 @@ void func_menu(void)
     func_menu_enter();
     while (func_cb.sta == FUNC_MENU)
     {
+
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+
         switch (func_cb.menu_style)
         {
             case MENU_STYLE_CUM_HONEYGRID:
@@ -249,6 +260,11 @@ void func_menu(void)
                 halt(HALT_FUNC_MENU_SUBSTA);
                 break;
         }
+#else
+        printf("444444444444444444444444\n");
+        func_menu_sub_list();
+#endif
+
     }
     func_menu_exit();
 }

@@ -38,7 +38,7 @@ enum sys_ctl_bits
     SYS_CTL_FUNC_CALENDAR_ON,           //日历功能界面选择
     SYS_CTL_FUNC_SET_POWER_ON,           //设置电子烟功率
     SYS_CTL_FUNC_ECIG_P_ON,           //电子烟口数记录界面
-
+    SYS_CTL_CHATBOT_ON,           //聊天机器人界面
     SYS_CTL_TOTAL_BITS = 256,
 };
 #define SYS_CTL_TOTAL_BYTES             ((SYS_CTL_TOTAL_BITS + 7) / 8)      //系统控制位

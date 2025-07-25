@@ -6,6 +6,8 @@
 #else
 #define TRACE(...)
 #endif
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+
 
 #if (USE_APP_TYPE == USE_AB_APP)
 #define ALARM_ENABLE_CNT()              alarm_num_get()
@@ -585,11 +587,16 @@ static void func_alarm_clock_sub_edit_card_click(void)
             {
                 if (compo_id == ui_handle.card_time.id)
                 {
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
                     func_cb.sta = FUNC_ALARM_CLOCK_SUB_SET;
+#endif
                 }
                 else if (compo_id == ui_handle.card_day.id)
                 {
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
                     func_cb.sta = FUNC_ALARM_CLOCK_SUB_REPEAT;
+#endif
+
                 }
             }
         }
@@ -1247,7 +1254,11 @@ static void func_alarm_clock_sub_edit_enter(void)
 //退出闹钟功能
 static void func_alarm_clock_sub_edit_exit(void)
 {
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     func_cb.last = FUNC_ALARM_CLOCK_SUB_EDIT;
+#endif
+
+
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
     if (f_alarm_clock_sub_edit->ptm)
@@ -1260,6 +1271,7 @@ static void func_alarm_clock_sub_edit_exit(void)
 //闹钟功能
 void func_alarm_clock_sub_edit(void)
 {
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     printf("%s\n", __func__);
     func_alarm_clock_sub_edit_enter();
     while (func_cb.sta == FUNC_ALARM_CLOCK_SUB_EDIT)
@@ -1268,4 +1280,9 @@ void func_alarm_clock_sub_edit(void)
         func_alarm_clock_sub_edit_message(msg_dequeue());
     }
     func_alarm_clock_sub_edit_exit();
+#endif
+
+
 }
+
+#endif

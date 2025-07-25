@@ -3,7 +3,7 @@
 #include "ute_module_systemtime.h"
 #include "api_gui.h"
 #include "../../../../ute/module/smoke/ute_module_smoke.h"
-#if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
+//#if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
 
 
 
@@ -303,4 +303,4 @@ void func_ecig_vpae_sub(void)
 }
 
 
-#endif
+//#endif

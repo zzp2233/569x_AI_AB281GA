@@ -84,7 +84,7 @@ static void event_cb(chatbot_event_t event)
         case CHATEVT_IS_CONN:
         {
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
-            compo_textbox_set(txt, "In monitoring");//监听中
+            compo_textbox_set(txt, "Listening");//监听中
             // compo_textbox_set_forecolor(txt, COLOR_GREEN);
             compo_animation_set_visible(animation2, true);
             compo_animation_set_visible(animation1, false);
@@ -110,7 +110,7 @@ static void event_cb(chatbot_event_t event)
         case CHATEVT_LISTENING:
         {
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
-            compo_textbox_set(txt, "In monitoring");//监听中
+            compo_textbox_set(txt, "Listening");//监听中
             //compo_textbox_set_forecolor(txt, COLOR_GREEN);
             compo_animation_set_visible(animation2, true);
             compo_animation_set_visible(animation1, false);
@@ -204,7 +204,7 @@ static void func_chatbot_message(size_msg_t msg)
             if (f_cb->is_conn && !f_cb->is_listen)
             {
                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
-                compo_textbox_set(txt, "In monitoring");//监听中
+                compo_textbox_set(txt, "Listening");//监听中
                 //compo_textbox_set_forecolor(txt, COLOR_GREEN);
                 compo_animation_set_visible(animation2, true);
                 compo_animation_set_visible(animation1, false);
@@ -229,32 +229,32 @@ static void func_chatbot_message(size_msg_t msg)
             break;
 
         case MSG_CTP_CLICK:
-            printf("MSG_CTP_CLICK: %d\n", f_cb->is_listen);
-            if (f_cb->is_conn)
-            {
-                if (!f_cb->is_listen)
-                {
-                    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
-                    compo_textbox_set(txt, "In monitoring");//监听中
-                    //compo_textbox_set_forecolor(txt, COLOR_GREEN);
-                    compo_animation_set_visible(animation2, true);
-                    compo_animation_set_visible(animation1, false);
+            // printf("MSG_CTP_CLICK: %d\n", f_cb->is_listen);
+            // if (f_cb->is_conn)
+            // {
+            //     if (!f_cb->is_listen)
+            //     {
+            //         compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
+            //         compo_textbox_set(txt, "Listening");//监听中
+            //         //compo_textbox_set_forecolor(txt, COLOR_GREEN);
+            //         compo_animation_set_visible(animation2, true);
+            //         compo_animation_set_visible(animation1, false);
 
-                    f_cb->is_listen = true;
-                    chatbot_start_mic();
-                }
-                else
-                {
-                    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
-                    compo_textbox_set(txt, "Ready (Idle), Click to Chat");
-                    //compo_textbox_set_forecolor(txt, COLOR_WHITE);
-                    compo_animation_set_visible(animation2, true);
-                    compo_animation_set_visible(animation1, false);
+            //         f_cb->is_listen = true;
+            //         chatbot_start_mic();
+            //     }
+            //     else
+            //     {
+            //         compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
+            //         compo_textbox_set(txt, "Ready (Idle), Click to Chat");
+            //         //compo_textbox_set_forecolor(txt, COLOR_WHITE);
+            //         compo_animation_set_visible(animation2, true);
+            //         compo_animation_set_visible(animation1, false);
 
-                    f_cb->is_listen = false;
-                    chatbot_stop_mic();
-                }
-            }
+            //         f_cb->is_listen = false;
+            //         chatbot_stop_mic();
+            //     }
+            // }
             //     func_calculator_button_click_handler();
             break;
 

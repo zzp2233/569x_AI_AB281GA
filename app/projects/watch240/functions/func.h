@@ -41,10 +41,14 @@ enum
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK,                   //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK_SUB_SET,           //闹钟--设置
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
     FUNC_ALARM_CLOCK_SUB_POP,           //闹钟--弹出
+
+#endif
     FUNC_SMOKE_TARGET_SUB_POP,           //抽烟目标达成
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     FUNC_BLOOD_OXYGEN,                  //血氧
@@ -65,8 +69,13 @@ enum
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     FUNC_CAMERA,                        //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+
+#if UTE_MODULE_SCREENS_CHATBOT_SUPPORT
     FUNC_CHATBOT,                       //聊天机器人
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+
+
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
     FUNC_LIGHT,                         //亮度调节
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
@@ -103,9 +112,11 @@ enum
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 //    FUNC_COMPASS,                       //指南针
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#endif
     FUNC_ADDRESS_BOOK,                  //电话簿
-#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+
     FUNC_CALL_SUB_LINKMAN = FUNC_ADDRESS_BOOK,
+// UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     FUNC_SPORT,                         //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
@@ -120,7 +131,10 @@ enum
     FUNC_CALL_SUB_RECORD,               //电话-最近通话
     FUNC_CALL_SUB_DIAL,                 //电话-拨打电话
     FUNC_CALL_SORT,                     //通话-一级界面
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     FUNC_FINDPHONE,                     //寻找手机
+#endif
+
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     FUNC_CALENDAER,                     //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT

@@ -84,7 +84,9 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_CALL,                     UI_BUF_I330001_THEME_1_CALL_BIN,                       STR_PHONE},                 //电话
 #endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     {FUNC_FINDPHONE,                UI_BUF_I330001_THEME_1_FINDPHONE_BIN,                  STR_FIND_PHONE},            //寻找手机
+#endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {FUNC_CALENDAER,                UI_BUF_I330001_THEME_1_CALENDAR_BIN,                   STR_CALENDAR},              //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -598,7 +600,10 @@ const static u8 latest_allowed_id[] =
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     FUNC_CALL,                          //电话
 #endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     FUNC_FINDPHONE,                     //寻找手机
+#endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     FUNC_CALENDAER,                     //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT

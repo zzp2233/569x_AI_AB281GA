@@ -29,12 +29,31 @@ extern u16 func_clock_preview_get_type(void);
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static const compo_cube_item_t tbl_menu_cube[] =
 {
+//     {UI_BUF_I330001_3D_MENU_THEM_BIN,             FUNC_STYLE},
+
+// #if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+//     {UI_BUF_I330001_3D_MENU_FINDPHONE_BIN,         FUNC_FINDPHONE},
+// #endif
+
+//     {UI_BUF_I330001_3D_MENU_MUSIC_BIN,             FUNC_BT},
+//     {UI_BUF_I330001_3D_MENU_POWER_BIN,             FUNC_ECIG_SET_POWER},
+//     {UI_BUF_I330001_3D_MENU_SETING_BIN,             FUNC_SETTING},
+
+// #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+//     {UI_BUF_I330001_3D_MENU_WEATHER_BIN,             FUNC_WEATHER},
+// #endif
+
     {UI_BUF_I330001_3D_MENU_THEM_BIN,             FUNC_STYLE},
-    {UI_BUF_I330001_3D_MENU_FINDPHONE_BIN,         FUNC_FINDPHONE},
+
+    {UI_BUF_I330001_3D_MENU_FINDPHONE_BIN,         FUNC_CHATBOT},
+
     {UI_BUF_I330001_3D_MENU_MUSIC_BIN,             FUNC_BT},
     {UI_BUF_I330001_3D_MENU_POWER_BIN,             FUNC_ECIG_SET_POWER},
     {UI_BUF_I330001_3D_MENU_SETING_BIN,             FUNC_SETTING},
-    {UI_BUF_I330001_3D_MENU_WEATHER_BIN,             FUNC_WEATHER},
+
+    {UI_BUF_I330001_3D_MENU_WEATHER_BIN,             FUNC_TIMER},
+
+
 };
 // static const compo_cube_item_t tbl_menu_cube[] =
 // {
@@ -182,7 +201,11 @@ const u8 quick_btn_tbl[] =
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     [25]    = FUNC_CALL,                    //电话
 #endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     [26]    = FUNC_FINDPHONE,               //寻找手机
+#endif
+
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     [27]    = FUNC_CALENDAER,               //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -244,6 +267,8 @@ u32 func_clock_get_dialplate_info(u8 index)
 //点进图标进入应用
 static void func_clock_cube_disk_icon_click(void)
 {
+    printf("dialplate_index: %d, DIALPLATE_CUBE_IDX: %d\\n", sys_cb.dialplate_index, DIALPLATE_CUBE_IDX);
+
 #if UTE_WATCHS_CUBE_DIAL_SUPPORT
     if (sys_cb.dialplate_index != DIALPLATE_CUBE_IDX)
     {
@@ -449,59 +474,66 @@ compo_form_t *func_clock_butterfly_form_create(void)
 
 compo_form_t *func_clock_form_create(void)
 {
+//     compo_form_t *frm;
+
+//     uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
+// #if UTE_MODULE_WATCHONLINE_SUPPORT
+//     if (uteModuleWatchOnlineGetVailWatchCnt())
+//     {
+//         for (uint8_t i = 0; i < uteModuleWatchOnlineGetVailWatchCnt(); i++)
+//         {
+//             dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i] = uteModuleWatchOnlineGetBaseAddress(i);
+//             UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,watch online index %d: 0x%x", __func__, i, dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i]);
+//         }
+//     }
+//     else
+// #endif
+//     {
+//         if (sys_cb.dialplate_index > UTE_MODULE_SCREENS_WATCH_CNT_MAX - 1)
+//         {
+//             sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
+//         }
+//     }
+
+//     switch (sys_cb.dialplate_index)
+//     {
+// #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
+//         case DIALPLATE_BTF_IDX:
+//         {
+// //            printf("1111111111111111111111\n");
+//             frm = func_clock_butterfly_form_create();
+//         }
+//         break;
+// #endif
+// #if UTE_WATCHS_CUBE_DIAL_SUPPORT
+//         case DIALPLATE_CUBE_IDX:
+//         {
+// //             printf("2222222222222222222222222222\n");
+//             frm = func_clock_cube_form_create();
+//         }
+//         break;
+// #endif
+//         default:
+//         {
+// //             printf("33333333333333333333333333\n");
+//             u32 base_addr = dialplate_info[sys_cb.dialplate_index];
+//             u16 compo_num = bsp_uitool_header_phrase(base_addr);
+//             if (!compo_num)
+//             {
+//                 halt(HALT_GUI_DIALPLATE_HEAD);
+//             }
+//             frm = compo_form_create(true);
+//             bsp_uitool_create(frm, base_addr, compo_num);
+//         }
+//         break;
+//     }
+
+//     return frm;
+
     compo_form_t *frm;
 
-    uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
-#if UTE_MODULE_WATCHONLINE_SUPPORT
-    if (uteModuleWatchOnlineGetVailWatchCnt())
-    {
-        for (uint8_t i = 0; i < uteModuleWatchOnlineGetVailWatchCnt(); i++)
-        {
-            dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i] = uteModuleWatchOnlineGetBaseAddress(i);
-            UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,watch online index %d: 0x%x", __func__, i, dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i]);
-        }
-    }
-    else
-#endif
-    {
-        if (sys_cb.dialplate_index > UTE_MODULE_SCREENS_WATCH_CNT_MAX - 1)
-        {
-            sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
-        }
-    }
-
-    switch (sys_cb.dialplate_index)
-    {
-#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
-        case DIALPLATE_BTF_IDX:
-        {
-//            printf("1111111111111111111111\n");
-            frm = func_clock_butterfly_form_create();
-        }
-        break;
-#endif
-#if UTE_WATCHS_CUBE_DIAL_SUPPORT
-        case DIALPLATE_CUBE_IDX:
-        {
-//             printf("2222222222222222222222222222\n");
-            frm = func_clock_cube_form_create();
-        }
-        break;
-#endif
-        default:
-        {
-//             printf("33333333333333333333333333\n");
-            u32 base_addr = dialplate_info[sys_cb.dialplate_index];
-            u16 compo_num = bsp_uitool_header_phrase(base_addr);
-            if (!compo_num)
-            {
-                halt(HALT_GUI_DIALPLATE_HEAD);
-            }
-            frm = compo_form_create(true);
-            bsp_uitool_create(frm, base_addr, compo_num);
-        }
-        break;
-    }
+    // 直接创建立方体表盘，不需要检查索引
+    frm = func_clock_cube_form_create();
 
     return frm;
 }
@@ -808,6 +840,7 @@ static void func_clock_process(void)
         func_clock_butterfly_process();
     }
 #endif
+    func_clock_3d_process();
     func_process();                                  //刷新UI
 }
 
@@ -957,6 +990,7 @@ static void func_clock_message(size_msg_t msg)
             break;
 
         case MSG_CTP_LONG:
+#if UTE_WATCHS_PREVIEW_SUPPORT
             if (func_clock_preview_get_type() == PREVIEW_ROTARY_STYLE)
             {
                 func_cb.sta = FUNC_CLOCK_PREVIEW;
@@ -966,6 +1000,7 @@ static void func_clock_message(size_msg_t msg)
                 func_switch_to(FUNC_CLOCK_PREVIEW, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);                    //切换回主时钟
             }
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#endif
             break;
 
         default:

@@ -7,6 +7,7 @@
 #else
 #define TRACE(...)
 #endif
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
 
 #define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item) / sizeof(tbl_rotary_item[0])))
 
@@ -172,3 +173,4 @@ void func_menustyle(void)
     }
     func_menustyle_exit();
 }
+#endif

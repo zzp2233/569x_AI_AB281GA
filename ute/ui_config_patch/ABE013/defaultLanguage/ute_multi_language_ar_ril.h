@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 阿拉伯语(以色列）
 *@author
-*@date   2025-07-08 11:19:15
+*@date   2025-07-24 11:05:16
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -293,6 +293,7 @@ const char * const i18n_ar_ril[] =
     [STR_YN] = "\x54\x69\xe1\xba\xbf\x6e\x67\x20\x56\x69\xe1\xbb\x87\x74\x00", // [277] Tiếng Việt
     [STR_XBYY] = "\x45\x73\x70\x61\xc3\xb1\x6f\x6c\x0a\x0a\x00", // [278] Español
     [STR_BLY] = "\x50\x6f\x6c\x73\x6b\x69\x00", // [279] Polski
+    [STR_CHATBOT] = "\xd8\xb1\xd9\x88\xd8\xa8\xd9\x88\xd8\xaa\x20\xd8\xa7\xd9\x84\xd8\xaf\xd8\xb1\xd8\xaf\xd8\xb4\xd8\xa9\x00", // [280] روبوت الدردشة
 };
 
 #endif

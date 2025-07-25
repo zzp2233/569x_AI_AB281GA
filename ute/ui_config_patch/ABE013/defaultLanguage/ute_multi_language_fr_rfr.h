@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 法语(法国）
 *@author
-*@date   2025-07-08 11:19:16
+*@date   2025-07-24 11:05:17
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -293,6 +293,7 @@ const char * const i18n_fr_rfr[] =
     [STR_YN] = "\x54\x69\xe1\xba\xbf\x6e\x67\x20\x56\x69\xe1\xbb\x87\x74\x0a\x00", // [277] Tiếng Việt
     [STR_XBYY] = "\x45\x73\x70\x61\xc3\xb1\x6f\x6c\x0a\x0a\x00", // [278] Español
     [STR_BLY] = "\x50\x6f\x6c\x73\x6b\x69\x00", // [279] Polski
+    [STR_CHATBOT] = "\x52\x6f\x62\x6f\x74\x20\x64\x65\x20\x64\x69\x73\x63\x75\x73\x73\x69\x6f\x6e\x00", // [280] Robot de discussion
 };
 
 #endif

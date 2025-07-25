@@ -25,7 +25,9 @@ enum
     FUNC_MENU,                          //主菜单
     FUNC_MENUSTYLE,                     //主菜单样式选择
     FUNC_CLOCK,                         //时钟表盘
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
     FUNC_CLOCK_PREVIEW,                 //时钟表盘预览
+#endif
     FUNC_SIDEBAR,                       //表盘右滑
     FUNC_CARD,                          //表盘上拉
     FUNC_HEARTRATE,                     //心率
@@ -34,10 +36,14 @@ enum
     FUNC_COMPO_SELECT_SUB,              //组件选择子界面
     FUNC_BT_RING,                       //来电界面
     FUNC_BT_CALL,                       //通话界面
+
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK,                   //闹钟
     FUNC_ALARM_CLOCK_SUB_SET,           //闹钟--设置
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
+#endif
+
     FUNC_BLOOD_OXYGEN,                  //血氧
     FUNC_BLOODSUGAR,                    //血糖
     FUNC_BLOOD_PRESSURE,                //血压

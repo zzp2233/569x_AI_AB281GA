@@ -101,7 +101,10 @@ static const compo_disklist_item_t tbl_menu_disk[] =
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {STR_VOICE_ASSISTANT,        UI_BUF_I330001_THEME_1_VIOCE_BIN,             .func_sta = FUNC_VOICE},                //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     {STR_FIND_PHONE,             UI_BUF_I330001_THEME_1_FINDPHONE_BIN,         .func_sta = FUNC_FINDPHONE},            //查找手机
+#endif
+
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {STR_GAME,                   UI_BUF_I330001_THEME_1_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT

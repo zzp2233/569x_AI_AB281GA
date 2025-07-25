@@ -158,6 +158,7 @@ static void func_alarm_clock_sub_pop_exit(void)
 //闹钟弹出功能
 void func_alarm_clock_sub_pop(void)
 {
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     printf("%s\n", __func__);
     func_alarm_clock_sub_pop_enter();
     while (func_cb.sta == FUNC_ALARM_CLOCK_SUB_POP)
@@ -166,4 +167,7 @@ void func_alarm_clock_sub_pop(void)
         func_alarm_clock_sub_pop_message(msg_dequeue());
     }
     func_alarm_clock_sub_pop_exit();
+#endif
+
+
 }

@@ -23,7 +23,10 @@ typedef struct func_t_
 extern void func_menu(void);
 extern void func_menustyle(void);
 extern void func_clock(void);
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
 extern void func_clock_preview(void);
+#endif
+
 //extern void func_clock_sub_sidebar(void);
 #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 extern void func_clock_sub_card(void);
@@ -367,10 +370,14 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {FUNC_ALARM_CLOCK,                  func_alarm_clock_form_create},
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set_form_create},
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat_form_create},
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop_form_create},
+
+#endif
     {FUNC_SMOKE_TARGET_SUB_POP,          func_smoke_target_sub_pop_form_create},
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
@@ -421,7 +428,10 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {FUNC_STYLE,                        func_style_form_create},
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     {FUNC_FINDPHONE,                    func_findphone_form_create},
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+
     {FUNC_ALTITUDE,                     func_altitude_form_create},
     {FUNC_MAP,                          func_map_form_create},
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
@@ -548,10 +558,15 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {FUNC_ALARM_CLOCK,                  func_alarm_clock},              //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+
+
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set},      //闹钟--设置
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat},   //闹钟--重复
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
+
+#endif
     {FUNC_SMOKE_TARGET_SUB_POP,          func_smoke_target_sub_pop},      //
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
@@ -612,8 +627,12 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {FUNC_STYLE,                        func_style},                    //菜单风格
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
-    {FUNC_ALTITUDE,                     func_altitude},                 //海拔
+
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     {FUNC_FINDPHONE,                    func_findphone},                //寻找手机
+#endif
+    {FUNC_ALTITUDE,                     func_altitude},                   //海拔
+
     {FUNC_MAP,                          func_map},                      //地图
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {FUNC_MESSAGE,                      func_message_info},             //消息

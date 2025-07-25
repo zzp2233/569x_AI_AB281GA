@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 西班牙(西班牙）
 *@author
-*@date   2025-07-08 11:19:16
+*@date   2025-07-24 11:05:16
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -293,6 +293,7 @@ const char * const i18n_es_res[] =
     [STR_YN] = "\x54\x69\xe1\xba\xbf\x6e\x67\x20\x56\x69\xe1\xbb\x87\x74\x00", // [277] Tiếng Việt
     [STR_XBYY] = "\x45\x73\x70\x61\xc3\xb1\x6f\x6c\x0a\x0a\x00", // [278] Español
     [STR_BLY] = "\x50\x6f\x6c\x73\x6b\x69\x00", // [279] Polski
+    [STR_CHATBOT] = "\x45\x6c\x20\x63\x68\x61\x74\x00", // [280] El chat
 };
 
 #endif

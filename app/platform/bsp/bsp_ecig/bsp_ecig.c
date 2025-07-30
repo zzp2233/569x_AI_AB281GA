@@ -17,12 +17,24 @@ void bsp_ecig_init(void)
     p->adc1_ch = ECIG_ADC1_GPIO;
 
 #if ECIG_ADC2_EN
+
+#if PROJECT_ABE013_SUPPORT
+    p->adc2_en = 1;
+    p->io_pwm2 = ECIG_PWM1_GPIO,
+       p->io_ven = ECIG_VEN_GPIO;
+
+    p->adc2_ch = ECIG_ADC1_GPIO;
+
+    p->adc_res1_ch = ECIG_ADC_RES1_GPIO;
+    p->adc_res2_ch = ECIG_ADC_RES1_GPIO;
+#else
     p->adc2_en = 1;
     p->io_pwm2 = ECIG_PWM2_GPIO,
        p->io_ven = ECIG_VEN_GPIO;
     p->adc_res1_ch = ECIG_ADC_RES1_GPIO;
     p->adc2_ch = ECIG_ADC2_GPIO;
     p->adc_res2_ch = ECIG_ADC_RES2_GPIO;
+#endif
 #if DEVELOPMENT_BOARD_TYPE == DEVELOPMENT_BOARD_USER
     p->res_diff = (u16)(10.0* 8192);
     p->short_res_proportion = 22;                       //计算方法：res_diff/res_min + 1(去掉小数部分),例res_diff = 4.7Ω，res_min = 0.4Ω

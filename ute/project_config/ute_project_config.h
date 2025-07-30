@@ -395,7 +395,7 @@
 #endif
 
 #ifndef UTE_MODULE_BT_POWER_DEFAULT_ON
-#define UTE_MODULE_BT_POWER_DEFAULT_ON false
+#define UTE_MODULE_BT_POWER_DEFAULT_ON true
 #endif
 
 /*! 一次配对连接, casen 2022-02-14*/

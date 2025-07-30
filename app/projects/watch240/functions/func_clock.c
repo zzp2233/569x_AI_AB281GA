@@ -930,9 +930,10 @@ static void func_clock_message(size_msg_t msg)
 //        func_clock_sub_side();                  //右拉边菜单
 //            func_switch_to(FUNC_SIDEBAR, FUNC_SWITCH_LR_ZOOM_RIGHT);  //右滑界面
             printf("%s -> MSG_CTP_SHORT_RIGHT\n", __func__);
-#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
             func_cb.left_sta = FUNC_ECIG_SET_POWER;
             func_switch_to(FUNC_ECIG_SET_POWER, FUNC_SWITCH_LR_ZOOM_RIGHT);
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
             break;
 

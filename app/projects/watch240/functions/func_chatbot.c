@@ -18,6 +18,8 @@ enum
     COMPO_ID_TEXT_STATUS = 0xff,
     COMPO_ID_BTN_SPEAKING,
     COMPO_ID_BTN_SPEAKED,
+    COMPO_ID_BTN_CONNECTED,
+    COMPO_ID_BTN_DISCONNECTED,
 };
 
 typedef struct f_chatbot_t_
@@ -26,6 +28,7 @@ typedef struct f_chatbot_t_
     bool is_conn;
     bool is_listen;
     bool need_reconn;
+    bool last_net_state;  //记录上一次网络状态
 } f_chatbot_t;
 
 typedef struct chatbot_disp_btn_item_t_
@@ -47,6 +50,8 @@ compo_form_t *func_chatbot_form_create(void)
     compo_picturebox_cut(picbox, 0, 38);
     compo_picturebox_set_pos(picbox, 120, 148);
 
+
+
     compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKING_BIN);
     compo_animation_set_pos(animation, 120, 148);
     compo_animation_set_radix(animation, 38);
@@ -60,6 +65,18 @@ compo_form_t *func_chatbot_form_create(void)
     compo_animation_set_interval(animation, 15);
     compo_setid(animation, COMPO_ID_BTN_SPEAKED);
     compo_animation_set_visible(animation, false);
+
+    // 已连接图片（默认隐藏）
+    compo_picturebox_t *pic_connected = compo_picturebox_create(frm, UI_BUF_I330001_AI_CONNECTED_BIN);
+    compo_picturebox_set_pos(pic_connected, 40, 40);
+    compo_setid(pic_connected, COMPO_ID_BTN_CONNECTED);
+    compo_picturebox_set_visible(pic_connected, false);
+
+
+    compo_picturebox_t *pic_disconnected = compo_picturebox_create(frm, UI_BUF_I330001_AI_NOT_CONNECTED_BIN);
+    compo_picturebox_set_pos(pic_disconnected, 40, 40);
+    compo_setid(pic_disconnected, COMPO_ID_BTN_DISCONNECTED);
+    compo_picturebox_set_visible(pic_disconnected, true);
 
     // 创建文本
     compo_textbox_t *txt;
@@ -79,6 +96,10 @@ static void event_cb(chatbot_event_t event)
     printf("\nchatbot event: %d\n", event);
     compo_animation_t *animation1 = compo_getobj_byid(COMPO_ID_BTN_SPEAKING);
     compo_animation_t *animation2 = compo_getobj_byid(COMPO_ID_BTN_SPEAKED);
+    compo_picturebox_t *pic_connected = compo_getobj_byid(COMPO_ID_BTN_CONNECTED);
+    compo_picturebox_t *pic_disconnected = compo_getobj_byid(COMPO_ID_BTN_DISCONNECTED);
+
+
     switch (event)
     {
         case CHATEVT_IS_CONN:
@@ -88,6 +109,8 @@ static void event_cb(chatbot_event_t event)
             // compo_textbox_set_forecolor(txt, COLOR_GREEN);
             compo_animation_set_visible(animation2, true);
             compo_animation_set_visible(animation1, false);
+            compo_picturebox_set_visible(pic_connected, true);
+            compo_picturebox_set_visible(pic_disconnected, false);
 
             f_cb->is_listen = true;
             f_cb->is_conn = true;
@@ -103,6 +126,8 @@ static void event_cb(chatbot_event_t event)
             //compo_textbox_set_forecolor(txt, COLOR_RED);
             compo_animation_set_visible(animation1, true);
             compo_animation_set_visible(animation2, false);
+            compo_picturebox_set_visible(pic_connected, true);
+            compo_picturebox_set_visible(pic_disconnected, false);
 
             f_cb->is_listen = false;
             break;
@@ -126,6 +151,8 @@ static void event_cb(chatbot_event_t event)
             //compo_textbox_set_forecolor(txt, COLOR_WHITE);
             compo_animation_set_visible(animation1, false);
             compo_animation_set_visible(animation2, false);
+            compo_picturebox_set_visible(pic_connected, false);
+            compo_picturebox_set_visible(pic_disconnected,true );
 
             f_cb->need_reconn = true;
             f_cb->is_conn = false;
@@ -136,6 +163,8 @@ static void event_cb(chatbot_event_t event)
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "Thinking...");//思考中
             // compo_textbox_set_forecolor(txt, COLOR_YELLOW);
+            compo_animation_set_visible(animation2, true);
+            compo_animation_set_visible(animation1, false);
             compo_animation_set_visible(animation2, true);
             compo_animation_set_visible(animation1, false);
             f_cb->is_listen = false;
@@ -153,6 +182,23 @@ static void event_cb(chatbot_event_t event)
 static void func_chatbot_process(void)
 {
     f_chatbot_t *f_cb = func_cb.f_cb;
+    bool current_net_state = bnep_network_is_ok();  // 获取当前网络状态
+
+
+    //检测网络从失败变为成功
+    if (current_net_state && !f_cb->last_net_state)
+    {
+        //重新初始化（如果之前未初始化成功）
+        if (!f_cb->is_conn && chatbot_init())
+        {
+            f_cb->is_conn = true;
+            chatbot_set_event_callback(event_cb);
+            chatbot_start();  // 启动后会触发CHATEVT_IS_CONN事件，进一步更新界面
+        }
+    }
+
+    // 更新上一次网络状态
+    f_cb->last_net_state = current_net_state;
     if (f_cb->need_reconn)
     {
         printf("f_cb->need_reconn = false\r\n");
@@ -270,6 +316,9 @@ static void func_chatbot_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_chatbot_t));
     func_cb.frm_main = func_chatbot_form_create();
 
+    f_chatbot_t *f_cb = func_cb.f_cb;
+    f_cb->last_net_state = bnep_network_is_ok();  // 记录初始网络状态
+
     sco_dump_init();
 
     mem_monitor_run();
@@ -283,17 +332,12 @@ static void func_chatbot_enter(void)
     // }
     if (chatbot_init())
     {
-        // printf("11111111111111133\r\n");
         chatbot_set_event_callback(event_cb);
         chatbot_start();
     }
     else
     {
-        extern u8 bt_onoff_chatbot;
-        if(bt_onoff_chatbot)
-        {
-            func_back_to();
-        }
+        //func_back_to();
 
     }
 

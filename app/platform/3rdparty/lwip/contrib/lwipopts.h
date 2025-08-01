@@ -43,14 +43,13 @@
 
 #define NO_SYS                     0
 #define LWIP_SOCKET                (NO_SYS==0)
-#define LWIP_NETCONN               (NO_SYS==0)
+#define LWIP_NETCONN               0//(NO_SYS==0)
 #define LWIP_NETIF_API             (NO_SYS==0)
 
 #define LWIP_IGMP                  0//LWIP_IPV4
 #define LWIP_ICMP                  LWIP_IPV4
 
 #define LWIP_SNMP                  0//LWIP_UDP
-#define MIB2_STATS                 LWIP_SNMP
 #ifdef LWIP_HAVE_MBEDTLS
 #define LWIP_SNMP_V3               (LWIP_SNMP)
 #endif
@@ -77,7 +76,7 @@
 #define LWIP_NETIF_STATUS_CALLBACK      1
 #define LWIP_NETIF_EXT_STATUS_CALLBACK  1
 
-#define LWIP_DEBUG
+// #define LWIP_DEBUG
 #ifdef LWIP_DEBUG
 
 #define LWIP_DBG_MIN_LEVEL         0
@@ -126,7 +125,7 @@
  * already use it.
  */
 #define MEM_LIBC_MALLOC         1
-#define MEMP_MEM_MALLOC         1
+#define MEMP_MEM_MALLOC         0
 
 #define mem_clib_free ab_free
 #define mem_clib_malloc ab_malloc
@@ -155,10 +154,10 @@ a lot of data that needs to be copied, this should be set high. */
 #define MEMP_NUM_UDP_PCB        4
 /* MEMP_NUM_TCP_PCB: the number of simulatenously active TCP
    connections. */
-#define MEMP_NUM_TCP_PCB        10
+#define MEMP_NUM_TCP_PCB        4
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP
    connections. */
-#define MEMP_NUM_TCP_PCB_LISTEN 4
+#define MEMP_NUM_TCP_PCB_LISTEN 2
 /* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP
    segments. */
 #define MEMP_NUM_TCP_SEG        TCP_SND_QUEUELEN
@@ -178,7 +177,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define MEMP_NUM_TCPIP_MSG_API   (TCP_SND_QUEUELEN)
 #define MEMP_NUM_TCPIP_MSG_INPKT 8
 
-#define MEMP_NUM_NETDB           3
+#define MEMP_NUM_NETDB           2
 
 #define MEMP_NUM_ALTCP_PCB 2
 #define MEMP_NUM_FRAG_PBUF 5
@@ -188,10 +187,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
-#define PBUF_POOL_SIZE          8
-
-/* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
-// #define PBUF_POOL_BUFSIZE       256
+#define PBUF_POOL_SIZE          0
 
 /** SYS_LIGHTWEIGHT_PROT
  * define SYS_LIGHTWEIGHT_PROT in lwipopts.h if you want inter-task protection
@@ -268,13 +264,14 @@ a lot of data that needs to be copied, this should be set high. */
    on a device with only one network interface, define this to 0. */
 #define IP_FORWARD              (!LWIP_SINGLE_NETIF)
 
+#define LWIP_NETIF_TX_SINGLE_PBUF       1
 /* IP reassembly and segmentation.These are orthogonal even
  * if they both deal with IP fragments */
-#define IP_REASSEMBLY           1
+#define IP_REASSEMBLY           0
 #define IP_REASS_MAX_PBUFS      10
 #define MEMP_NUM_REASSDATA      5
-#define IP_FRAG                 1
-#define IPV6_FRAG_COPYHEADER    1
+#define IP_FRAG                 0
+#define IPV6_FRAG_COPYHEADER    0
 
 /* ---------- ICMP options ---------- */
 #define ICMP_TTL                255
@@ -307,13 +304,13 @@ a lot of data that needs to be copied, this should be set high. */
 
 
 /* ---------- RAW options ---------- */
-#define LWIP_RAW                1
+#define LWIP_RAW                0
 
 
 /* ---------- Statistics options ---------- */
 
-#define LWIP_STATS              1
-#define LWIP_STATS_DISPLAY      1
+#define LWIP_STATS              0
+#define LWIP_STATS_DISPLAY      0
 
 #if LWIP_STATS
 #define LINK_STATS              1

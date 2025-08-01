@@ -24,12 +24,20 @@ typedef struct f_power_on_t_
 enum
 {
     COMPO_PIC_ID = 1,
+    COMPO_WRITE_ID = 1,
 };
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
+
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, 120, 148, 240, 296);
+    compo_shape_set_color(shape, COLOR_WHITE);
+    compo_setid(shape, COMPO_WRITE_ID);
+
+
 
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I330001_KAIJI_ICON_LOGO_HELLO_BIN);///背景图片
     // compo_picturebox_cut(pic, 0, 24 );

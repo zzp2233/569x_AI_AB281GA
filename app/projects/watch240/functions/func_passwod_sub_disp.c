@@ -447,7 +447,7 @@ static void func_password_sub_disp_message(size_msg_t msg)
             func_message(msg);
             break;
     }
-    uteModulePasswordDataSaveConfig();
+    //uteModulePasswordDataSaveConfig();
 }
 
 //进入开启密码锁功能

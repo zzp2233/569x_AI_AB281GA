@@ -295,7 +295,7 @@
 
 /*! 默认亮屏时间zn.zeng, 2021-08-20  */
 #ifndef DEFAULT_SCREEN_ON_TIME_SECOND
-#define DEFAULT_SCREEN_ON_TIME_SECOND 120
+#define DEFAULT_SCREEN_ON_TIME_SECOND 10
 #endif
 
 /*! 不同TE模式下的spiclk,用于优化撕裂,spiclk : baud = sys_clk / (div +1),wang.luo 2025-01-11 */

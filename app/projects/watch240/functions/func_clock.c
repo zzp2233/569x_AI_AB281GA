@@ -43,7 +43,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 //     {UI_BUF_I330001_3D_MENU_WEATHER_BIN,             FUNC_WEATHER},
 // #endif
 
-    {UI_BUF_I330001_3D_MENU_THEM_BIN,             FUNC_STYLE},
+    {UI_BUF_I330001_3D_MENU_THEM_BIN,             FUNC_CHATBOT},
 
     {UI_BUF_I330001_3D_MENU_FINDPHONE_BIN,         FUNC_CHATBOT},
 

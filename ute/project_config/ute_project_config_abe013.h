@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NAME "romio"
-#define UTE_SW_VERSION "ABE013V000010"
+#define UTE_SW_VERSION "ABE013V000011"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "ABE013"
@@ -31,6 +31,8 @@
 #define UTE_DRV_TFT_S240X296NV3030B_ZD183G1196_QSPI_SUPPORT 0
 
 // #define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN  0
+
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
 
 /*! 屏最大亮度百分比 dengli.lu, 2021-10-29  */
 #define DEFAULT_BACK_LIGHT_PERCENT_MAX 100
@@ -179,7 +181,7 @@
 #define UTE_MODULE_SCREENS_LANGUAGE_SUPPORT           1 //语言
 #define UTE_MODULE_SCREENS_BREATHE_SUPPORT            0 //呼吸
 #define UTE_MODULE_SCREENS_HEARTRATE_SUPPORT          0 //心率
-#define UTE_MODULE_SCREENS_STYLE_SUPPORT              1 //菜单主题，选择主题用，屏蔽后只有list一个主题
+#define UTE_MODULE_SCREENS_STYLE_SUPPORT              0 //菜单主题，选择主题用，屏蔽后只有list一个主题
 #define UTE_MODULE_SCREENS_SLEEP_SUPPORT              0 //睡眠
 #define UTE_MODULE_SCREENS_LIGHT_SUPPORT              1 //亮度调节
 #define UTE_MODULE_SCREENS_MUSIC_SUPPORT              1 //音乐

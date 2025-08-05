@@ -54,7 +54,7 @@ compo_form_t *func_chatbot_form_create(void)
 
     compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKING_BIN);
     compo_animation_set_pos(animation, 120, 148);
-    compo_animation_set_radix(animation, 16);
+    compo_animation_set_radix(animation, 15);//张数
     compo_animation_set_interval(animation, 15);
     compo_setid(animation, COMPO_ID_BTN_SPEAKING);
     compo_animation_set_visible(animation, false);

@@ -26,7 +26,7 @@ typedef struct f_set_list_t_
 
 static const compo_listbox_item_t tbl_setting_list[] =
 {
-    {STR_DIAL_SWICTH,                    UI_BUF_I330001_SETTINGS_ICON_WATCHFACES_BIN,       .func_sta = FUNC_CLOCK_PREVIEW},    //表盘切换
+//    {STR_DIAL_SWICTH,                    UI_BUF_I330001_SETTINGS_ICON_WATCHFACES_BIN,       .func_sta = FUNC_CLOCK_PREVIEW},    //表盘切换
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
     {STR_SETTING_LIGHT,                  UI_BUF_I330001_SETTINGS_ICON_RIGHTNESS_BIN,        .func_sta = FUNC_LIGHT},            //亮度调节
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT

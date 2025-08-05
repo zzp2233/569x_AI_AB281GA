@@ -544,9 +544,9 @@ const func_t tbl_func_create[] =
 const func_t tbl_func_entry[] =
 {
     {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
-    {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
+    //{FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
     {FUNC_CLOCK,                        func_clock},                    //时钟表盘
-    {FUNC_CLOCK_PREVIEW,                func_clock_preview},            //时钟表盘预览
+    //{FUNC_CLOCK_PREVIEW,                func_clock_preview},            //时钟表盘预览
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑
 #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_CARD,                         func_clock_sub_card},           //表盘上拉

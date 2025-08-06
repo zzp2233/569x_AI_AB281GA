@@ -100,9 +100,10 @@ compo_form_t *func_target_puffs_form_create(void)
     return frm;
 }
 
-#define HALF_SCREEN_HEIGHT GUI_SCREEN_HEIGHT//(GUI_SCREEN_HEIGHT / 2)
+//#define HALF_SCREEN_HEIGHT (GUI_SCREEN_HEIGHT / 2)//(GUI_SCREEN_HEIGHT / 2)
+#define MOVE_THRESHOLD (GUI_SCREEN_HEIGHT / 4)  // 1/4屏幕高度切换  
+#define ACCUMULATE_FACTOR 25  // 累积因子，数值越大越不敏感  
 
-// 滑动处理
 static void func_target_puffs_sub_set_move(void)
 {
     target_puffs_sub_set_t *f_target_puffs = (target_puffs_sub_set_t *)func_cb.f_cb;
@@ -110,34 +111,28 @@ static void func_target_puffs_sub_set_move(void)
     if (f_target_puffs->touch_flag)
     {
         s32 dx, dy;
-        // 获取本次移动增量，并更新touch_flag（是否有后续移动）
         bool has_move = ctp_get_dxy(&dx, &dy);
         f_target_puffs->touch_flag = has_move;
 
         if (has_move)
         {
-            // 忽略微小移动，设置最小阈值
-            const s32 MIN_DY_THRESHOLD = 50; // 可根据实际需求调整
+            const s32 MIN_DY_THRESHOLD = 30; // 降低最小阈值，但用累积因子控制敏感度
             if (abs(dy) > MIN_DY_THRESHOLD)
             {
-                f_target_puffs->move_dy_data -= dy/2;
-                TRACE("[MOVE] dy=%d, move_dy_data=%d\n", dy, f_target_puffs->move_dy_data);
-            }
-            else
-            {
-                // 微小移动不处理
-                dy = 0;
+                // 使用累积因子减少敏感度
+                f_target_puffs->move_dy_data -= dy / ACCUMULATE_FACTOR;
+                TRACE("[MOVE] dy=%d, move_dy_data=%d\\n", dy, f_target_puffs->move_dy_data);
             }
 
-            // 计算滑动距离是否超过阈值（半个屏幕高度）
-            if (abs(f_target_puffs->move_dy_data) >= HALF_SCREEN_HEIGHT)
+            // 使用新的阈值判断
+            if (abs(f_target_puffs->move_dy_data) >= MOVE_THRESHOLD)
             {
                 int offset = (f_target_puffs->move_dy_data > 0) ? 1 : -1;
                 int new_index = f_target_puffs->current_index + offset;
                 new_index = CLAMP(new_index, 0, TARGET_PUFFS_DATA_SIZE - 1);
-                TRACE("[MOVE] new_index=%d, offset=%d\n", new_index, offset);
+                TRACE("[MOVE] new_index=%d, offset=%d\\n", new_index, offset);
 
-                // 更新三个文本框的数字
+                // 更新界面显示
                 for (int i = 0; i < 3; i++)
                 {
                     compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TXT_NUM_TOP + i);
@@ -155,14 +150,14 @@ static void func_target_puffs_sub_set_move(void)
                 }
 
                 f_target_puffs->current_index = new_index;
-                // 重置滑动数据，保留余数以支持连续滑动
-                f_target_puffs->move_dy_data %= HALF_SCREEN_HEIGHT;
+                // 重置累积值，但保留一些余量避免丢失连续滑动
+                f_target_puffs->move_dy_data = f_target_puffs->move_dy_data % (MOVE_THRESHOLD / 2);
             }
         }
         else
         {
             // 触摸结束，重置滑动数据
-            TRACE("[MOVE] Touch released, reset move_dy_data\n");
+            TRACE("[MOVE] Touch released, reset move_dy_data\\n");
             f_target_puffs->move_dy_data = 0;
         }
     }

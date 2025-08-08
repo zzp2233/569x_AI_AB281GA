@@ -783,11 +783,11 @@ void func_watch_bt_process(void)
     else if (bt_cb.disp_status == BT_STA_INCOMING)
     {
 #endif
-        if (func_cb.sta != FUNC_BT_RING)
-        {
-            func_cb.sta = FUNC_BT_RING;
-            msg_enqueue(EVT_MSGBOX_EXIT);
-        }
+        // if (func_cb.sta != FUNC_BT_RING)
+        // {
+        //     func_cb.sta = FUNC_BT_RING;
+        //     msg_enqueue(EVT_MSGBOX_EXIT);
+        // }
 
 #if BT_VOIP_REJECT_EN
     }
@@ -798,11 +798,11 @@ void func_watch_bt_process(void)
     else if (bt_cb.disp_status >= BT_STA_OUTGOING)
     {
 #endif
-        if (func_cb.sta != FUNC_BT_CALL)
-        {
-            func_cb.sta = FUNC_BT_CALL;
-            msg_enqueue(EVT_MSGBOX_EXIT);
-        }
+        // if (func_cb.sta != FUNC_BT_CALL)
+        // {
+        //     func_cb.sta = FUNC_BT_CALL;
+        //     msg_enqueue(EVT_MSGBOX_EXIT);
+        // }
     }
 #endif
 }

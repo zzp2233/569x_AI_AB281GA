@@ -105,12 +105,16 @@ const compo_listbox_item_t tbl_list_data[] =
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {STR_WEATHER,                          .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_WEATHER_ON},   //天气
 #endif
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     {STR_PHONE,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_BT_CALL_ON},   //电话
+#endif
+
     {STR_MUSIC,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_MUSIC_ON},     //音乐
 
 #if UTE_MODULE_SCREENS_CHATBOT_SUPPORT
     {STR_CHATBOT,                          .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_CHATBOT_ON},   //机器人
 #endif
+    {STR_ECIG_RECORD,                      .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_ECIG_P_ON},     //口数记录
 };
 const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
 {
@@ -135,9 +139,9 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     SYS_CTL_FUNC_CALENDAR_ON,       FUNC_CALENDAER_SUB,//FUNC_SPORT,
 #endif
-
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     SYS_CTL_FUNC_BT_CALL_ON,        FUNC_CALL_SORT,//FUNC_CALL,
-
+#endif
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     SYS_CTL_FUNC_WEATHER_ON,        FUNC_WEATHER,
 #endif
@@ -145,6 +149,7 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
 #if UTE_MODULE_SCREENS_CHATBOT_SUPPORT
     SYS_CTL_CHATBOT_ON,        FUNC_CHATBOT,
 #endif
+    SYS_CTL_FUNC_ECIG_P_ON,        FUNC_ECIG_VPAE_SUB,
 };
 
 static u8 list_data_sort[LIST_ITEM_CNT_MAX] =

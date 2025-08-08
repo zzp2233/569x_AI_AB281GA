@@ -186,7 +186,7 @@
 #define UTE_MODULE_SCREENS_LIGHT_SUPPORT              1 //亮度调节
 #define UTE_MODULE_SCREENS_MUSIC_SUPPORT              1 //音乐
 #define UTE_MODULE_SCREENS_MESSAGE_SUPPORT            0 //信息
-#define UTE_MODULE_SCREENS_CALL_SUPPORT               1 //电话
+#define UTE_MODULE_SCREENS_CALL_SUPPORT               0 //电话
 #define UTE_MODULE_SCREENS_SETTING_SUPPORT            1 //设置
 #define UTE_MODULE_SCREENS_CALCULATOR_SUPPORT         0//计算器
 #define UTE_MODULE_SCREENS_RESTART_SUPPORT            1 //重启

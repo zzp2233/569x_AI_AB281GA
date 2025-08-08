@@ -5641,9 +5641,9 @@ void music_data_refresh(void)
 #define SEC_TO_MIN(s)   ((s % 3600) / 60)   //总秒数转换为时分秒（分）
 #define SEC_TO_SEC(s)   (s % 60)            //总秒数转换为时分秒（秒）
 
-#define DEFAULT_LATEST_TASK_NUM 2   //最近任务不足4个时默认值补上
+#define DEFAULT_LATEST_TASK_NUM 4   //最近任务不足4个时默认值补上
 // const u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_SLEEP, FUNC_SPORT, FUNC_HEARTRATE,FUNC_ACTIVITY,FUNC_WEATHER};
-const u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_CHATBOT,FUNC_CALL};
+const u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_CHATBOT,FUNC_SETTING,FUNC_SET_SUB_ABOUT,FUNC_SET_SUB_LANGUAGE,FUNC_SET_PUFFS};
 ///卡片、组件原始位置（相对于卡片中心点）
 #define CARD_WIDTH_ORG                  208//308
 

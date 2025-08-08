@@ -104,7 +104,9 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_RESTART,                  UI_BUF_I330001_THEME_1_BOOT_BIN,                    STR_SETTING_RESTART},       //重启
     {FUNC_RSTFY,                    UI_BUF_I330001_THEME_1_RETRY_BIN,            STR_SETTING_RSTFY},         //设置--恢复出厂
     {FUNC_SET_SUB_ABOUT,            UI_BUF_I330001_THEME_1_GUANYU_BIN,            STR_SETTING_ABOUT},         //设置--关于
-//    {FUNC_OFF,                      UI_BUF_ICON_OFF_BIN,                        STR_SETTING_OFF},           //关机
+    {FUNC_CHATBOT,                      UI_BUF_I330001_THEME_1_MESSAGE_BIN,                        STR_CHATBOT},           //机器人
+    {FUNC_ECIG_SET_POWER,                      UI_BUF_I330001_THEME_1_THEME_BIN,                        STR_ECIG_SET_POWER},           //功率设置
+    {FUNC_SET_PUFFS,        UI_BUF_I330001_THEME_1_BREATHE_BIN,                        STR_SET_PUFFS},           //口数设置
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
@@ -622,6 +624,9 @@ const static u8 latest_allowed_id[] =
     FUNC_RSTFY,                         //设置--恢复出厂
 //    FUNC_OFF,                           //关机
     FUNC_SET_SUB_ABOUT,                 //关于
+    FUNC_CHATBOT,                 //机器人
+    FUNC_ECIG_SET_POWER,                 //功率调节
+    FUNC_SET_PUFFS,   //口数设置
 };
 
 /**

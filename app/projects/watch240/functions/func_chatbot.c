@@ -12,6 +12,8 @@
 #define TRACE(...)
 #endif
 
+static bool chatbot_network = false;
+
 enum
 {
 
@@ -87,7 +89,6 @@ compo_form_t *func_chatbot_form_create(void)
     compo_textbox_set_autosize(txt, true);
     compo_textbox_set(txt, "Connecting...");
     compo_textbox_set_forecolor(txt, COLOR_WHITE);
-
     return frm;
 }
 
@@ -105,6 +106,7 @@ static void event_cb(chatbot_event_t event)
     {
         case CHATEVT_IS_CONN:
         {
+            chatbot_network = true;
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "Listening");//监听中
             // compo_textbox_set_forecolor(txt, COLOR_GREEN);
@@ -151,7 +153,7 @@ static void event_cb(chatbot_event_t event)
         }
         case CHATEVT_ERROR_RECONN:
         {
-
+            chatbot_network = false;
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "Reconnect");//重新连接中
             //compo_textbox_set_forecolor(txt, COLOR_WHITE);
@@ -191,6 +193,11 @@ static void event_cb(chatbot_event_t event)
 // 聊天机器人功能事件处理
 static void func_chatbot_process(void)
 {
+    if(!chatbot_network)
+    {
+        bt_panu_network_connect();
+    }
+
     f_chatbot_t *f_cb = func_cb.f_cb;
     bool current_net_state = bnep_network_is_ok();  // 获取当前网络状态
 

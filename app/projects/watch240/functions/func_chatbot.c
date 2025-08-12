@@ -29,6 +29,7 @@ typedef struct f_chatbot_t_
     bool is_listen;
     bool need_reconn;
     bool last_net_state;  //记录上一次网络状态
+    bool exiting;
 } f_chatbot_t;
 
 typedef struct chatbot_disp_btn_item_t_
@@ -117,7 +118,12 @@ static void event_cb(chatbot_event_t event)
             break;
         }
         case CHATEVT_EXIT:
-            func_back_to();
+            if(!f_cb->exiting)
+            {
+                f_cb->exiting = true;
+                func_back_to();
+            }
+
             break;
         case CHATEVT_TTS_PLAYING:
         {
@@ -171,7 +177,11 @@ static void event_cb(chatbot_event_t event)
             break;
         }
         case CHATEVT_ERROR_BROKEN:
-            func_back_to();
+            if(!f_cb->exiting)
+            {
+                f_cb->exiting = true;
+                func_back_to();
+            }
             break;
         default:
             break;
@@ -353,6 +363,7 @@ static void func_chatbot_exit(void)
     f_chatbot_t *f_cb = func_cb.f_cb;
     gcal_cb_destroy();
 
+    f_cb->exiting = true;
     f_cb->is_conn = false;
     chatbot_deinit();
     mem_monitor_run();

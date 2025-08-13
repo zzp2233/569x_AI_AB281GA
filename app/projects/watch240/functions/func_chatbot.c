@@ -131,6 +131,7 @@ static void event_cb(chatbot_event_t event)
             break;
         case CHATEVT_TTS_PLAYING:
         {
+            chatbot_network = true;
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "Speaking");//说话中
             //compo_textbox_set_forecolor(txt, COLOR_RED);
@@ -144,6 +145,7 @@ static void event_cb(chatbot_event_t event)
         }
         case CHATEVT_LISTENING:
         {
+            chatbot_network = true;
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "Listening");//监听中
             //compo_textbox_set_forecolor(txt, COLOR_GREEN);
@@ -170,6 +172,7 @@ static void event_cb(chatbot_event_t event)
         }
         case CHATEVT_THINKING:
         {
+            chatbot_network = true;
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "Thinking...");//思考中
             // compo_textbox_set_forecolor(txt, COLOR_YELLOW);
@@ -183,9 +186,26 @@ static void event_cb(chatbot_event_t event)
         case CHATEVT_ERROR_BROKEN:
             if(!f_cb->exiting)
             {
-                f_cb->exiting = true;
-                printf("zzp2\n");
-                func_back_to();
+                printf("zzp\n");
+                printf("Chatbot connection broken, restarting bluetooth\\n");
+
+                // 关闭蓝牙
+                bsp_bt_trun_off();
+
+                // 等待一段时间确保蓝牙完全关闭
+                delay_ms(1000);
+
+                // 重新开启蓝牙
+                bsp_bt_trun_on();
+
+                // 设置重连标志
+                f_cb->need_reconn = true;
+                f_cb->is_conn = false;
+                chatbot_network = false;
+
+                // 更新UI显示
+                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
+                compo_textbox_set(txt, " ERROR...");
             }
             break;
         default:
@@ -198,6 +218,7 @@ static void func_chatbot_process(void)
 {
     if(!chatbot_network)
     {
+        printf("zzp_chatbot_network\n");
         bt_panu_network_connect();
     }
 

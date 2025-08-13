@@ -89,6 +89,7 @@ compo_form_t *func_chatbot_form_create(void)
     compo_textbox_set_autosize(txt, true);
     compo_textbox_set(txt, "Connecting...");
     compo_textbox_set_forecolor(txt, COLOR_WHITE);
+    chatbot_network = false;
     return frm;
 }
 
@@ -122,6 +123,7 @@ static void event_cb(chatbot_event_t event)
         case CHATEVT_EXIT:
             if(!f_cb->exiting)
             {
+                printf("zzp1\n");
                 f_cb->exiting = true;
                 func_back_to();
             }
@@ -182,6 +184,7 @@ static void event_cb(chatbot_event_t event)
             if(!f_cb->exiting)
             {
                 f_cb->exiting = true;
+                printf("zzp2\n");
                 func_back_to();
             }
             break;

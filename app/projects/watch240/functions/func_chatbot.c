@@ -13,6 +13,7 @@
 #endif
 
 static bool chatbot_network = false;
+static u16 chatbot_num = 0;
 
 enum
 {
@@ -178,34 +179,14 @@ static void event_cb(chatbot_event_t event)
             // compo_textbox_set_forecolor(txt, COLOR_YELLOW);
             compo_animation_set_visible(animation2, true);
             compo_animation_set_visible(animation1, false);
-            compo_animation_set_visible(animation2, true);
-            compo_animation_set_visible(animation1, false);
             f_cb->is_listen = false;
             break;
         }
         case CHATEVT_ERROR_BROKEN:
             if(!f_cb->exiting)
             {
-                printf("zzp\n");
-                printf("Chatbot connection broken, restarting bluetooth\\n");
-
-                // 关闭蓝牙
-                bsp_bt_trun_off();
-
-                // 等待一段时间确保蓝牙完全关闭
-                delay_ms(1000);
-
-                // 重新开启蓝牙
-                bsp_bt_trun_on();
-
-                // 设置重连标志
-                f_cb->need_reconn = true;
-                f_cb->is_conn = false;
-                chatbot_network = false;
-
-                // 更新UI显示
-                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
-                compo_textbox_set(txt, " ERROR...");
+                f_cb->exiting = true;
+                func_back_to();
             }
             break;
         default:
@@ -216,9 +197,10 @@ static void event_cb(chatbot_event_t event)
 // 聊天机器人功能事件处理
 static void func_chatbot_process(void)
 {
-    if(!chatbot_network)
+    if(!chatbot_network && ++chatbot_num > 500)
     {
-        printf("zzp_chatbot_network\n");
+        chatbot_num = 0;
+        //printf("zzp_chatbot_network\n");
         bt_panu_network_connect();
     }
 

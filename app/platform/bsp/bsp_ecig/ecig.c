@@ -652,6 +652,20 @@ void ecigarette_isr(void)//50us
     {
         if(mic_start_or_not())
         {
+            // if(cnt_lock_ms >= (ecig.timer_20ms_cnt))
+            // {
+            //     if(cnt_lock_ms == (ecig.timer_20ms_cnt))
+            //     {
+            //         //发提醒事件
+            //         func_cb.sta = FUNC_ECIG_REMINDERCLOCK;
+            //         printf(flag_str);
+            //     }
+            // }
+            // else
+            // {
+            //     cnt_lock_ms++;
+            // }
+
             if(cnt_lock_ms >= (ecig.timer_20ms_cnt))
             {
                 if(cnt_lock_ms == (ecig.timer_20ms_cnt))
@@ -661,10 +675,7 @@ void ecigarette_isr(void)//50us
                     printf(flag_str);
                 }
             }
-            else
-            {
-                cnt_lock_ms++;
-            }
+            cnt_lock_ms++;
         }
         else
         {

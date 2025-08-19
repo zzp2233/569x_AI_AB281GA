@@ -57,7 +57,7 @@ void bsp_ecig_init(void)
     //p->aim_power = 5,
     //ecig_set_power(15);
     ecig_cfg.aim_voltage = 3290;
-    p->heat_time_max = 8;
+    p->heat_time_max = 5;
     p->short_res_prop = 14;
     p->open_res_prop = 320;
     test_1st_gear_func();
@@ -184,10 +184,10 @@ uint8_t ecig_get_res(void)
     printf("%s, data_temp1=%d,result=%lu\n", __func__,data_temp1, result);
     printf("%s, data=%d\n", __func__, data);
 #endif
-    if(data>=11 && data<=13)
-        data =12;
-    if(data>=7 && data<=9)
-        data =8;
+    // if(data>=11 && data<=13)
+    //     data =12;
+    // if(data>=7 && data<=9)
+    //     data =8;
     if(ecig_cfg.smoke_position_swich == 0)
     {
         return data;

@@ -1,7 +1,7 @@
 /*
  * @brief:
  * @LastEditors: ljf
- * @LastEditTime: 2025-08-21 14:58:29
+ * @LastEditTime: 2025-08-23 11:57:58
  * @FilePath: \AB5691_SDK\app\projects\watch240\config.h
  * @Date: 2025-04-16 10:52:40
  */

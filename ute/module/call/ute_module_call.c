@@ -114,7 +114,7 @@ void uteModuleCallBtReadConfig(void)
 */
 bool uteModuleCallBtIsConnected(void)
 {
-#if 1
+#if 0
     return isHfpAndA2dpProfileBothConnected();
 #else
     return bt_is_connected();
@@ -150,6 +150,7 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,reason=%d",__func__,reason);
     bsp_bt_trun_off();
+    printf("zzp2\n");
     if(reason == UTE_BT_POWER_OFF_APP_UNBIND)
     {
         bt_nor_delete_link_info();
@@ -250,6 +251,13 @@ bool uteModuleCallGetIsBtAutoClose(void)
     return uteModuleCallData.isBtAutoClose;
 }
 
+void zzp_btnum(void)
+{
+    printf("zzp_powerOnTimeSecond:%d\n",uteModuleCallData.powerOnTimeSecond);
+}
+
+
+
 /**
 *@brief  call 每秒函数
 *@details
@@ -288,7 +296,7 @@ void uteModuleCallEverySecond(void)
         }
 #endif
         uteModuleCallData.powerOnTimeSecond++;
-        if(isHfpAndA2dpProfileBothConnected())
+        if(bt_is_connected())
         {
             uteModuleCallData.powerOnTimeSecond = 0;
             uint disp_status = bsp_bt_disp_status();
@@ -312,7 +320,7 @@ void uteModuleCallEverySecond(void)
         }
 
 #if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
-        if (uteModuleCallData.powerOnTimeSecond > (UTE_BT30_AUTO_POWRER_OFF_TIME_SECOND + 10)&&(!isHfpAndA2dpProfileBothConnected()))
+        if (uteModuleCallData.powerOnTimeSecond > (UTE_BT30_AUTO_POWRER_OFF_TIME_SECOND + 10)&&(!bt_is_connected()))
         {
             uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO);
             uteModuleCallData.isBtAutoClose = true;
@@ -326,6 +334,7 @@ void uteModuleCallEverySecond(void)
         if (bt_get_scan())
         {
             bsp_bt_trun_off();
+            printf("zzp1\n");
         }
     }
 }

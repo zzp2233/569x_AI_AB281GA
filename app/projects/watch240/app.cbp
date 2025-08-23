@@ -135,7 +135,9 @@
 			<Add library="../../platform/modules/asr_using/libasr.a" />
 			<Add library="../../platform/modules/asr_using/libasr_air.a" />
 			<Add library="../../platform/libs/libchatbot.a" />
+			<Add library="libnet" />
 			<Add directory="../../platform/libs" />
+			<Add directory="../../platform/libs/net/build" />
 		</Linker>
 		<ExtraCommands>
 			<Add before="python ..\..\..\ute\ui_config_patch\build_cpy_res.py" />

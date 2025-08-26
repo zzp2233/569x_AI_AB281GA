@@ -14,6 +14,7 @@
 
 static bool chatbot_network = false;
 static u16 chatbot_num = 0;
+static bool chatbot_VOL = false;
 
 enum
 {
@@ -33,6 +34,7 @@ typedef struct f_chatbot_t_
     bool need_reconn;
     bool last_net_state;  //记录上一次网络状态
     bool exiting;
+    bool back_to;
 } f_chatbot_t;
 
 typedef struct chatbot_disp_btn_item_t_
@@ -126,12 +128,14 @@ static void event_cb(chatbot_event_t event)
             {
                 printf("zzp1\n");
                 f_cb->exiting = true;
-                func_back_to();
+                f_cb->back_to = true;
+                //func_back_to();
             }
 
             break;
         case CHATEVT_TTS_PLAYING:
         {
+            printf("zzpbsp_set_volume\n");
             chatbot_network = true;
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "Speaking");//说话中
@@ -183,11 +187,13 @@ static void event_cb(chatbot_event_t event)
             break;
         }
         case CHATEVT_ERROR_BROKEN:
+            printf("f_cb->exiting=%d\n", f_cb->exiting);
             if(!f_cb->exiting)
             {
                 chatbot_network = false;
                 f_cb->exiting = true;
-                func_back_to();
+                f_cb->back_to = true;
+                //func_back_to();
             }
             break;
         default:
@@ -202,7 +208,7 @@ static void func_chatbot_process(void)
     {
         chatbot_num = 0;
         //printf("zzp_chatbot_network\n");
-        bt_panu_network_connect();
+        //bt_panu_network_connect();
 
         // extern void zzp_btnum(void);
         // zzp_btnum();
@@ -248,6 +254,12 @@ static void func_chatbot_process(void)
         }
     }
     reset_sleep_delay_all(); // 不休眠
+
+    if (f_cb->back_to)
+    {
+        f_cb->back_to = false;
+        func_back_to();
+    }
     func_process();
 }
 
@@ -291,7 +303,7 @@ static void func_chatbot_message(size_msg_t msg)
                 compo_animation_set_visible(animation1, false);
 
                 f_cb->is_listen = true;
-                chatbot_start_mic();
+                //chatbot_start_mic();
             }
             break;
         case MSG_QDEC_BACKWARD:
@@ -305,7 +317,7 @@ static void func_chatbot_message(size_msg_t msg)
                 compo_animation_set_visible(animation1, false);
 
                 f_cb->is_listen = false;
-                chatbot_stop_mic();
+                //chatbot_stop_mic();
             }
             break;
 
@@ -409,13 +421,16 @@ static void func_chatbot_exit(void)
 // 聊天机器人功能
 void func_chatbot(void)
 {
-//    bsp_set_volume(VOL_MAX);
+    watch_point_set(&func_cb.sta);
+    //bsp_set_volume(VOL_MAX);//进入机器人界面默认最大声
     printf("%s\n", __func__);
+    bt_panu_network_connect();//进入机器人界面默认打开网络连接
     func_chatbot_enter();
     while (func_cb.sta == FUNC_CHATBOT)
     {
         func_chatbot_process();
         func_chatbot_message(msg_dequeue());
     }
+    //netlib_run_test();
     func_chatbot_exit();
 }

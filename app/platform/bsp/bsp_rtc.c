@@ -131,19 +131,3 @@ AT(.sleep_text.rtc)
 void rtc_clock_calc_notify(void)
 {
 }
-
-struct timeval
-{
-    long    tv_sec;         /* seconds */
-    long    tv_usec;        /* and microseconds */
-};
-int gettimeofday(struct timeval *__tp, void *__tzp)
-{
-    if (__tp)
-    {
-        __tp->tv_sec = RTCCNT;
-        __tp->tv_usec = RTCCNT * 1000 * 1000;
-    }
-
-    return 0;
-}

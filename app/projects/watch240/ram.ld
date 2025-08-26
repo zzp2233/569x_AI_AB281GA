@@ -375,6 +375,10 @@ SECTIONS
         *(.btmem.bb.buf)
         *(.ble_cache.sm)
 #endif
+        __net_data_start = .;
+        *(.net_bss)
+        *(.net_sbss)
+        __net_data_end = .;
        __hr_start = .;
 
 #if 0
@@ -443,7 +447,7 @@ SECTIONS
     } > sram
     __bss_size = __bss_end - __bss_start;
     __asr_buf_size = __asr_buf_end - __asr_buf_start;
-
+    __net_data_size = __net_data_end - __net_data_start;
     .bram __bram_vma (NOLOAD) : {
         __bram_start = .;
         *(.btmem.bthw)

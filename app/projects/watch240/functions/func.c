@@ -1605,7 +1605,7 @@ void func_message(size_msg_t msg)
 //            break;
 //
         case MSG_SYS_500MS:
-
+            //chatbot_cleanup();
             break;
         case MSG_SYS_BOX_500MS:
 #if CHARGE_EX_IC_SELECT

@@ -185,6 +185,7 @@ static void event_cb(chatbot_event_t event)
         case CHATEVT_ERROR_BROKEN:
             if(!f_cb->exiting)
             {
+                chatbot_network = false;
                 f_cb->exiting = true;
                 func_back_to();
             }
@@ -202,6 +203,9 @@ static void func_chatbot_process(void)
         chatbot_num = 0;
         //printf("zzp_chatbot_network\n");
         bt_panu_network_connect();
+
+        // extern void zzp_btnum(void);
+        // zzp_btnum();
     }
 
     f_chatbot_t *f_cb = func_cb.f_cb;
@@ -218,6 +222,10 @@ static void func_chatbot_process(void)
             chatbot_set_event_callback(event_cb);
             chatbot_start();  // 启动后会触发CHATEVT_IS_CONN事件，进一步更新界面
         }
+        else
+        {
+            //func_back_to();
+        }
     }
 
     // 更新上一次网络状态
@@ -233,6 +241,10 @@ static void func_chatbot_process(void)
             chatbot_set_event_callback(event_cb);
             chatbot_start();
             f_cb->is_conn = true;
+        }
+        else
+        {
+            //func_back_to();
         }
     }
     reset_sleep_delay_all(); // 不休眠
@@ -327,6 +339,7 @@ static void func_chatbot_message(size_msg_t msg)
             //     func_calculator_button_click_handler();
             break;
 
+
         default:
             func_message(msg);
             break;
@@ -364,27 +377,39 @@ static void func_chatbot_enter(void)
 
     }
 
-    if (gcal_cb_init() == false)
-    {
-        halt(HALT_MALLOC);
-    }
+    // if (gcal_cb_init() == false)
+    // {
+    //     halt(HALT_MALLOC);
+    // }
 }
 
 // 退出聊天机器人功能
 static void func_chatbot_exit(void)
 {
     f_chatbot_t *f_cb = func_cb.f_cb;
-    gcal_cb_destroy();
+    //gcal_cb_destroy();
 
+    //f_cb->exiting = true;
+    // f_cb->is_conn = false;
+    // chatbot_deinit();
+    // mem_monitor_run();
+
+
+    compo_form_t *frm = func_create_form(func_cb.sta);
     f_cb->exiting = true;
     f_cb->is_conn = false;
+    printf("zzp1\n");
     chatbot_deinit();
-    mem_monitor_run();
+    printf("zzp2\n");
+    compo_form_destroy(frm);
+
+
 }
 
 // 聊天机器人功能
 void func_chatbot(void)
 {
+//    bsp_set_volume(VOL_MAX);
     printf("%s\n", __func__);
     func_chatbot_enter();
     while (func_cb.sta == FUNC_CHATBOT)

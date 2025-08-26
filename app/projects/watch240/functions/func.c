@@ -1481,6 +1481,7 @@ void func_message(size_msg_t msg)
             if (func_cb.sta == FUNC_CLOCK || func_cb.flag_sort)
             {
                 func_switch_next(false, true);                    //切到下一个任务
+                printf("zzp_MSG_CTP_SHORT_LEFT\n");
             }
             else
             {
@@ -1520,6 +1521,7 @@ void func_message(size_msg_t msg)
             {
                 msg_queue_detach(MSG_QDEC_FORWARD, 0);  //防止不停滚动
                 func_switch_next(true, true);                     //切到下一个任务
+                printf("zzp_MSG_CTP_COVER\n");
             }
             break;
 

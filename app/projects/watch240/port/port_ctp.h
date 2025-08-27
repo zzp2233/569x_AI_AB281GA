@@ -7,8 +7,8 @@
 #define PORT_CTP_MAP_GPIO       7
 #define PORT_CTP_IIC_HW         1
 
-#define PORT_CTP_INT            IO_PF5
-#define PORT_CTP_INT_VECTOR     PORT_INT2_VECTOR
+#define PORT_CTP_INT            IO_PB4
+#define PORT_CTP_INT_VECTOR     PORT_INT5_VECTOR
 
 #if !MODEM_CAT1_EN
 #define PORT_CTP_RST            IO_PH3

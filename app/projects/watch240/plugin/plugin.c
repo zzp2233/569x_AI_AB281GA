@@ -88,11 +88,6 @@ void sleep_wakeup_config(void)
         port_wakeup_init(ECIG_DET1_GPIO, 1, 0);  //通道一插入唤醒
     }
 
-    //充电仓，data脚配置上拉，下降沿唤醒
-    if (func_cb.sta != FUNC_CHARGE)
-    {
-        port_wakeup_init(IO_PA5, 1, 1);
-    }
 
 
     //port_wakeup_init(ECIG_DET2_GPIO, 1, 0);  //通道二插入唤醒

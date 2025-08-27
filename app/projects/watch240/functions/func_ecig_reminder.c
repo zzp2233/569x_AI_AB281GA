@@ -86,7 +86,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
         {
             animation = compo_animation_create(frm, UI_BUF_I330001_SMOKEING_FIRE1_BIN);
             compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-            compo_animation_set_radix(animation, 19);
+            compo_animation_set_radix(animation, 31);
             compo_animation_set_interval(animation, 8);
             compo_setid(animation, COMPO_ID_PIC_SMOCKING);
         }

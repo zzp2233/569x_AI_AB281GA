@@ -885,5 +885,6 @@ void bsp_sys_init(void)
 #if CHARGE_EX_IC_SELECT
     bsp_charge_ex_init();
 #endif
+//port_gpio_set_out(IO_PF5,1);
 }
 

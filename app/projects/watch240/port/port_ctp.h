@@ -6,10 +6,13 @@
 #define PORT_CTP_SDA            IO_PH1
 #define PORT_CTP_MAP_GPIO       7
 #define PORT_CTP_IIC_HW         1
-
+#if GUIMAI_SUPPORT
 #define PORT_CTP_INT            IO_PB4
 #define PORT_CTP_INT_VECTOR     PORT_INT5_VECTOR
-
+#else
+#define PORT_CTP_INT            IO_PF5
+#define PORT_CTP_INT_VECTOR     PORT_INT2_VECTOR
+#endif
 #if !MODEM_CAT1_EN
 #define PORT_CTP_RST            IO_PH3
 #define PORT_CTP_RST_H()        GPIOHSET = BIT(3);

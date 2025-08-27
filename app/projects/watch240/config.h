@@ -640,10 +640,10 @@
 #define CHARGE_CTRL_GPIO                IO_PF0              //充电IC模式控制脚（SY-EN）
 #define CHARGE_ENABLE_GPIO              IO_PB5              //充电启停控制脚（VOUT-EN）
 #else
-#define CHARGE_SDA_GPIO                 IO_PA5              //充电IC单线数据脚
-#define CHARGE_CTRL_GPIO                IO_PH4              //充电IC模式控制脚
-#define SDA_STATUS()                    (GPIOA & BIT(5))
-#define CHARGE_ENABLE_GPIO              IO_NONE             //充电启停控制脚
+// #define CHARGE_SDA_GPIO                 IO_PA5              //充电IC单线数据脚
+// #define CHARGE_CTRL_GPIO                IO_PH4              //充电IC模式控制脚
+// #define SDA_STATUS()                    (GPIOA & BIT(5))
+// #define CHARGE_ENABLE_GPIO              IO_NONE             //充电启停控制脚
 #endif
 
 /*****************************************************************************

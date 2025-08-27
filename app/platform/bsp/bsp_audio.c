@@ -77,6 +77,7 @@ const sdadc_cfg_t rec_cfg_tbl[] =
 
 void audio_path_init(u8 path_idx)
 {
+    port_gpio_set_out(IO_PF5,1);
     sdadc_cfg_t cfg;
     memcpy(&cfg, &rec_cfg_tbl[path_idx], sizeof(sdadc_cfg_t));
     sys_cb.audio_path = path_idx;
@@ -150,6 +151,7 @@ void audio_path_start(u8 path_idx)
     memcpy(&cfg, &rec_cfg_tbl[path_idx], sizeof(sdadc_cfg_t));
     sdadc_start(cfg.channel);
     sys_cb.audio_path = path_idx;
+
 }
 
 void audio_path_exit(u8 path_idx)
@@ -165,6 +167,7 @@ void audio_path_exit(u8 path_idx)
     sdadc_exit(cfg.channel);
     adpll_spr_set(DAC_OUT_SPR);
     sys_cb.audio_path = path_idx;
+    port_gpio_set_out(IO_PF5,0);
 }
 
 

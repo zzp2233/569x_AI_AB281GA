@@ -1,7 +1,7 @@
 /*
  * @brief:
  * @LastEditors: ljf
- * @LastEditTime: 2025-08-23 11:57:58
+ * @LastEditTime: 2025-08-27 11:04:11
  * @FilePath: \AB5691_SDK\app\projects\watch240\config.h
  * @Date: 2025-04-16 10:52:40
  */
@@ -148,7 +148,7 @@
 #define BT_2ACL_EN                      0   //是否支持连接两部手机（TWS不支持）
 #define BT_2ACL_AUTO_SWITCH             0   //连接两部手机时是否支持点击播放切换到对应的手机
 #define BT_A2DP_EN                      1   //是否打开蓝牙音乐服务
-#define BT_HFP_EN                       0   //是否打开蓝牙通话服务
+#define BT_HFP_EN                       1   //是否打开蓝牙通话服务
 #define BT_HSP_EN                       0   //是否打开蓝牙HSP通话服务
 #define BT_PBAP_EN                      1   //是否打开蓝牙电话簿服务
 #define BT_MAP_EN                       0   //是否打开蓝牙短信服务(用于获取设备时间，支持IOS/Android)

@@ -544,7 +544,7 @@ static void bsp_var_init(void)
 {
     memset(&sys_cb, 0, sizeof(sys_cb));
     func_heap_init(heap_func, HEAP_FUNC_SIZE);
-
+    net_bss_init();
     sys_cb.loudspeaker_mute = 1;
     sys_cb.ms_ticks = tick_get();
     xcfg_cb.vol_max = maxvol_tbl[xcfg_cb.vol_max];

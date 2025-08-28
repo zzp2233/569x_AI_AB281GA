@@ -20,8 +20,8 @@ enum
     SHAPE_BG_ID, //
     TXT_1_ID,    /// 发热丝状态
     TXT_2_ID,    /// 电池状态
-    TXT_3_ID,    /// 震动次数文字
-    TXT_4_ID,    /// 震动次数
+    // TXT_3_ID,    /// 震动次数文字
+    // TXT_4_ID,    /// 震动次数
     TXT_5_ID,    // 抽吸口数
     TXT_6_ID,    /// 发热丝1
     TXT_7_ID,    /// 发热丝2
@@ -133,17 +133,17 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5,5 + TXT_SPACING * 9.8 - widget_text_get_area(textbox->txt).hei / 2 );
     compo_setid(textbox, TXT_2_ID);
 
-    textbox = compo_textbox_create(frm, 10);
-    compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox, "震动次数:");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 6.5 - widget_text_get_area(textbox->txt).hei / 2);
-    compo_setid(textbox, TXT_3_ID);
+    // textbox = compo_textbox_create(frm, 10);
+    // compo_textbox_set_align_center(textbox, false);
+    // compo_textbox_set(textbox, "震动次数:");
+    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 6.5 - widget_text_get_area(textbox->txt).hei / 2);
+    // compo_setid(textbox, TXT_3_ID);
 
-    textbox = compo_textbox_create(frm, 6);
-    compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox, "--次");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 7.5 - widget_text_get_area(textbox->txt).hei / 2);
-    compo_setid(textbox, TXT_4_ID);
+    // textbox = compo_textbox_create(frm, 6);
+    // compo_textbox_set_align_center(textbox, false);
+    // compo_textbox_set(textbox, "--次");
+    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 7.5 - widget_text_get_area(textbox->txt).hei / 2);
+    // compo_setid(textbox, TXT_4_ID);
 
     textbox = compo_textbox_create(frm, 9);
     compo_textbox_set_align_center(textbox, false);
@@ -396,8 +396,8 @@ static void func_ageing_process(void)
             compo_shape_t *shape = compo_getobj_byid(SHAPE_BG_ID);           /// 背景
             compo_textbox_t *textbox1 = compo_getobj_byid(TXT_1_ID);         /// 发热丝状态文字
             compo_textbox_t *textbox2 = compo_getobj_byid(TXT_2_ID);         /// 电池状态
-            compo_textbox_t *textbox3 = compo_getobj_byid(TXT_3_ID);         /// 震动次数文字
-            compo_textbox_t *textbox4 = compo_getobj_byid(TXT_4_ID);         /// 震动次数
+            // compo_textbox_t *textbox3 = compo_getobj_byid(TXT_3_ID);         /// 震动次数文字
+            // compo_textbox_t *textbox4 = compo_getobj_byid(TXT_4_ID);         /// 震动次数
             compo_textbox_t *textbox5 = compo_getobj_byid(TXT_5_ID);         // 抽吸口数
             compo_textbox_t *textbox9 = compo_getobj_byid(TXT_9_ID);         /// 单发双发显示
             compo_textbox_t *textbox10 = compo_getobj_byid(TXT_10_ID);       ///
@@ -476,9 +476,9 @@ static void func_ageing_process(void)
             memset(txt_buf, 0, sizeof(txt_buf));
             u8 cur_hr = bsp_sensor_hrs_data_get();
 
-            compo_textbox_set(textbox3, "震动次数:");
-            snprintf(txt_buf, sizeof(txt_buf), "%d次", uteModuleNewFactoryAgingTestMotoCount());
-            compo_textbox_set(textbox4, txt_buf);
+            // compo_textbox_set(textbox3, "震动次数:");
+            // snprintf(txt_buf, sizeof(txt_buf), "%d次", uteModuleNewFactoryAgingTestMotoCount());
+            // compo_textbox_set(textbox4, txt_buf);
 
             compo_textbox_set(textbox10, "烟弹阻值:");
             uint8_t fixed_res = ecig_get_res();

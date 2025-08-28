@@ -108,7 +108,7 @@ void uteModuleFactoryTestEverySecond(void)
         bitChange.outputYaxis = &uteModuleFactoryTestData.u.aging.gsensorY;
         bitChange.outputZaxis = &uteModuleFactoryTestData.u.aging.gsensorZ;
         uteDrvGsensorCommonXYZaxisDataBitChange(&bitChange, 1, GSENSOR_DATA_BIT_STEP);
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+        //uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
         uteModuleFactoryTestData.u.aging.runningTimeSecond++;
 #endif
     }
@@ -121,7 +121,7 @@ void uteModuleFactoryTestEverySecond(void)
     else if (uteModuleFactoryTestData.currItem == TEST_ITEM_SCREEN_RGB)
     {
         uteModuleFactoryTestData.u.screen.runningTimeSecond++;
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+        //uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
     }
     else if (uteModuleFactoryTestData.currItem == TEST_ITEM_MIC_SPEAKER)
     {

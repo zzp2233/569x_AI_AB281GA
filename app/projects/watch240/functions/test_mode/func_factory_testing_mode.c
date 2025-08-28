@@ -91,8 +91,8 @@ enum
     QDEC_FORWARD_TXT_ID,
     QDEC_BACKWARD_TXT_ID,
     ///*马达测试*/
-    MOTOR_TXT_ID,
-    MOTOR_BTN_ID,
+    // MOTOR_TXT_ID,
+    // MOTOR_BTN_ID,
     ///*充电测试*/
     CHARGE_TXT_ID,
     ///*录音测试*/
@@ -117,7 +117,7 @@ typedef struct f_factory_testing_t_
     bool leakage_mode3_flag;///漏光测试-对空采集标志位
     u8 heart_max;///心率测试最大值
     u8 heart_dif;///心率测试dif值
-    bool motor_flag;///测试马达标志位
+    //bool motor_flag;///测试马达标志位
     bool tape_flag;///测试录音标志位
     bool horn_flag;///测试喇叭标志位
     u8   count_num;//测试喇叭标音频播放时间
@@ -133,7 +133,7 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
     // "心率测试",
     // "血氧测试",
     // "gsensor测试",
-    "马达测试",
+    //"马达测试",
     "充电测试",
     "咪头喇叭测试",
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
@@ -179,11 +179,11 @@ compo_form_t *func_factory_testing_create(void)
         uteModuleHeartStopSingleTesting(TYPE_BLOODOXYGEN);
     }
 #endif
-    if(f_factory_testing->motor_flag)
-    {
-        f_factory_testing->motor_flag = false;
-        uteDrvMotorDisable();
-    }
+    // if(f_factory_testing->motor_flag)
+    // {
+    //     f_factory_testing->motor_flag = false;
+    //     uteDrvMotorDisable();
+    // }
 
     if (test_data->moduleType == FACTORY_MODULE_VERSION)
     {
@@ -219,10 +219,10 @@ compo_form_t *func_factory_testing_create(void)
         frm = func_factory_testing_gsensor();
     }
 #endif
-    else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
-    {
-        frm = func_factory_testing_motor();
-    }
+    // else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
+    // {
+    //     frm = func_factory_testing_motor();
+    // }
     else if (test_data->moduleType == FACTORY_MODULE_CHARGING)
     {
         frm = func_factory_testing_charging();
@@ -277,7 +277,7 @@ static void func_factory_testing_init(void)
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     f_factory_testing->rgb_num = 0;///初始化RBG
     memset(f_factory_testing->tp_test, false, sizeof(f_factory_testing->tp_test));///初始化TP标志位
-    f_factory_testing->motor_flag =false;///初始化测试马达标志位
+    // f_factory_testing->motor_flag =false;///初始化测试马达标志位
 
     uteModuleNewFactoryTestResetParam();
     uteModuleNewFactoryTestSetMode(&test_data);
@@ -660,25 +660,25 @@ compo_form_t * func_factory_testing_motor(void)
 {
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
-//    compo_button_t *btn;
+// //    compo_button_t *btn;
 
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-    f_factory_testing->motor_flag = false;
+//     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+//     f_factory_testing->motor_flag = false;
 
-    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("马达测试"));
-    compo_textbox_set(textbox, "马达测试");
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
+//     compo_textbox_t *textbox = compo_textbox_create(frm, strlen("马达测试"));
+//     compo_textbox_set(textbox, "马达测试");
+//     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
 
-    textbox = compo_textbox_create(frm, strlen("震动关闭"));
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
-    compo_textbox_set(textbox, "震动关闭");
-    compo_setid(textbox,MOTOR_TXT_ID);
-    compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+//     textbox = compo_textbox_create(frm, strlen("震动关闭"));
+//     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+//     compo_textbox_set(textbox, "震动关闭");
+//     compo_setid(textbox,MOTOR_TXT_ID);
+//     compo_textbox_set_forecolor(textbox, make_color(0,191,255));
 
-    compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
-    compo_setid(btn, MOTOR_BTN_ID);
-    func_factory_testing_pass_fail_bnt_create(frm);
+//     compo_button_t *btn = compo_button_create(frm);
+//     compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+//     compo_setid(btn, MOTOR_BTN_ID);
+//     func_factory_testing_pass_fail_bnt_create(frm);
 
     return frm;
 }
@@ -885,25 +885,25 @@ static void func_mode_tp_click(void)
 
 static void func_mode_motor_click(void)
 {
-    int id = compo_get_button_id();
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-    compo_textbox_t *textbox = compo_getobj_byid(MOTOR_TXT_ID);///马达震动
+    // int id = compo_get_button_id();
+    // f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    // compo_textbox_t *textbox = compo_getobj_byid(MOTOR_TXT_ID);///马达震动
 
-    if(id != FALL_ID && id != PASS_ID)
-    {
-        if(!f_factory_testing->motor_flag)
-        {
-            f_factory_testing->motor_flag = true;
-            compo_textbox_set(textbox, (const char *)"震动开启");
-            uteDrvMotorEnable(); //开启马达
-        }
-        else
-        {
-            f_factory_testing->motor_flag = false;
-            compo_textbox_set(textbox, (const char *)"震动关闭");
-            uteDrvMotorDisable(); //关闭马达
-        }
-    }
+    // if(id != FALL_ID && id != PASS_ID)
+    // {
+    //     if(!f_factory_testing->motor_flag)
+    //     {
+    //         f_factory_testing->motor_flag = true;
+    //         compo_textbox_set(textbox, (const char *)"震动开启");
+    //         uteDrvMotorEnable(); //开启马达
+    //     }
+    //     else
+    //     {
+    //         f_factory_testing->motor_flag = false;
+    //         compo_textbox_set(textbox, (const char *)"震动关闭");
+    //         uteDrvMotorDisable(); //关闭马达
+    //     }
+    // }
 }
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
 static void func_mode_test_ring_click(void)
@@ -1035,10 +1035,10 @@ static void func_factory_testing_message(size_msg_t msg)
             {
                 func_mode_tp_click();
             }
-            else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
-            {
-                func_mode_motor_click();
-            }
+            // else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
+            // {
+            //     func_mode_motor_click();
+            // }
             else if (test_data->moduleType == FACTORY_MODULE_MIC_SPEAKER)
             {
                 func_mode_mic_speaker_click();

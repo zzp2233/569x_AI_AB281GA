@@ -141,10 +141,10 @@ uint16_t uteModuleNewFactoryTestGetTpVersion(void)
  *@author        lkl
  *@date        2022-02-09
  */
-uint16_t uteModuleNewFactoryAgingTestMotoCount(void)
-{
-    return uteModuleSmokeFactoryData.Moto_Count;
-}
+// uint16_t uteModuleNewFactoryAgingTestMotoCount(void)
+// {
+//     return uteModuleSmokeFactoryData.Moto_Count;
+// }
 /**
  *@brief  抽吸次数
  *@details
@@ -211,7 +211,7 @@ void uteModuleNewFactoryTestEverySecond(void)
                 // 屏幕10分钟亮一次，震动一次
                 if ((uteModuleNewFactoryTestData.secondCount % (60 * 10) == 0) && (uteModuleNewFactoryTestData.secondCount > 0))
                 {
-                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+                    //uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID, 0, __func__);
                 }
                 // 心率5分钟测一次，每次测1分钟
@@ -240,7 +240,7 @@ void uteModuleNewFactoryTestEverySecond(void)
                     {
                         if ((uteModuleNewFactoryTestData.secondCount % 3) == 0)
                         {
-                            uteDrvMotorStart(500, 500, 1);
+                            //uteDrvMotorStart(500, 500, 1);
                         }
                     }
 #endif
@@ -281,8 +281,8 @@ void uteModuleNewFactoryTestEverySecond(void)
                     }
                     // uteDrvMotorStart(500,500,1);
                     //   printf("MOTOR\n");
-                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
-                    uteModuleSmokeFactoryData.Moto_Count++;
+                    // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+                    // uteModuleSmokeFactoryData.Moto_Count++;
                 }
 
 #if ECIG_POWER_CONTROL

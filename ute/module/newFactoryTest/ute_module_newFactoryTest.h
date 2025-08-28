@@ -185,7 +185,7 @@ typedef struct
     uint8_t Smoke_R;     //烟弹阻值
     uint8_t Smoke_Module;//抽吸模式
     uint8_t Smoke_Hot;//发热丝状态
-    uint16_t Moto_Count;//震动次数
+    //uint16_t Moto_Count;//震动次数
     uint16_t Smoke_Count;//抽吸口数
     bool play_flag;
 }

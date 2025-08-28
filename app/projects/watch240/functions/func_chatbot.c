@@ -15,6 +15,7 @@
 static bool chatbot_network = false;
 static u16 chatbot_num = 0;
 static bool chatbot_VOL = false;
+static u8 saved_volume = 0;  // 保存进入机器人界面前的音量
 
 enum
 {
@@ -397,6 +398,14 @@ static void func_chatbot_enter(void)
 // 退出聊天机器人功能
 static void func_chatbot_exit(void)
 {
+    // 恢复保存的音量
+    if (saved_volume > 0)
+    {
+        bsp_set_volume(saved_volume);
+        printf("chatbot exit - restored volume: %d\\n", saved_volume);
+        saved_volume = 0;  // 清除保存的音量
+    }
+
     f_chatbot_t *f_cb = func_cb.f_cb;
     //gcal_cb_destroy();
 
@@ -420,8 +429,15 @@ static void func_chatbot_exit(void)
 // 聊天机器人功能
 void func_chatbot(void)
 {
+    // 保存当前音量
+    saved_volume = sys_cb.vol;
+    printf("chatbot enter - saved volume: %d\n", saved_volume);
+
+    // 设置为最大音量
+    bsp_set_volume(VOL_MAX);
+    printf("chatbot enter - set volume to max: %d\n", VOL_MAX);
+
     //watch_point_set(&func_cb.sta);
-    //bsp_set_volume(VOL_MAX);//进入机器人界面默认最大声
     printf("%s\n", __func__);
     bt_panu_network_connect();//进入机器人界面默认打开网络连接
     func_chatbot_enter();

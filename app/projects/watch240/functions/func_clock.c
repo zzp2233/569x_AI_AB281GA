@@ -291,9 +291,47 @@ static void func_clock_cube_disk_icon_click(void)
     if (func_sta > 0)
     {
 //        func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
+        /*
+        点击表盘盒子图标进入后返回时直接返回到表盘
         func_switch_to(func_sta, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
         func_cb.sta = func_sta;
         func_cb.menu_idx = icon_idx;                //记住当前编号
+        */
+
+//修改点击表盘盒子图标进入返回时按顺序返回
+        // 获取界面排序
+        uint8_t tblSort[MAX_FUNC_SORT_CNT];
+        uint8_t sortCnt;
+        uteModuleGuiCommonGetScreenTblSort(tblSort, &sortCnt);
+
+        // 找到目标界面在排序中的位置
+        int targetIndex = -1;
+        for (int i = 0; i < sortCnt; i++)
+        {
+            if (tblSort[i] == func_sta)
+            {
+                targetIndex = i;
+                break;
+            }
+        }
+
+        if (targetIndex > 0)
+        {
+            // 按顺序导航到目标界面
+            for (int i = 1; i <= targetIndex; i++)
+            {
+                task_stack_push(tblSort[i]);
+            }
+            func_cb.sta = func_sta;
+            func_cb.flag_sort = 1;
+        }
+        else
+        {
+            // 如果不在排序中，使用原有逻辑
+            func_switch_to(func_sta, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+            func_cb.sta = func_sta;
+        }
+        func_cb.menu_idx = icon_idx;
     }
 #endif
 }

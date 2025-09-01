@@ -15,7 +15,6 @@
 static bool chatbot_network = false;
 static u16 chatbot_num = 0;
 static bool chatbot_VOL = false;
-static u8 saved_volume = 0;  // 保存进入机器人界面前的音量
 
 enum
 {
@@ -34,9 +33,7 @@ typedef struct f_chatbot_t_
     bool need_reconn;       // 是否需要重新连接的标志位
     bool last_net_state;    // 记录上一次网络连接状态，用于检测网络状态变化
     bool exiting;           // 是否正在退出聊天功能的标志位
-    bool back_to;           // 是否需要返回上一界面的标志位
-    bool wait_disconn;
-    u32 wait_disconn_tick;
+    bool back_to;           // 是否需要返回上一界面的标志位（注：代码中未使用此字段）
 } f_chatbot_t;
 
 typedef struct chatbot_disp_btn_item_t_
@@ -132,7 +129,7 @@ static void event_cb(chatbot_event_t event)
                 printf("zzp1\n");                                            // 调试输出
                 f_cb->exiting = true;                                        // 标记正在退出
                 f_cb->back_to = true;                                        // 标记需要返回上一界面
-                //func_back_to();                                            // 返回函数调用
+                //func_back_to();                                            // 注释掉的返回函数调用
             }
             break;
 
@@ -195,7 +192,7 @@ static void event_cb(chatbot_event_t event)
                 chatbot_network = false;                                     // 设置全局网络状态为未连接
                 f_cb->exiting = true;                                        // 标记正在退出
                 f_cb->back_to = true;                                        // 标记需要返回上一界面
-                //func_back_to();                                            // 掉的返回函数调用
+                //func_back_to();                                            // 注释掉的返回函数调用
             }
             break;
         default:
@@ -243,25 +240,16 @@ static void func_chatbot_process(void)
         printf("f_cb->need_reconn = false\r\n");
         f_cb->need_reconn = false;
         f_cb->is_conn = false;
-        f_cb->wait_disconn = true;
-        f_cb->wait_disconn_tick = tick_get();
         chatbot_deinit();
-
-    }
-
-    if (f_cb->wait_disconn)
-    {
         if (chatbot_init())
         {
-            f_cb->wait_disconn = false;
             chatbot_set_event_callback(event_cb);
             chatbot_start();
+            f_cb->is_conn = true;
         }
-        if (tick_check_expire(f_cb->wait_disconn_tick, 4000))
+        else
         {
-            f_cb->wait_disconn = false;
-            printf("zzp2\n");
-            func_back_to();
+            //func_back_to();
         }
     }
     reset_sleep_delay_all(); // 不休眠
@@ -269,7 +257,6 @@ static void func_chatbot_process(void)
     if (f_cb->back_to)
     {
         f_cb->back_to = false;
-        printf("zzp3\n");
         func_back_to();
     }
     func_process();
@@ -410,14 +397,6 @@ static void func_chatbot_enter(void)
 // 退出聊天机器人功能
 static void func_chatbot_exit(void)
 {
-    // 恢复保存的音量
-    if (saved_volume > 0)
-    {
-        bsp_set_volume(saved_volume);
-        printf("chatbot exit - restored volume: %d\\n", saved_volume);
-        saved_volume = 0;  // 清除保存的音量
-    }
-
     f_chatbot_t *f_cb = func_cb.f_cb;
     //gcal_cb_destroy();
 
@@ -430,7 +409,9 @@ static void func_chatbot_exit(void)
     compo_form_t *frm = func_create_form(func_cb.sta);
     f_cb->exiting = true;
     f_cb->is_conn = false;
+    printf("zzp1\n");
     chatbot_deinit();
+    printf("zzp2\n");
     compo_form_destroy(frm);
 
 
@@ -439,15 +420,8 @@ static void func_chatbot_exit(void)
 // 聊天机器人功能
 void func_chatbot(void)
 {
-    // 保存当前音量
-    saved_volume = sys_cb.vol;
-    printf("chatbot enter - saved volume: %d\n", saved_volume);
-
-    // 设置为最大音量
-    bsp_set_volume(VOL_MAX);
-    printf("chatbot enter - set volume to max: %d\n", VOL_MAX);
-
     //watch_point_set(&func_cb.sta);
+    //bsp_set_volume(VOL_MAX);//进入机器人界面默认最大声
     printf("%s\n", __func__);
     bt_panu_network_connect();//进入机器人界面默认打开网络连接
     func_chatbot_enter();

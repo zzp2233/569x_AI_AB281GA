@@ -548,9 +548,9 @@ u8 bsp_key_scan(void)
         {
             if ((key & KEY_TYPE_MASK) == KEY_SHORT_UP || (key & KEY_TYPE_MASK) == KEY_LONG_UP || (key & KEY_TYPE_MASK) == KEY_SHORT_UP_DELAY)
             {
-                sys_cb.gui_need_wakeup = 1;
                 if(uteApplicationCommonIsPowerOn())
                 {
+                    sys_cb.gui_need_wakeup = 1;
                     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
                 }
             }

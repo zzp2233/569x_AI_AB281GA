@@ -20,7 +20,7 @@
 #include "func.h"
 
 //多国语言
-#include "lang.h"
+//#include "lang.h"
 
 //扩展
 #include "plugin.h"
@@ -30,6 +30,10 @@
 #include "ui.h"
 #include "ui_external.h"
 
+//ute
+#include "ute_project_config.h"
+#include "ute_module_log.h"
+#include "ute_language_common.h"
 
 #ifndef sscanf
 extern int sscanf(char *s, const char *format, ...);

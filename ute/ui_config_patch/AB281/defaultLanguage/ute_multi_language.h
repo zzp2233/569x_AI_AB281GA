@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-02-19 14:23:40
+*@date   2025-03-17 09:20:50
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -263,12 +263,18 @@ enum
     STR_PORTUGUESE, // Português
     STR_SPANISH, // Español
     STR_THAI, // ภาษาไทย
+    STR_WOMEN_HEALTH, // 女性健康
+    STR_PLEASE_APP_DATA, // 请前往APP同步数据
+    STR_MENSTRUAL_CYCLE, // 月经期
+    STR_PREGNANCY, // 易孕期
+    STR_SAFE_PERIOD, // 安全期
+    STR_HEART_HIGHT, // 心率过高
+    STR_HEART_LOW, // 心率过低
 };
 
 extern const char * const *i18n;
 extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
-extern const char * const i18n_ar_ril[];
 extern const char * const i18n_ru_rru[];
 extern const char * const i18n_tr_rtr[];
 extern const char * const i18n_ja_rjp[];

@@ -10,25 +10,102 @@
 #define _UTE_PROJECT_CONFIG_H_
 
 #define PROJECT_AB281_SUPPORT        0
-#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T62,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281AB_SUPPORT      0 /*! 同乐达 T69,在T62基础上增加编码器,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-04-18 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
-#define PROJECT_AB281C_SUPPORT       0 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
-#define PROJECT_ABE012_SUPPORT       0
-#define PROJECT_ABE013_SUPPORT       1
+#define PROJECT_AB281C_SUPPORT       0 /*! 同乐达 T60, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-01-21 */
+#define PROJECT_AB281D_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-01-21 */
+#define PROJECT_AB281AC_SUPPORT      0 /*! 同乐达T66，TFT 240x296 NV3030B,CHIP_5691C_F 基于AB281AV0000031修改分辨率为240x296 ,ganqian.yi 2025-4-21*/
+#define PROJECT_AB281E_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-04-21 */
+#define PROJECT_AB281DA_SUPPORT      0 /*! 共鑫W17Y,在AB281D基础上更改蓝牙名, TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-01-21 */
+#define PROJECT_AB281F_SUPPORT       0 /*! 同乐达T70 TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
+#define PROJECT_AB281EA_SUPPORT      0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-04-21 */
+#define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
+#define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
+#define PROJECT_AB281DB_SUPPORT      1 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
+#define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-05-19 G28Z项目 */
+#define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
+#define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
+#define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
+#define PROJECT_AB281N_SUPPORT       0 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
+#define PROJECT_AB281DC_SUPPORT      0 /*! 恒鑫HX01定制,双按键+编码器+手电筒,TFT 240x296 JD9853,CHIP_5691C_F,wang.luo 2025-06-13 */
+#define PROJECT_AB281GA_SUPPORT      0 /*! 传音815N,amoled 368x448,wang.luo,CHIP_5691G 2025-06-13 */
+#define PROJECT_AB281FA_SUPPORT      0 /*! 同乐达T70-A TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
+#define PROJECT_AB281AD_SUPPORT      0 /*! 融创A310,在T62基础上增加编码器,TFT 240X294 NV3030B,CHIP_5691C_F,qiquan.cai 2025-06-21 */
+#define PROJECT_AB281DE_SUPPORT      0 /*! JU107首版软件需求,TFT 240X284 NV3030B,CHIP_5691C_F,基于AB281DA,banghua.yin 2025-06-24 */
+#define PROJECT_AB281JA_SUPPORT      0 /*! HX03 天之蓝UI, TFT 360x360,CHIP_5691C_F,banghua.yin 2025-06-28 */
+#define PROJECT_AB281AE_SUPPORT      0 /*! 同乐达 T75,在T62-AB281AB基础上修改表盘、蓝牙名T75、电池,TFT 240X284 NV3030B,CHIP_5691C_F,xiaoqing.huang 2025-06-28 */
+#define PROJECT_AB281KA_SUPPORT      0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-06-03 */
+#define PROJECT_AB281AF_SUPPORT      0 /*! 共鑫W23Z，TFT 240x296 NV3030B,CHIP_5691C_F,qiquan.cai 2025-4-21*/
+#define PROJECT_AB281JB_SUPPORT      0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-05-19 G28Z中性项目 */
+#define PROJECT_AB281AG_SUPPORT      0 /*! 同乐达 T75-定制,在T75-AB281AE基础上修改蓝牙名F3 Stream、Gloryfit、开关机logo,TFT 240X284 NV3030B,CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
+#define PROJECT_AB281DD_SUPPORT      0 /*! 共鑫W31,在AB281DA基础上更改蓝牙名、开关机logo、高压电池, TP:SPT5113C 240x284 CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
+
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
 #elif PROJECT_AB281A_SUPPORT
 #include"ute_project_config_ab281a.h"
+#elif PROJECT_AB281AB_SUPPORT
+#include"ute_project_config_ab281ab.h"
 #elif PROJECT_AB281B_SUPPORT
 #include"ute_project_config_ab281b.h"
 #elif PROJECT_AB281C_SUPPORT
 #include"ute_project_config_ab281c.h"
-#elif PROJECT_ABE012_SUPPORT
-#include"ute_project_config_abe012.h"
-#elif PROJECT_ABE013_SUPPORT
-#include"ute_project_config_abe013.h"
+#elif PROJECT_AB281D_SUPPORT
+#include"ute_project_config_ab281d.h"
+#elif PROJECT_AB281AC_SUPPORT
+#include "ute_project_config_ab281ac.h"
+#elif PROJECT_AB281DA_SUPPORT
+#include"ute_project_config_ab281da.h"
+#elif PROJECT_AB281DB_SUPPORT
+#include"ute_project_config_ab281db.h"
+#elif PROJECT_AB281E_SUPPORT
+#include"ute_project_config_ab281e.h"
+#elif PROJECT_AB281F_SUPPORT
+#include"ute_project_config_ab281f.h"
+#elif PROJECT_AB281EA_SUPPORT
+#include"ute_project_config_ab281ea.h"
+#elif PROJECT_AB281G_SUPPORT
+#include"ute_project_config_ab281g.h"
+#elif PROJECT_AB281J_SUPPORT
+#include"ute_project_config_ab281j.h"
+#elif PROJECT_AB281H_SUPPORT
+#include"ute_project_config_ab281h.h"
+#elif PROJECT_AB281K_SUPPORT
+#include"ute_project_config_ab281k.h"
+#elif PROJECT_AB281L_SUPPORT
+#include"ute_project_config_ab281l.h"
+#elif PROJECT_AB281M_SUPPORT
+#include"ute_project_config_ab281m.h"
+#elif PROJECT_AB281N_SUPPORT
+#include"ute_project_config_ab281n.h"
+#elif PROJECT_AB281DC_SUPPORT
+#include"ute_project_config_ab281dc.h"
+#elif PROJECT_AB281GA_SUPPORT
+#include"ute_project_config_ab281ga.h"
+#elif PROJECT_AB281FA_SUPPORT
+#include"ute_project_config_ab281fa.h"
+#elif PROJECT_AB281AD_SUPPORT
+#include"ute_project_config_ab281ad.h"
+#elif PROJECT_AB281DE_SUPPORT
+#include"ute_project_config_ab281de.h"
+#elif PROJECT_AB281AE_SUPPORT
+#include"ute_project_config_ab281ae.h"
+#elif PROJECT_AB281JA_SUPPORT
+#include"ute_project_config_ab281ja.h"
+#elif PROJECT_AB281KA_SUPPORT
+#include"ute_project_config_ab281ka.h"
+#elif PROJECT_AB281AF_SUPPORT
+#include "ute_project_config_ab281af.h"
+#elif PROJECT_AB281JB_SUPPORT
+#include"ute_project_config_ab281jb.h"
+#elif PROJECT_AB281AG_SUPPORT
+#include"ute_project_config_ab281ag.h"
+#elif PROJECT_AB281DD_SUPPORT
+#include"ute_project_config_ab281dd.h"
 #endif
+
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 1
 
@@ -53,17 +130,29 @@
 #define TITLE_BAR_HIGH   28
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-#define TITLE_BAR_HIGH   28    ///标题栏高度
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-#define TITLE_BAR_HIGH   64    ///标题栏高度
+/*! 侧边栏添加应用数量,qiquan.cai 2025-05-29 */
+#ifndef UTE_CLOCK_SIDE_ADD_WIDGET_NUM
+#define CLOCK_SIDE_ADD_WIDGET_NUM         5
 #else
-#define TITLE_BAR_HIGH   28
+#define CLOCK_SIDE_ADD_WIDGET_NUM         UTE_CLOCK_SIDE_ADD_WIDGET_NUM
 #endif
+
+/*! 标题栏高度,qiquan.cai 2025-05-29 */
+#ifndef UTE_TITLE_BAR_HIGH
+#define TITLE_BAR_HIGH         28
+#else
+#define TITLE_BAR_HIGH         UTE_TITLE_BAR_HIGH
+#endif
+
 
 /*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
 #ifndef UTE_DRV_CTP_SELECT
 #define UTE_DRV_CTP_SELECT             CTP_CHSC6X
+#endif
+
+/*! 心率sensor选择,wang.luo 2025-04-16 */
+#ifndef UTE_DRV_HR_SENSOR_SELECT
+#define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VC30FX
 #endif
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
@@ -80,7 +169,7 @@
 
 /*! 中科平台广播UUID,wang.luo 2025-02-13 */
 #ifndef UTE_SERVICE_APP_GLORY_ME_SUPPORT
-#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 1
 #endif
 
 /*! gloryfit 广播数据标识 zn.zeng  modify Jul 05, 2021 */
@@ -91,6 +180,11 @@
 #endif
 /*! 应用端识别是否在搜索界面显示蓝牙名zn.zeng  modify Jul 05, 2021 */
 #define UTE_APP_DISPLAY_BT_NAME_ADVERTISE_DATA       "\x22\x22"
+
+/*! 最多MTU设置，不能超过247,wang.luo 2025-06-24 */
+#ifndef UTE_BLE_MTU_MAX_SIZE
+#define UTE_BLE_MTU_MAX_SIZE       247
+#endif
 
 /*! 显示蓝牙名蓝牙地址后4位 zn.zeng, 2021-12-08  */
 #ifndef UTE_APP_DISPLAY_NAME_ID_SUPPORT
@@ -142,7 +236,7 @@
 
 /** 系统启动电压*/
 #ifndef UTE_DRV_BATTERY_POWER_ON_VOLTAGE
-#define UTE_DRV_BATTERY_POWER_ON_VOLTAGE     3300  //mv
+#define UTE_DRV_BATTERY_POWER_ON_VOLTAGE     3400  //mv
 #endif
 
 /** 系统自动关机白分比*/
@@ -214,7 +308,7 @@
 #define UTE_DRV_BATTERY_MAX_VOLTAGE 4450
 #elif UTE_DRV_BATTERY_100 > 4350
 #define UTE_DRV_BATTERY_MAX_VOLTAGE 4400
-#elif UTE_DRV_BATTERY_100 >= 4300
+#elif UTE_DRV_BATTERY_100 > 4200
 #define UTE_DRV_BATTERY_MAX_VOLTAGE 4350
 #else
 #define UTE_DRV_BATTERY_MAX_VOLTAGE 4200
@@ -286,7 +380,43 @@
 #endif
 /*! 相同分辨率不同R角的在线表盘区分,R角范围0~255 xjc 2023-07-05 */
 #ifndef UTE_MODULE_WATCHONLINNE_R_VALUE
+#if (UTE_DRV_SCREEN_WIDTH == 167 && UTE_DRV_SCREEN_HEIGHT == 240)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   23
+#elif (UTE_DRV_SCREEN_WIDTH == 172 && UTE_DRV_SCREEN_HEIGHT == 320)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   23
+#elif (UTE_DRV_SCREEN_WIDTH == 194 && UTE_DRV_SCREEN_HEIGHT == 368)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   23
+#elif (UTE_DRV_SCREEN_WIDTH == 200 && UTE_DRV_SCREEN_HEIGHT == 320)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   14
+#elif (UTE_DRV_SCREEN_WIDTH == 240 && UTE_DRV_SCREEN_HEIGHT == 240)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   36
+#elif (UTE_DRV_SCREEN_WIDTH == 240 && (UTE_DRV_SCREEN_HEIGHT == 280 || UTE_DRV_SCREEN_HEIGHT == 284 || UTE_DRV_SCREEN_HEIGHT == 286))
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   43
+#elif (UTE_DRV_SCREEN_WIDTH == 240 && UTE_DRV_SCREEN_HEIGHT == 296)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   48    // 小R角 48 大R角 62
+#elif (UTE_DRV_SCREEN_WIDTH == 280 && UTE_DRV_SCREEN_HEIGHT == 456)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   37
+#elif (UTE_DRV_SCREEN_WIDTH == 320 && UTE_DRV_SCREEN_HEIGHT == 320)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   36
+#elif (UTE_DRV_SCREEN_WIDTH == 320 && UTE_DRV_SCREEN_HEIGHT == 360)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   36
+#elif (UTE_DRV_SCREEN_WIDTH == 320 && UTE_DRV_SCREEN_HEIGHT == 380)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   52
+#elif (UTE_DRV_SCREEN_WIDTH == 356 && UTE_DRV_SCREEN_HEIGHT == 400)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   60
+#elif (UTE_DRV_SCREEN_WIDTH == 360 && UTE_DRV_SCREEN_HEIGHT == 360)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   36
+#elif (UTE_DRV_SCREEN_WIDTH == 360 && UTE_DRV_SCREEN_HEIGHT == 392)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   92
+#elif (UTE_DRV_SCREEN_WIDTH == 368 && UTE_DRV_SCREEN_HEIGHT == 448)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   58    // 小R角 58 大R角 102
+#elif (UTE_DRV_SCREEN_WIDTH == 390 && UTE_DRV_SCREEN_HEIGHT == 450)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   92
+#elif (UTE_DRV_SCREEN_WIDTH == 410 && UTE_DRV_SCREEN_HEIGHT == 502)
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   113
+#else
 #define UTE_MODULE_WATCHONLINNE_R_VALUE   0
+#endif
 #endif
 /*! 屏使用16bit色彩 zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_SCREEN_PIXEL_BYTES
@@ -359,6 +489,11 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #ifndef DEFAULT_WATCH_INDEX
 #define DEFAULT_WATCH_INDEX                      0
+#endif
+
+/*! 默认菜单索引 zn.zeng, 2021-10-25  */
+#ifndef DEFAULT_THEMETYPE_INDEX
+#define DEFAULT_THEMETYPE_INDEX                      MENU_STYLE_LIST
 #endif
 
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
@@ -492,12 +627,12 @@
 
 /*! pwm控制马达支持zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_MOTOR_PWM_MODE_SUPPORT
-#define UTE_DRV_MOTOR_PWM_MODE_SUPPORT 0
+#define UTE_DRV_MOTOR_PWM_MODE_SUPPORT 1
 #endif
 
 /*! pwm控制马达的频率zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_MOTOR_PWM_RATE_HZ
-#define UTE_DRV_MOTOR_PWM_RATE_HZ 177
+#define UTE_DRV_MOTOR_PWM_RATE_HZ 160
 #endif
 
 //允许马达振动
@@ -543,6 +678,55 @@
 #define UTE_MUSIC_ARTLIST_MAX_SIZE  103
 #endif
 
+/*! 默认PWM频率,中科平台PWM使用一个定时器产生，不能多路PWM输出不同频率的PWM信号,wang.luo 2025-05-09 */
+#ifndef UTE_DRV_DEFAULT_PWM_HZ
+#define UTE_DRV_DEFAULT_PWM_HZ 160
+#endif
+
+/*! LED手电筒,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_SUPPORT
+#define UTE_DRV_LED_SUPPORT 0
+#endif
+
+/*! LED手电筒PWM调整亮度,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_PWM_MODE_SUPPORT
+#define UTE_DRV_LED_PWM_MODE_SUPPORT 0 //目前LED使用PB7，马达使用PE3，在同一组PWM，无法同时使用
+#endif
+
+/*! 手电筒LED电源gpio pin,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_POWER_GPIO_PIN
+#define UTE_DRV_LED_POWER_GPIO_PIN      IO_PF5
+#endif
+
+#ifndef UTE_DRV_LED_ENABLE_GPIO_PIN
+#define UTE_DRV_LED_ENABLE_GPIO_PIN     IO_PB7
+#endif
+
+#ifndef UTE_DRV_LED_ENABLE_PWM_ID
+#define UTE_DRV_LED_ENABLE_PWM_ID       GPIO_PB7
+#endif
+
+/*! LED亮度等级,wang.luo 2025-06-18 */
+#ifndef UTE_DRV_LED_PWM_LEVEL_HIGH
+#define UTE_DRV_LED_PWM_LEVEL_HIGH 90
+#endif
+#ifndef UTE_DRV_LED_PWM_LEVEL_MEDIUM
+#define UTE_DRV_LED_PWM_LEVEL_MEDIUM 70
+#endif
+#ifndef UTE_DRV_LED_PWM_LEVEL_LOW
+#define UTE_DRV_LED_PWM_LEVEL_LOW 50
+#endif
+
+/*!默认LED亮度等级 level 0-100,wang.luo 2025-06-18 */
+#ifndef UTE_MODULE_LED_PWM_DEFAULT_LEVEL
+#define UTE_MODULE_LED_PWM_DEFAULT_LEVEL UTE_DRV_LED_PWM_LEVEL_HIGH
+#endif
+
+/*! 复用心率电源,wang.luo 2025-06-19 */
+#ifndef UTE_DRV_REUSE_HEART_POWER_SUPPORT
+#define UTE_DRV_REUSE_HEART_POWER_SUPPORT 1
+#endif
+
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE
 #define DEFAULT_LANGUAGE 0x02//ENGLISH_LANGUAGE_ID
@@ -575,6 +759,15 @@
 /*! UTE多国语言,wang.luo 2024-11-08 */
 #ifndef UTE_MULTIPLE_LANGUAGE_SUPPORT
 #define UTE_MULTIPLE_LANGUAGE_SUPPORT 1
+#endif
+
+/*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
+#ifndef UTE_MODULE_BEDSIDE_MODE_SUPPORT
+#define UTE_MODULE_BEDSIDE_MODE_SUPPORT 0
+#endif
+/*! 床头钟模式默认开关,wang.luo 2025-04-29 */
+#ifndef UTE_MODULE_BEDSIDE_MODE_DEFAULT_OPEN
+#define UTE_MODULE_BEDSIDE_MODE_DEFAULT_OPEN false
 #endif
 
 #ifndef UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
@@ -837,7 +1030,7 @@
 
 /*! 天气增加紫外强度和湿度 2022-09-22  */
 #ifndef UTE_MODULE_WEATHER_HUMIDITY_ULTRAVIOLET_SUPPORT
-#define UTE_MODULE_WEATHER_HUMIDITY_ULTRAVIOLET_SUPPORT 0
+#define UTE_MODULE_WEATHER_HUMIDITY_ULTRAVIOLET_SUPPORT 1
 #endif
 
 /* 天气城市名支持,utf8编码 txj 2022-11-10*/
@@ -932,6 +1125,97 @@
 /*! zn.zeng, 2021-08-31  */
 #ifndef UTE_MODULE_BLOODOXYGEN_SAVE_DATA_MAX_DAYS
 #define UTE_MODULE_BLOODOXYGEN_SAVE_DATA_MAX_DAYS 7
+#endif
+
+/*! 情绪压力模块,xjc 2022-02-15*/
+#ifndef UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 1
+#endif
+/*! 情绪压力自动测试模式默认打开,xjc 2022-02-15  */
+#ifndef UTE_MODULE_EMOTION_PRESSURE_SAVE_DATA_MAX_DAYS
+#define UTE_MODULE_EMOTION_PRESSURE_SAVE_DATA_MAX_DAYS 7
+#endif
+/*! 情绪压力自动测试模式默认打开,xjc 2022-02-15  */
+#ifndef UTE_MODULE_EMOTION_PRESSURE_IS_AUTO_OPEN
+#define UTE_MODULE_EMOTION_PRESSURE_IS_AUTO_OPEN false
+#endif
+/*! 情绪压力时间段测试模式默认关闭,xjc 2022-02-15  */
+#ifndef UTE_MODULE_EMOTION_PRESSURE_IS_AUTO_TIME_BUCKET_OPEN
+#define UTE_MODULE_EMOTION_PRESSURE_IS_AUTO_TIME_BUCKET_OPEN false
+#endif
+/*! 情绪压力自动测试时间间隔，单位为分钟，默认为10分钟,xjc 2022-02-15  */
+#ifndef UTE_MODULE_EMOTION_PRESSURE_AUTO_INTERVAL_MIN
+#define UTE_MODULE_EMOTION_PRESSURE_AUTO_INTERVAL_MIN 10
+#endif
+/*! 情绪压力测试时间段,xjc 2022-02-15  */
+#ifndef UTE_MODULE_EMOTION_PRESSURE_TIME_BUCKET_START
+#define UTE_MODULE_EMOTION_PRESSURE_TIME_BUCKET_START 0X0001
+#define UTE_MODULE_EMOTION_PRESSURE_TIME_BUCKET_END 0X173B
+#endif
+/*! 情绪压力测量时长,xjc 2022-02-15  */
+#ifndef UTE_DRV_EMOTION_PRESSURE_TEST_TIMEOUT_SECOND
+#define UTE_DRV_EMOTION_PRESSURE_TEST_TIMEOUT_SECOND 45
+#endif
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#ifndef UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+#define UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT 1 // 维客情绪压力算法
+#ifndef UTE_MODULE_SCREENS_FATIGUE_SUPPORT
+#define UTE_MODULE_SCREENS_FATIGUE_SUPPORT 0 // 疲劳度
+#endif
+#ifndef UTE_MODULE_SCREENS_EMOTION_SUPPORT
+#define UTE_MODULE_SCREENS_EMOTION_SUPPORT 1 // 情绪界面
+#endif
+#ifndef UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+#define UTE_MODULE_SCREENS_PRESSURE_SUPPORT 1 // 压力界面
+#endif
+#endif
+#endif
+#ifndef UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT
+#define UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT 1
+#endif
+
+/*! 呼吸率,wang.luo 2025-04-25 */
+#ifndef UTE_MODULE_BREATHRATE_SUPPORT
+#define UTE_MODULE_BREATHRATE_SUPPORT 0
+#endif
+#ifndef UTE_DRV_BREATHRATE_VCXX_SUPPORT
+#define UTE_DRV_BREATHRATE_VCXX_SUPPORT 0
+#endif
+/*!呼吸率自动测试模式默认打开 zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_IS_AUTO_OPEN
+#define UTE_MODULE_BREATHRATE_IS_AUTO_OPEN true
+#endif
+/*!呼吸率时间段测试模式默认关闭 zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_IS_AUTO_TIME_BUCKET_OPEN
+#define UTE_MODULE_BREATHRATE_IS_AUTO_TIME_BUCKET_OPEN false
+#endif
+/*!呼吸率自动测试时间间隔，单位为分钟，默认为10分钟     zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_AUTO_INTERVAL_MIN
+#define UTE_MODULE_BREATHRATE_AUTO_INTERVAL_MIN 10
+#endif
+/*! 呼吸率测试时间段zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_TIME_BUCKET_START
+#define UTE_MODULE_BREATHRATE_TIME_BUCKET_START 0X0001
+#define UTE_MODULE_BREATHRATE_TIME_BUCKET_END 0X173B
+#endif
+/*! zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_SAVE_DATA_MAX_DAYS
+#define UTE_MODULE_BREATHRATE_SAVE_DATA_MAX_DAYS 7
+#endif
+/*!呼吸率最大数字，zn.zeng 2023-01-12  */
+#define UTE_MODULE_BREATHRATE_MAX_VALUE 50
+
+/*! 关闭心率自动测量时使用wear模式优化佩戴检测,wang.luo 2025-07-21 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
+#define UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT 0
+#endif
+/*! 佩戴检测时间间隔,wang.luo 2025-07-22 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_AUTO_INTERVAL_MIN
+#define UTE_MODULE_HEART_WEAR_DETECTION_AUTO_INTERVAL_MIN 10
+#endif
+/*! 佩戴检测时长,wang.luo 2025-07-22 */
+#ifndef UTE_MODULE_HEART_WEAR_DETECTION_TIMEOUT_SECOND
+#define UTE_MODULE_HEART_WEAR_DETECTION_TIMEOUT_SECOND 10
 #endif
 
 //二维码链接内容
@@ -1098,7 +1382,7 @@
 4、默认运动的显示顺序,开了几个运动就按需要的顺序填写,不要重复,不显示的置0;
 */
 #ifndef UTE_MODULE_SPORT_HUNDRED_SUPPORT
-#define UTE_MODULE_SPORT_HUNDRED_SUPPORT 0
+#define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1
 #endif
 /*! 支持的运动数量, xjc 2022-03-09  */
 #ifndef UTE_MODULE_SPORT_MAX_SPORT_NUM
@@ -1106,7 +1390,7 @@
 #endif
 /*! 多运动界面显示的最少运动数量, xjc 2022-03-29 */
 #ifndef UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM
-#define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM 1
+#define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM 4
 #endif
 /*! 多运动界面显示的最大运动数量, xjc 2022-03-29 */
 #ifndef UTE_MODULE_SPORT_DISPLAY_MAX_SPORT_NUM
@@ -1120,7 +1404,7 @@
 
 /*! 省略运动算法定时器,把运动算法丢到系统500ms定时器中,wang.luo 2025-02-21 */
 #ifndef UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
-#define UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT 0
+#define UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT 1
 #endif
 
 /*! 运动算法定时器时长,wang.luo 2024-11-12 */
@@ -1130,7 +1414,7 @@
 
 /*! 运动计步算法自动切换主频以降低功耗,静止时降低主频,运动时提高主频,wang.luo 2025-02-21 */
 #ifndef UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
-#define UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT 1
+#define UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT 0
 #endif
 
 /*! 打开拍照界面app也打开,dengli.lu 2022-08-18*/
@@ -1198,16 +1482,49 @@
 #define UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT 0
 #endif
 
+#define SENSOR_HR_NULL                           0
+#define SENSOR_HR_EN                             0x200
+#define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
+#define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
+#define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
+#define SENSOR_HR_VCLC09A                        (SENSOR_HR_EN | 0x4)
+
+/*! 心率漏光测试默认阈值,wang.luo 2025-05-15 */
+#ifndef DRV_HEART_VCXX_LIGHT_I_MIN_VALUE
+#if (UTE_DRV_HR_SENSOR_SELECT == SENSOR_HR_VCLC09A)
+#define DRV_HEART_VCXX_LIGHT_I_MIN_VALUE 85 //100 单颗灯时电流只需要大于85
+#define DRV_HEART_VCXX_LIGHT_I_MAX_VALUE 120
+#define DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE 2
+#define DRV_HEART_VCXX_PS_MIN_VALUE 10
+#define DRV_HEART_VCXX_BIO_PASS_VALUE 0
+#else
 #define DRV_HEART_VCXX_LIGHT_I_MIN_VALUE 100
 #define DRV_HEART_VCXX_LIGHT_I_MAX_VALUE 120
 #define DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE 32
 #define DRV_HEART_VCXX_PS_MIN_VALUE 210
 #define DRV_HEART_VCXX_BIO_PASS_VALUE 60
+#endif
+#endif
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #ifndef UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT
-#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7
-#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY, FUNC_HEARTRATE, FUNC_SLEEP, FUNC_BLOOD_OXYGEN, FUNC_BT, FUNC_COMPO_SELECT}
+#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 2
+#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY}
+#endif
+
+/*! 表盘左侧界面,wang.luo 2025-04-07 */
+#ifndef UTE_CUI_SCREEN_WATCHDIAL_LEFT
+#define UTE_CUI_SCREEN_WATCHDIAL_LEFT FUNC_NULL
+#endif
+
+/*! 表盘上拉界面,wang.luo 2025-04-07 */
+#ifndef UTE_CUI_SCREEN_WATCHDIAL_PULLUP
+#define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_NULL
+#endif
+
+/*! KEY1跳转界面,wang.luo 2025-04-09 */
+#ifndef UTE_KEY_LEFT_SWITCH_SCREEN
+#define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
 #endif
 
 /*! 体温模块支持zn.zeng, 2021-12-01  */
@@ -1312,6 +1629,46 @@
 /*! 使用UTE表盘头,需使用修改后的表盘工具生成表盘，无法使用原厂工具,wang.luo 2024-11-25 */
 #ifndef UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
 #define UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT 1
+#endif
+
+/*! 相册表盘功能,wang.luo 2025-05-29 */
+#ifndef UTE_MODULE_WATCH_PHOTO_SUPPORT
+#define UTE_MODULE_WATCH_PHOTO_SUPPORT 1
+#endif
+/*! 相册表盘最大图片数量,wang.luo 2025-05-29 */
+#ifndef UTE_MODULE_WATCH_PHOTO_MAX_PICTURE_CNT
+#define UTE_MODULE_WATCH_PHOTO_MAX_PICTURE_CNT 1
+#endif
+/*! 相册表盘自定义字体颜色,wang.luo 2025-05-29 */
+#ifndef UTE_MODULE_WATCH_PHOTO_CUSTOM_FONT_COLOR_SUPPORT
+#define UTE_MODULE_WATCH_PHOTO_CUSTOM_FONT_COLOR_SUPPORT 1
+#endif
+/*! 相册表盘默认字体颜色,wang.luo 2025-05-29 */
+#ifndef UTE_MODULE_WATCH_PHOTO_DEFAULT_FONT_COLOR
+#define UTE_MODULE_WATCH_PHOTO_DEFAULT_FONT_COLOR 0xffffff
+#endif
+/*! 相册表盘默认ID,wang.luo 2025-05-29 */
+#ifndef UTE_MODULE_WATCH_PHOTO_DEFAULT_ID
+#define UTE_MODULE_WATCH_PHOTO_DEFAULT_ID 0xFFFFFFFE
+#endif
+/*! 相册表盘数据存储地址偏移,wang.luo 2025-05-29 */
+#ifndef UTE_MODULE_WATCH_PHOTO_BASSADDR_OFFSET
+#define UTE_MODULE_WATCH_PHOTO_BASSADDR_OFFSET 0x1000
+#endif
+
+/*! 表盘预览样式选择: 1 横向列表 2 堆叠 3 立体转盘,wang.luo 2025-05-29 */
+#ifndef UTE_MODULE_WATCH_PREVIEW_STYLE
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 3
+#endif
+
+/*! 默认预览图图片使用列表样式时偏小，开启这个宏后会对列表样式图片放大,wang.luo 2025-06-06 */
+#ifndef UTE_MODULE_WATCH_PREVIEW_ENLARGE_IMAGE_SUPPORT
+#define UTE_MODULE_WATCH_PREVIEW_ENLARGE_IMAGE_SUPPORT 1
+#endif
+
+/*! 预览图图片放大倍数,wang.luo 2025-06-06 */
+#ifndef UTE_MODULE_WATCH_PREVIEW_ENLARGE_IMAGE_MULTIPLE
+#define UTE_MODULE_WATCH_PREVIEW_ENLARGE_IMAGE_MULTIPLE 1.2f
 #endif
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
@@ -1422,9 +1779,23 @@
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_VOLUME_LEVEL 12
 #endif
 
+/*! 新工厂模式下的老化测试使用三种模式 yin, 2025-06-28  */
+#ifndef UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
+#define UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST 1
+#endif
+/*! 工厂模式TP测试不用跳过弹窗 yin, 2025-07-14  */
+#ifndef UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+#define UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION 0
+#endif
+
 /*! 咪头喇叭测试的时候，播放音量, 2022-06-15  */
 #ifndef UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME
 #define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 10
+#endif
+
+/*! 工厂测试咪头测试改为边录边播，如果啸叫需要改小播放音量,wang.luo 2025-07-23 */
+#ifndef UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT
+#define UTE_MODULE_MIC_RECORD_FACTORY_DIRECT_OUT_SUPPORT 0
 #endif
 
 /*! 咪头喇叭测试录音时长,wang.luo 2025-05-10 */
@@ -1433,15 +1804,18 @@
 #endif
 
 /*! hardfault info to flash zn.zeng,2022-03-10*/
-#if UTE_MODULE_LOG_SUPPORT
-#define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 0
-#else
+#ifndef UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
 #define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 1
 #endif
 
 /*! 保存重启信息最大数量,wang.luo 2024-12-30 */
 #ifndef UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT
 #define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 6
+#endif
+
+/*! hardfault静默重启,不显示蓝屏，不显示开机logo,wang.luo 2025-06-11 */
+#ifndef UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT (!UTE_MODULE_LOG_SUPPORT)
 #endif
 
 /*! 重置BT地址，启用后BT和BLE地址会不同,wang.luo 2025-02-08 */
@@ -1452,6 +1826,81 @@
 /*! 是否创建1S定时器，用于计时和每秒钟任务，反之使用系统500ms任务执行，wang.luo 2024-12-30 */
 #ifndef UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
 #define UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT 1
+#endif
+
+/*! 女性生理周期dengli.lu, 2021-11-24  */
+#ifndef UTE_MODULE_MENSTRUAL_CYCLE_SUPPORT
+#define UTE_MODULE_MENSTRUAL_CYCLE_SUPPORT 1
+#endif
+
+/* 女性生理周期默认参数zn.zeng 2022-01-27*/
+#ifndef UTE_MODULE_MENSTRUALCYCLE_OPEN
+#define UTE_MODULE_MENSTRUALCYCLE_OPEN false
+#endif
+#ifndef UTE_MODULE_MENSTRUALCYCLE_KEEP_DAYS
+#define UTE_MODULE_MENSTRUALCYCLE_KEEP_DAYS 5
+#endif
+#ifndef UTE_MODULE_MENSTRUALCYCLE_CYCLE_DAYS
+#define UTE_MODULE_MENSTRUALCYCLE_CYCLE_DAYS 28
+#endif
+#ifndef UTE_MODULE_MENSTRUALCYCLE_LAST_CYCLE_TIME_YEAR
+#define UTE_MODULE_MENSTRUALCYCLE_LAST_CYCLE_TIME_YEAR DEFAULT_SYSTEM_TIME_YEAR
+#define UTE_MODULE_MENSTRUALCYCLE_LAST_CYCLE_TIME_MONTH DEFAULT_SYSTEM_TIME_MONTH
+#define UTE_MODULE_MENSTRUALCYCLE_LAST_CYCLE_TIME_DAY DEFAULT_SYSTEM_TIME_DAY
+#endif
+
+/*! 世界时钟时区设置模块,wang.luo 2025-07-07 */
+#ifndef UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+#define UTE_MODULE_TIME_ZONE_SETTING_SUPPORT 0
+#endif
+
+/*! 世界时钟支持四分之一时区,wuhuowang 2022-11-18*/
+#ifndef UTE_MODULE_WORLD_CLOCK_QUARTER_TIME_SUPPORT
+#define UTE_MODULE_WORLD_CLOCK_QUARTER_TIME_SUPPORT (1 & UTE_MODULE_TIME_ZONE_SETTING_SUPPORT)
+#define UTE_MODULE_WORLD_CLOCK_TOTAL_CNT 6
+#endif
+
+/*! ESD测试屏幕TE中断异常复位处理,wang.luo 2025-05-28 */
+#ifndef UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+#define UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT 0
+#endif
+
+/*! 编码器切换表盘,wang.luo 2025-04-09 */
+#ifndef DRV_ENCODER_KEYS_WATCHMAIN_SCREEN_SWITCHOVER_SUPPORT
+#define DRV_ENCODER_KEYS_WATCHMAIN_SCREEN_SWITCHOVER_SUPPORT  1
+#endif
+
+/*! 编码器切换表盘锁定,wang.luo 2025-04-09 */
+#ifndef UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+#define UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT  0
+#endif
+
+/*! 编码器切换表盘锁定默认开关,wang.luo 2025-06-18 */
+#ifndef DEFAULT_SWITCHOVER_WATCHMAIN_LOCK
+#define DEFAULT_SWITCHOVER_WATCHMAIN_LOCK  false
+#endif
+
+/*! 更新版本号默认清除所有数据,xjc 2022-05-05*/
+#ifndef UTE_COMPARE_SOFTWARE_VERSION_AND_CLEAR_FLASH_SUPPORT
+#define UTE_COMPARE_SOFTWARE_VERSION_AND_CLEAR_FLASH_SUPPORT 1
+#endif
+
+/*!指南针模块.默认关闭使用时候在对应项目配置打开 并且移植好相关IO口配置 add by pcm 2024-11-25*/
+#ifndef UTE_MODULE_MAGNETIC_SUPPORT
+#define UTE_MODULE_MAGNETIC_SUPPORT 0
+#endif
+
+#if UTE_MODULE_MAGNETIC_SUPPORT
+#ifndef UTE_DRV_MAGNETIC_SENSOR_SUPPORT
+#define UTE_DRV_MAGNETIC_SENSOR_SUPPORT  1
+#define UTE_DRV_MAGNETIC_SPI_TWI_ID   1  //使用I2C或者SPI通道编号
+#define UTE_DRV_SENSOR_MAG_MMC5603NJ_SUPPORT  1  //打开对应配置驱动，默认使用美新的地磁芯片
+#endif
+#endif
+
+/*! 不使用动态主频切换，亮屏时手动切换主频,wang.luo 2025-06-24 */
+#ifndef UTE_DRV_DYNAMIC_FREQUENCY_SWITCH_SUPPORT
+#define UTE_DRV_DYNAMIC_FREQUENCY_SWITCH_SUPPORT 1
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */
@@ -1523,6 +1972,15 @@
 #endif
 #endif
 
+/*! 编码器gpio zn.zeng, 2021-12-06  */
+#ifndef UTE_DRV_QDEC_Y_PHA_GPIO_PIN
+#define UTE_DRV_QDEC_Y_PHA_GPIO_PIN          IO_PB0
+#define UTE_DRV_QDEC_Y_PHB_GPIO_PIN          IO_PB1
+#endif
 
+/*! 使用编码器功能,wang.luo 2025-04-09 */
+#ifndef DRV_ENCODER_KEYS_SUPPORT
+#define DRV_ENCODER_KEYS_SUPPORT 0
+#endif
 
 #endif//_UTE_PROJECT_CONFIG_H_

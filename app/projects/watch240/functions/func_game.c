@@ -8,9 +8,6 @@
 #endif
 
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
-
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
 #define GAME_NUM                    1
 
 typedef struct f_game_t_
@@ -45,15 +42,12 @@ enum
 };
 
 
-
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static Style game[GAME_NUM] =
 {
     {"飞扬的小鸟", UI_BUF_I330001_GAME_BIRD2_BIN, 1},
     //{"俄罗斯方块", UI_BUF_TETRIS_16_1_BIN, 0},
 };
-
-
-
 //创建海拔窗体
 compo_form_t *func_game_form_create(void)
 {
@@ -92,43 +86,52 @@ compo_form_t *func_game_form_create(void)
     return frm;
 }
 
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-
-#define GAME_NUM                    1
-
-typedef struct f_game_t_
+#elif  GUI_SCREEN_SIZE_240X284RGB_I335003_SUPPORT
+static Style game[GAME_NUM] =
 {
-    compo_button_t* rect[GAME_NUM];
-    compo_picturebox_t * pic[GAME_NUM];
-    compo_textbox_t* text[GAME_NUM];
-
-    bool drag_flag;
-    s32 ofs_y;
-    s32 focus_y;
-    bool                flag_move_auto;
-    s16                 focus_icon_idx;
-    int                 moveto_idx;
-    s32                 moveto_y;
-    int                 line_height;
-    uint32_t            tick;
-    int                 line_center_y;
-} f_game_t;
-
-typedef struct
-{
-    char name[20];
-    u32 res_addr;
-    bool cutflag;   //图片资源是否需要裁剪
-} Style;
-
-enum
-{
-    GAME_ID_BTN_ICON_1 = 1,
-    GAME_ID_BTN_ICON_2,
+    {"飞扬的小鸟", UI_BUF_I335003_GAME_BIRD2_BIN, 1},
+    //{"俄罗斯方块", UI_BUF_TETRIS_16_1_BIN, 0},
 };
+//创建海拔窗体
+compo_form_t *func_game_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_GAME]);
+    for(int i=0; i<GAME_NUM; i++)
+    {
+        compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape, 120, 100 + i*72, 220, 60);
+        compo_shape_set_radius(shape,10);
+        compo_shape_set_color(shape,make_color(41,41,41));
+        //矩形框
+        compo_button_t * btn = compo_button_create(frm);
+        compo_setid(btn, GAME_ID_BTN_ICON_1 + i);
+        compo_button_set_location(btn, 120, 100 + i*72, 220, 60);
 
+        //文本
+        compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_FLY_BIRD]));
+        compo_textbox_set_align_center(txt, false);
+        compo_textbox_set_location(txt, 82, 100 + i*72-widget_text_get_height()/2, 140, widget_text_get_height()+8);
+//        compo_textbox_set(txt, game[i].name);
+        compo_textbox_set(txt, i18n[STR_FLY_BIRD]);
+        compo_textbox_set_visible(txt, 1);
 
+        //图标
+        compo_picturebox_t * pic = compo_picturebox_create(frm, game[i].res_addr);
+        if(game[i].cutflag)
+            compo_picturebox_cut(pic, 0, 3);
+        compo_picturebox_set_pos(pic, 50, 100 + i*72);
+    }
 
+    widget_page_set_client(frm->page_body, 0, -65);
+    printf("%s\n", __func__);
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 static Style game[GAME_NUM] =
 {
     {"飞扬的小鸟", UI_BUF_I332001_GAME_BIRD2_BIN, 1},
@@ -171,7 +174,58 @@ compo_form_t *func_game_form_create(void)
     printf("%s\n", __func__);
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+static Style game[GAME_NUM] =
+{
+    {"飞扬的小鸟", UI_BUF_I340001_GAME_BIRD2_BIN, 1},
+    //{"俄罗斯方块", UI_BUF_TETRIS_16_1_BIN, 0},
+};
+//创建海拔窗体
+compo_form_t *func_game_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
 
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_GAME]);
+    for(int i=0; i<GAME_NUM; i++)
+    {
+        //矩形框
+        compo_button_t * btn = compo_create(frm, COMPO_TYPE_BUTTON);
+        widget_icon_t *img_btn = widget_icon_create(frm->page_body, UI_BUF_I340001_FIRSTORDER_CARD_BIN);
+        btn->widget = img_btn;
+        compo_setid(btn, GAME_ID_BTN_ICON_1 + i);
+        compo_button_set_location(btn, 324/2+18, 112+80/2+ i*84, 324, 80);
+
+        //文本
+        compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_FLY_BIRD]));
+        compo_textbox_set_align_center(txt, false);
+        compo_textbox_set_location(txt, 88+20, 112+80/2+ i*84-10, 200, 34);
+//        compo_textbox_set(txt, game[i].name);
+        compo_textbox_set(txt, i18n[STR_FLY_BIRD]);
+        compo_textbox_set_visible(txt, 1);
+
+        //图标
+        compo_picturebox_t * pic = compo_picturebox_create(frm, game[i].res_addr);
+        if(game[i].cutflag)
+            compo_picturebox_cut(pic, 0, 3);
+        compo_picturebox_set_pos(pic, 56/2+40, 112+80/2+ i*84);
+    }
+
+    widget_page_set_client(frm->page_body, 0, -65);
+    printf("%s\n", __func__);
+    return frm;
+}
+
+#else
+
+compo_form_t *func_game_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //事件处理
 static void func_game_process(void)
@@ -188,7 +242,7 @@ static void func_game_process(void)
         if (f_game->drag_flag)
         {
             f_game->ofs_y = f_game->focus_y - dy;
-            int iy = -45 - f_game->ofs_y;
+//            int iy = -45 - f_game->ofs_y;
 //            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
 
             int kidx;
@@ -266,7 +320,7 @@ static void func_game_process(void)
             f_game->focus_y += dy;
 
             f_game->ofs_y = f_game->focus_y - dy;
-            int iy = -45 - f_game->ofs_y;
+//            int iy = -45 - f_game->ofs_y;
 //            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
         }
     }

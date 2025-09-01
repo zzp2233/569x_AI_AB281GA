@@ -86,7 +86,207 @@ compo_form_t *func_scan_form_create(void)
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
     return frm;
 }
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+//创建扫一扫窗体
+compo_form_t *func_scan_form_create(void)
+{
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
 
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+//    if(sys_cb.power_on_state == false)
+//    {
+//        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+//        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+//        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+//    }
+
+    //创建按键
+    //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
+    //compo_button_set_pos(btn, 160, 180);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 140);
+    uteModulePlatformMemoryFree(qr_str);
+    //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+//创建扫一扫窗体
+compo_form_t *func_scan_form_create(void)
+{
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+//    if(sys_cb.power_on_state == false)
+//    {
+//        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+//        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+//        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+//    }
+
+    //创建按键
+    //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
+    //compo_button_set_pos(btn, 160, 180);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 140);
+    uteModulePlatformMemoryFree(qr_str);
+    //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+//创建扫一扫窗体
+compo_form_t *func_scan_form_create(void)
+{
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+//    if(sys_cb.power_on_state == false)
+//    {
+//        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+//        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+//        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+//    }
+
+    //创建按键
+    //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
+    //compo_button_set_pos(btn, 160, 180);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 140);
+    uteModulePlatformMemoryFree(qr_str);
+    //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+//创建扫一扫窗体
+compo_form_t *func_scan_form_create(void)
+{
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
+    widget_rect_set_radius(qrbox->bg, 20);
+    uteModulePlatformMemoryFree(qr_str);
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+//创建扫一扫窗体
+compo_form_t *func_scan_form_create(void)
+{
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+//    if(sys_cb.power_on_state == false)
+//    {
+//        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+//        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+//        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+//    }
+
+    //创建按键
+    //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
+    //compo_button_set_pos(btn, 160, 180);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
+    uteModulePlatformMemoryFree(qr_str);
+    //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+//创建扫一扫窗体
+compo_form_t *func_scan_form_create(void)
+{
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+//    if(sys_cb.power_on_state == false)
+//    {
+//        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+//        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+//        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+//    }
+
+    //创建按键
+    //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
+    //compo_button_set_pos(btn, 160, 180);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 100);
+    uteModulePlatformMemoryFree(qr_str);
+    //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
+    return frm;
+}
+#else
+compo_form_t *func_scan_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //扫一扫功能事件处理

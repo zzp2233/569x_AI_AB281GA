@@ -48,6 +48,7 @@
 			<Add directory="../../platform/gui/ctp" />
 			<Add directory="../../platform/bsp/bsp_sensor/internal_sensor" />
 			<Add directory="../../platform/gui/ctp/axs5106" />
+			<Add directory="../../platform/gui/ctp/chsc6x/Firmware" />
 			<Add directory="functions/common" />
 			<Add directory="../../platform/bsp/bsp_sensor/vcc30fx" />
 			<Add directory="../../../ute/project_config" />
@@ -91,19 +92,20 @@
 			<Add directory="../../../ute/module/micrecord" />
 			<Add directory="../../../ute/module/music" />
 			<Add directory="../../../ute/module/localRingtone" />
-			<Add directory="../../platform/modules/ws" />
-			<Add directory="../../platform/modules/ws_air" />
-			<Add directory="../../platform/modules/yj" />
-			<Add directory="functions/3d" />
-			<Add directory="../../../ute/module/smoke" />
-			<Add directory="../../../ute/module/password" />
-			<Add directory="../../platform/bsp/bsp_charge_ex" />
-			<Add directory="../../platform/bsp/bsp_charge_ex/charge_ic_comm" />
-			<Add directory="../../platform/bsp/bsp_charge_ex/lp7812c" />
-			<Add directory="../../platform/bsp/bsp_speech" />
-			<Add directory="../../platform/libs/net/include" />
-			<Add directory="../../platform/libs/net/include/lwip" />
-			<Add directory="../../platform/libs/net/include/lwip/ports" />
+			<Add directory="../../../ute/module/menstrualcycle" />
+			<Add directory="../../../ute/module/fifo" />
+			<Add directory="../../../ute/module/slideBar" />
+			<Add directory="../../../ute/module/appbinding" />
+			<Add directory="../../../ute/module/emotionPressure" />
+			<Add directory="../../../ute/module/breathrate" />
+			<Add directory="../../../ute/module/bedsideMode" />
+			<Add directory="../../platform/gui/ctp/spt5113c" />
+			<Add directory="../../platform/gui/ctp/spt5113c/firmware" />
+			<Add directory="../../../ute/module/keysetfunc" />
+			<Add directory="../../../ute/drv/led" />
+			<Add directory="../../../ute/module/compass" />
+			<Add directory="../../../ute/drv/magnetic" />
+			<Add directory="../../../ute/module/timezonesetting" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -120,21 +122,19 @@
 			<Add library="../../platform/bsp/bsp_sensor/hrs3300/libhrs3300.a" />
 			<Add library="../../platform/bsp/bsp_sensor/hrs3300/libhrs3300_s.a" />
 			<Add library="../../platform/bsp/bsp_sensor/hrs3300/libhrs3300_test.a" />
+			<Add library="../../../ute/module/compass/MemsicAlgo.a" />
 			<Add library="../../platform/libs/libapp.a" />
 			<Add library="../../platform/libs/libgcc.a" />
 			<Add library="../../platform/libs/libc.a" />
 			<Add library="../../platform/libs/libm.a" />
-			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_BIODetect_V141_codeBlock_Riscv_01.a" />
-			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_hr_vH102ed02_ZKLXRISCV32V2_NA_01.a" />
-			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_spo2_VC30FS_Int_ZhongKe5681_01.a" />
 			<Add library="../../../ute/lib/libute_all_sports_int_algorithms3_0.a" />
 			<Add library="../../../ute/lib/libUTEsleepOnBandLib.a" />
 			<Add library="../../../ute/drv/gsensor/libSL_Acc_Mtp_WR.a" />
-			<Add library="../../platform/modules/asr_using/libasr.a" />
-			<Add library="../../platform/modules/asr_using/libasr_air.a" />
-			<Add library="../../platform/libs/libchatbot.a" />
-			<Add library="../../platform/libs/libnet.a" />
-			<Add library="libnet" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_BIODetect_V141_codeBlock_Riscv_01.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_RepRateEst_Int_16Bit_CodeBlocks_RISCV_NA_01.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_StressEst_V107H_30s_ZKLX_NA_01.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_hr.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_spo2.a" />
 			<Add directory="../../platform/libs" />
 			<Add directory="../../platform/libs/net/build" />
 		</Linker>
@@ -162,6 +162,21 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_sc7a20h.h" />
+		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_stk8321.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/led/ute_drv_led.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/led/ute_drv_led.h" />
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_common.h" />
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_mmc5603.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_mmc5603.h" />
 		<Unit filename="../../../ute/drv/motor/ute_drv_motor.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -199,10 +214,21 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/language/ute_language_common.h" />
+		<Unit filename="../../../ute/module/appbinding/ute_module_appbinding.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/bedsideMode/ute_module_bedside_mode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/bedsideMode/ute_module_bedside_mode.h" />
 		<Unit filename="../../../ute/module/bloodoxygen/ute_module_bloodoxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/bloodoxygen/ute_module_bloodoxygen.h" />
+		<Unit filename="../../../ute/module/breathrate/ute_module_breathrate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/breathrate/ute_module_breathrate.h" />
 		<Unit filename="../../../ute/module/call/ute_module_call.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -211,14 +237,28 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/charencode/ute_module_charencode.h" />
+		<Unit filename="../../../ute/module/compass/MemsicAlgo.h" />
+		<Unit filename="../../../ute/module/compass/MemsicCompass.h" />
+		<Unit filename="../../../ute/module/compass/ute_module_compass.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/compass/ute_module_compass.h" />
 		<Unit filename="../../../ute/module/crc/ute_module_crc.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/crc/ute_module_crc.h" />
+		<Unit filename="../../../ute/module/emotionPressure/ute_module_emotionPressure.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/emotionPressure/ute_module_emotionPressure.h" />
 		<Unit filename="../../../ute/module/factorytest/ute_module_factorytest.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/factorytest/ute_module_factorytest.h" />
+		<Unit filename="../../../ute/module/fifo/ute_module_simple_fifo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/fifo/ute_module_simple_fifo.h" />
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -235,7 +275,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/heart/ute_module_heart.h" />
-		<Unit filename="../../../ute/module/heating_element/ute_module_heating_element.h" />
+		<Unit filename="../../../ute/module/keysetfunc/ute_module_keysetfunc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/keysetfunc/ute_module_keysetfunc.h" />
 		<Unit filename="../../../ute/module/liftwrist/ute_module_liftwrist.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -252,6 +295,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/mem/ute_module_mem.h" />
+		<Unit filename="../../../ute/module/menstrualcycle/ute_module_menstrualcycle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/menstrualcycle/ute_module_menstrualcycle.h" />
 		<Unit filename="../../../ute/module/message/ute_module_message.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -313,6 +360,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/temperature/ute_module_temperature.h" />
+		<Unit filename="../../../ute/module/timezonesetting/ute_module_timezonesetting.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/timezonesetting/ute_module_timezonesetting.h" />
 		<Unit filename="../../../ute/module/watchonline/ute_module_watchonline.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -323,7 +374,27 @@
 		<Unit filename="../../../ute/module/weather/ute_module_weather.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281.h" />
-		<Unit filename="../../../ute/project_config/ute_project_config_abe012.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281a.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ab.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ac.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ae.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ag.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281b.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281c.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281d.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281da.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281db.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281e.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ea.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281f.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281fa.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281g.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281h.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281j.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281k.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281l.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281m.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281n.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -720,6 +791,9 @@
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/BIODetect_V14_1.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/StressEst.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/algo.h" />
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/module_heart_vc_int_10.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/spo2Algo_16bit.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vc30fx_core.c">
 			<Option compilerVar="CC" />
@@ -740,6 +814,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vc30fx_user_app.h" />
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcHr11DEBUG.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcHr11Hci.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcHr11Hci.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcSportMotionIntAlgo.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcare_device_com.h" />
 		<Unit filename="../../platform/bsp/bsp_sleep.c">
@@ -924,6 +1005,10 @@
 		<Unit filename="../../platform/gui/ctp/ctp_cst8x.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../platform/gui/ctp/spt5113c/spt5113c.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/gui/ctp/spt5113c/spt5113c.h" />
 		<Unit filename="../../platform/gui/gui.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1206,9 +1291,6 @@
 		<Unit filename="functions/func_blood_oxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_blood_pressure.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="functions/func_bloodsugar.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1218,10 +1300,16 @@
 		<Unit filename="functions/func_breathe_finish.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_breathe_run.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_breathe_sub_mode.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_breathe_sub_time.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_bright_set.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_bt.c">
@@ -1276,6 +1364,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_clock.h" />
+		<Unit filename="functions/func_clock_butterfly.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_clock_cube.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_clock_light_cube.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_clock_photo.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_clock_preview.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1313,6 +1413,9 @@
 		<Unit filename="functions/func_debug_info.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_dial_and_theme.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_disturd_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1340,7 +1443,16 @@
 		<Unit filename="functions/func_game.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_heart_about .c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_heart_warning.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_heartrate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_key_set_function.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_light.c">
@@ -1356,6 +1468,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_menu.h" />
+		<Unit filename="functions/func_menu_sub_cum_ring1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_menu_sub_cum_ring2.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_menu_sub_cum_sudoku.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1363,6 +1481,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_menu_sub_football.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_menu_sub_football_list.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_menu_sub_grid.c">
@@ -1392,6 +1513,10 @@
 		<Unit filename="functions/func_menu_sub_waterfall.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_menu_ui_data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_menu_ui_data.h" />
 		<Unit filename="functions/func_menustyle.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1403,6 +1528,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_modem_ring.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_mood.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_mood_about.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_motor_grade.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_music.c">
@@ -1421,10 +1555,16 @@
 		<Unit filename="functions/func_ota_update.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_oxygen_about.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_passwod_sub_disp.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_password_sub_select.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_power_off.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_power_on.c">
@@ -1486,9 +1626,6 @@
 		<Unit filename="functions/func_setting_sub_sav.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_setting_sub_sos.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="functions/func_setting_sub_time.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1516,6 +1653,9 @@
 		<Unit filename="functions/func_sport_sort.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_sport_sub_pause.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_sport_sub_run.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1531,6 +1671,12 @@
 		<Unit filename="functions/func_style.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_sub_sos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_system.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_tetris.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1541,6 +1687,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_timer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_toolbox.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_up_watch_dial.c">
@@ -1556,10 +1705,13 @@
 		<Unit filename="functions/func_volume.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_watch_clock.c">
+		<Unit filename="functions/func_watchface_and_theme.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_weather.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_women_health.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/test_mode/func_factory_testing_mode.c">
@@ -1572,6 +1724,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/test_mode/func_test_mode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/test_mode/func_test_mode_list.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">

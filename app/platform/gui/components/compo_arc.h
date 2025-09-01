@@ -40,6 +40,14 @@ typedef struct compo_arc_t_
 compo_arc_t *compo_arc_create(compo_form_t *frm);
 
 /**
+ * @brief 创建一个圆弧组件(默认0°位置在12点钟方向)
+ * @param[in] frm : 窗体指针
+ * @param[in] page : 窗体页面
+ * @return 返回圆弧指针
+ **/
+compo_arc_t *compo_arc_create_page(compo_form_t *frm,widget_page_t *page);
+
+/**
  * @brief 设置圆弧的坐标及大小(指的是圆弧组件自身的大小，而非圆弧宽度)
           注意：该设置默认的坐标是以中心点作为参考点
  * @param[in] arc : 圆弧指针

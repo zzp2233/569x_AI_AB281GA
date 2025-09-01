@@ -25,6 +25,9 @@
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 #include "ute_module_emotionPressure.h"
 #endif
+#if UTE_MODULE_MAGNETIC_SUPPORT
+#include "ute_module_compass.h"
+#endif
 
 /**
 *@brief  消息模块消息处理函数
@@ -143,8 +146,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
 #endif
         case MSG_TYPE_HEART_ALGO_HANDLER:
         {
-            // vc30fx_usr_device_handler(0, 1);
-            // uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData();
+            bsp_sensor_hr_algo_input_data_handle();
         }
         break;
         case MSG_TYPE_HEART_START_SINGLE_TESTING:
@@ -173,6 +175,11 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         case MSG_TYPE_MODULE_WATCHONLINE_ONESEC_TIMER:
         {
             uteModuleWatchOnlineOneSecMsgHandler();
+        }
+        break;
+        case MSG_TYPE_MODULE_WATCHONLINE_START_TIMER:
+        {
+            uteModuleWatchOnlineStartSync();
         }
         break;
 #endif
@@ -228,27 +235,29 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleLocalRingtoneStopRingDetail();
         }
         break;
+
         case MSG_TYPE_FACTORY_WRITE_RECORD_DATA_TO_FLASH:
-            //uteModuleMicRecordFactoryWriteDataToFlash();
+            uteModuleMicRecordFactoryWriteDataToFlash();
             break;
 
         case MSG_TYPE_FACTORY_PLAY_RECORD:
-            //uteModuleMicRecordFactoryPlay();
+            uteModuleMicRecordFactoryPlay();
             break;
+
 #if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
         case MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET:
             uteDrvScreenEsdTeIntErrorCheckHandlerMsg();
             break;
 #endif
-        case MSG_TYPE_SMOKE_REMIND:
+
+#if (UTE_MODULE_MAGNETIC_SUPPORT)    //add by pcm 2024-11-27
+        case MSG_TYPE_COMPASS_TESTING:
         {
-            if(uteApplicationCommonIsPowerOn() && func_cb.sta != FUNC_AGEING)
-            {
-                printf("uteTaskGuiStartScreen(FUNC_ECIG_REMINDER\n");
-                uteTaskGuiStartScreen(FUNC_ECIG_REMINDER, 0, __func__);
-            }
+            uteModuleCompassDataputHandler();
         }
         break;
+#endif
+
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

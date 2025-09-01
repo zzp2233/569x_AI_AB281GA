@@ -20,7 +20,7 @@ static const int pwm_gpio_reg[GPIO_PWM0_MAX] =
     IO_PH2, IO_PB3, IO_PE7, IO_PE5, IO_PF5,
 };
 
-static bool pwm_freq_is_init = 0;
+static bool pwm_freq_is_init = false;
 
 static co_timer_t motor_timer;
 static motor_t motor_st;
@@ -34,17 +34,18 @@ static motor_t motor_st;
  **/
 bool bsp_pwm_freq_set(u32 freq)
 {
-    TMR5CON  = 0;
-    TMR5PR   = 2000000/freq;
-    TMR5CPND = BIT(9);
-    TMR5CNT  = 0;
-    TMR5CON  = (4<<1)  | BIT(0);  // RC2M
-
-    pwm_freq_is_init = 1;
-
-    return true;
+    if (!pwm_freq_is_init)
+    {
+        TMR5CON = 0;
+        TMR5PR = (2000000 / freq);
+        TMR5CPND = BIT(9);
+        TMR5CNT = 0;
+        TMR5CON = (4 << 1) | BIT(0); // RC2M
+        pwm_freq_is_init = true;
+        return true;
+    }
+    return false;
 }
-
 
 /**
  * @brief 设置PWM0的占空比
@@ -70,9 +71,9 @@ bool bsp_pwm_duty_set(pwm_gpio gpio, u32 duty, bool invert)
         duty = 100;
     }
 
-    if(pwm_freq_is_init == 0)
+    if (!pwm_freq_is_init)
     {
-        bsp_pwm_freq_set(20000);            //如果没初始化频率，默认设置为20K
+        bsp_pwm_freq_set(UTE_DRV_DEFAULT_PWM_HZ); // 如果没初始化频率，默认设置为20K
     }
 
     //IO Init
@@ -119,7 +120,7 @@ bool bsp_pwm_disable(pwm_gpio gpio)
     TMR5CON &= ~BIT(16 + pwm_num * 2);
     FUNCMCON1 = (FUNCMCON1 & (~(0xf << (8 + pwm_num * 4))));
 
-    pwm_freq_is_init = false;
+    // pwm_freq_is_init = false;
 
     return true;
 }

@@ -28,11 +28,11 @@
 #define UTE_MODULE_PLATFORM_DLPS_BIT_HEART         0x00000080
 #define UTE_MODULE_PLATFORM_DLPS_BIT_UART          0x00000100
 #define UTE_MODULE_PLATFORM_DLPS_BIT_SYNC          0x00000200
-#define UTE_MODULE_PLATFORM_DLPS_BIT_ASR           0x00000400
-#define UTE_MODULE_PLATFORM_DLPS_BIT_EARPHONE          0x00000800
+#define UTE_MODULE_PLATFORM_DLPS_BIT_LED           0x00000400
+#define UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR      0x00000800
 
-#define UTE_MODULE_PLATFORM_TIMER_MAX    8
-#define UTE_MODULE_PLATFORM_MUTEX_MAX    8
+#define UTE_MODULE_PLATFORM_TIMER_MAX    0x0f
+#define UTE_MODULE_PLATFORM_MUTEX_MAX    0x0f
 typedef struct
 {
     co_timer_t timer;
@@ -451,7 +451,7 @@ uint8_t uteModulePlatformGetAdvData(uint8_t *advData, uint8_t advDataLen);
 uint8_t uteModulePlatformGetScanRspData(uint8_t *scanRsp, uint8_t scanRspLen);
 
 void uteModulePlatformAdvDataInit(void);
-
+bool uteModulePlatformIsAllowBleSend(void);
 void uteModulePlatformDlpsEnable(uint32_t bit);
 void uteModulePlatformDlpsDisable(uint32_t bit);
 uint32_t uteModulePlatformNotAllowSleep(void);

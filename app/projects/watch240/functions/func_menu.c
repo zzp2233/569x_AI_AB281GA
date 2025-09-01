@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_menu.h"
+#include "func_menu_ui_data.h"
 
 #define TRACE_EN                0
 
@@ -14,7 +15,9 @@
 compo_form_t *func_menu_form_create(void)
 {
 
-#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+#if UTE_MODULE_SCREENS_MENU_DATA_BIND
+    f_menu_ui_data_init();
+#endif
     switch (func_cb.menu_style)
     {
         case MENU_STYLE_CUM_HONEYGRID:
@@ -56,7 +59,14 @@ compo_form_t *func_menu_form_create(void)
 
         case MENU_STYLE_CUM_HEXAGON:
             return func_menu_sub_hexagon_form_create();
-
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+        case MENU_STYLE_CUM_RING1:
+            return func_menu_sub_cum_ring1_form_create();
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+        case MENU_STYLE_CUM_RING2:
+            return func_menu_sub_cum_ring2_form_create();
+#endif
         default:
             halt(HALT_FUNC_MENU_SUBSTA);
             return NULL;
@@ -67,70 +77,37 @@ compo_form_t *func_menu_form_create(void)
 
 }
 
-////切换菜单样式
-//static void func_menu_switch_style(void)
-//{
-//    func_cb.menu_idx = 0;
-//    func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
-//    func_cb.flag_animation = true;
-//    switch (func_cb.menu_style) {
-//    case MENU_STYLE_HONEYCOMB:
-//        func_cb.menu_style = MENU_STYLE_WATERFALL;
-//        break;
-//
-//    case MENU_STYLE_WATERFALL:
-//        func_cb.menu_style = MENU_STYLE_SUDOKU;
-//        break;
-//
-//    case MENU_STYLE_SUDOKU:
-//        func_cb.menu_style = MENU_STYLE_LIST;
-//        break;
-//
-//    case MENU_STYLE_LIST:
-//        func_cb.menu_style = MENU_STYLE_SUDOKU_HRZ;
-//        break;
-//
-//    case MENU_STYLE_SUDOKU_HRZ:
-//        func_cb.menu_style = MENU_STYLE_GRID;
-//        break;
-//
-//    case MENU_STYLE_GRID:
-//        func_cb.menu_style = MENU_STYLE_DISK;
-//        break;
-//
-//    case MENU_STYLE_DISK:
-//        func_cb.menu_style = MENU_STYLE_RING;
-//        break;
-//
-//    case MENU_STYLE_RING:
-//        func_cb.menu_style = MENU_STYLE_KALE;
-//        break;
-//
-//    case MENU_STYLE_KALE:
-//        func_cb.menu_style = MENU_STYLE_SKYRER;
-//        break;
-//
-//    case MENU_STYLE_SKYRER:
-//        func_cb.menu_style = MENU_STYLE_CUM_SUDOKU;
-//        break;
-//
-//    case MENU_STYLE_CUM_SUDOKU:
-//        func_cb.menu_style = MENU_STYLE_CUM_GRID;
-//        break;
-//
-//    case MENU_STYLE_CUM_GRID:
-//        func_cb.menu_style = MENU_STYLE_CUM_HEXAGON;
-//        break;
-//
-//    case MENU_STYLE_CUM_HEXAGON:
-//        func_cb.menu_style = MENU_STYLE_CUM_FOURGRID;
-//        break;
-//
-//    default:
-//        func_cb.menu_style = MENU_STYLE_HONEYCOMB;
-//        break;
-//    }
-//}
+#if UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE
+#define MENU_CNT                       sizeof(SWITCH_NEXT_MENU) / sizeof(SWITCH_NEXT_MENU[0])
+const u8 SWITCH_NEXT_MENU[]=UTE_CUI_SCREEN_MENU_STYLE;
+static void func_menu_sub_switch_next(void)
+{
+    int idx;
+    for(int idx=0; idx<MENU_CNT; idx++)
+    {
+        if(SWITCH_NEXT_MENU[idx] == func_cb.menu_style)
+        {
+            idx++;
+            if(idx == MENU_CNT)
+            {
+                idx = 0;
+            }
+            func_cb.menu_style = SWITCH_NEXT_MENU[idx];
+            if (func_cb.menu_style == MENU_STYLE_SKYRER)
+            {
+                u8 func_menu_sub_skyrer_get_first_idx(void);
+                func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+            }
+            else
+            {
+                func_cb.menu_idx = 0;           //切换风格后进入回中心位置
+            }
+            uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
+            return;
+        }
+    }
+}
+#endif
 
 //菜单样式公用消息
 void func_menu_sub_message(size_msg_t msg)
@@ -142,13 +119,15 @@ void func_menu_sub_message(size_msg_t msg)
             break;
 
         case KD_BACK:
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
                 func_cb.sta = FUNC_MENUSTYLE;
-#endif
-                //func_menu_switch_style();
             }
+#elif UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE
+            func_menu_sub_switch_next();
+#endif
             break;
 
         default:
@@ -186,77 +165,71 @@ void func_menu(void)
     func_menu_enter();
     while (func_cb.sta == FUNC_MENU)
     {
-
-#if UTE_MODULE_SCREENS_STYLE_SUPPORT
-
+        printf("func_cb.menu_style:[%d]\n",func_cb.menu_style);
         switch (func_cb.menu_style)
         {
             case MENU_STYLE_CUM_HONEYGRID:
             case MENU_STYLE_HONEYCOMB:
-                printf("111111111111111111111111\n");
                 func_menu_sub_honeycomb();
                 break;
 
             case MENU_STYLE_WATERFALL:
-                printf("2222222222222222222222222\n");
                 func_menu_sub_waterfall();
                 break;
 
             case MENU_STYLE_FOOTBALL:
-                printf("33333333333333333333333333\n");
                 func_menu_sub_football();
                 break;
 
             case MENU_STYLE_LIST:
             case MENU_STYLE_CUM_FOURGRID:
-                printf("444444444444444444444444\n");
                 func_menu_sub_list();
                 break;
 
             case MENU_STYLE_SUDOKU:
             case MENU_STYLE_SUDOKU_HRZ:
-                printf("55555555555555555555555555555\n");
                 func_menu_sub_sudoku();
                 break;
 
             case MENU_STYLE_GRID:
             case MENU_STYLE_CUM_GRID:
-                printf("6666666666666666666666666666\n");
                 func_menu_sub_grid();
                 break;
 
             case MENU_STYLE_DISK:
-                printf("777777777777777777777777777777\n");
                 func_menu_sub_disk();
                 break;
 
             case MENU_STYLE_RING:
-                printf("88888888888888888888888888\n");
                 func_menu_sub_ring();
                 break;
 
             case MENU_STYLE_KALE:
-                printf("99999999999999999999999999\n");
                 func_menu_sub_kale();
                 break;
 
             case MENU_STYLE_SKYRER:
-                printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
                 func_menu_sub_skyrer();
                 break;
 
             case MENU_STYLE_CUM_SUDOKU:
-                printf("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n");
                 func_menu_sub_cum_sudoku();
                 break;
 
             case MENU_STYLE_CUM_HEXAGON:
-                printf("cccccccccccccccccccccccccccccc\n");
                 func_menu_sub_hexagon();
                 break;
-
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+            case MENU_STYLE_CUM_RING1:
+                func_menu_sub_cum_ring1();
+                break;
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+            case MENU_STYLE_CUM_RING2:
+                func_menu_sub_cum_ring2();
+                break;
+#endif
             default:
-                printf("oooooooooooooooooooooooooooo\n");
                 halt(HALT_FUNC_MENU_SUBSTA);
                 break;
         }

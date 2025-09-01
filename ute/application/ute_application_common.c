@@ -29,16 +29,25 @@
 #include "ute_module_factorytest.h"
 #include "ute_module_music.h"
 #include "ute_module_gui_common.h"
-// #include "ute_module_menstrualcycle.h"
+#include "ute_module_menstrualcycle.h"
 #include "ute_module_newFactoryTest.h"
 #include "ute_module_localRingtone.h"
-#include "ecig.h"
-// #include "ute_module_appbinding.h"
+#include "ute_module_appbinding.h"
+#include "ute_module_breathrate.h"
+#include "ute_module_bedside_mode.h"
+#include "ute_module_emotionPressure.h"
+#include "ute_module_keysetfunc.h"
+#include "ute_drv_led.h"
+#if UTE_MODULE_MAGNETIC_SUPPORT
+#include "ute_module_compass.h"
+#endif
+#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+#include "ute_module_timezonesetting.h"
+#endif
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
 #include "ute_drv_gsensor_common.h"
-#include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
 #include "ute_module_call.h"
@@ -47,7 +56,6 @@
 #include "ute_module_breathtraining.h"
 #include "ute_module_countdown.h"
 #include "ute_module_temperature.h"
-#include "ute_module_emotionPressure.h"
 #include "UTEsecurityCode.h"
 #include "ute_picture_font_common.h"
 #include "ute_module_lockScreen.h"
@@ -92,12 +100,9 @@
 #endif
 #endif
 /*!application 数据 zn.zeng, 2021-07-15  */
-ute_application_common_data_t uteApplicationCommonData =
-{
-    .isSynchronizingData = false,
-    .isAncsConnected = false,
-};
+ute_application_common_data_t uteApplicationCommonData;
 ute_application_sync_data_param_t sendHistoryDataParam;
+static bool uteApplicationCommonHardfaultFlag = false;
 /* app common 互斥量 zn.zeng 2022-02-14*/
 void *uteApplicationCommonMute;
 void *uteApplicationCommonSyncDataTimer = NULL;
@@ -116,6 +121,8 @@ void uteApplicationCommonStartupFrist(void)
     uteApplicationCommonData.isStartupSecondFinish = false;
     uteApplicationCommonData.isPowerOn = false;
     uteApplicationCommonData.isAppClosed = true;
+    uteApplicationCommonData.isSynchronizingData = false,
+    uteApplicationCommonData.isAncsConnected = false,
     uteModuleFilesystemInit();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_DIR);
@@ -274,6 +281,9 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
         uteModuleSportMoreSportsTargetInit();
 #endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+        uteModuleKeySetFuncInit();
+#endif
 #if UTE_MODULE_LOCK_SCREEN_SUPPORT
         uteModulePasswordInit();
         //  uteModulePasswordLoadToSysCb();
@@ -286,6 +296,12 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #if UTE_MODULE_LOCAL_RINGTONE_VOLUME_SET
         uteModuleLocalRingtoneInit();
+#endif
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+        uteModuleBedsideModeInit();
+#endif
+#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+        uteModuleTimezoneInit();
 #endif
         //系统参数配置
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
@@ -306,7 +322,12 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_COMPONENTS_SUPPORT
         uteModuleComponentsInit();
 #endif
-
+#if UTE_DRV_LED_SUPPORT
+        uteDrvLedInit();
+#endif
+#if UTE_MODULE_MAGNETIC_SUPPORT
+        uteModuleCompassInit();
+#endif
         uteModulePlatformCreateTimer(&uteApplicationCommonSyncDataTimer, "SYNC DATA timer", 1, UTE_SEND_DATA_TO_PHONE_INVTERVAL, false, uteApplicationCommonSyncDataTimerCallback);
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_DEV_NAME,0);
@@ -359,7 +380,18 @@ void uteApplicationCommonStartupSecond(void)
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #else
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
+#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+            if (uteApplicationCommonIsHardfaultReboot())
+            {
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
+            }
+            else
+            {
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID, 0, __func__);
+            }
+#else
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID, 0, __func__);
+#endif
 #else
             if(0)
             {}
@@ -397,8 +429,14 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleMotorSetIsOpenVibrationStatus(true);
         }
 #endif
-
+#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+        if (!uteApplicationCommonIsHardfaultReboot())
+        {
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        }
+#else
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#endif
         uteApplicationCommonData.isStartupSecondFinish = true;
         uteApplicationCommonData.isPowerOn = true;
         uteApplicationCommonData.systemPowerOnSecond = 0;
@@ -464,7 +502,8 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     uteApplicationCommonData.bleConnectState.connectedSecond = 0;
     uteApplicationCommonData.bleConnectState.isParired = false;
     uteModuleNotifyAncsTimerConnectHandler(isConnected);
-    if(!isConnected) /* ellison add ,2022-Jun-15 断开以后回到20 byte 兼容部分手机同步表盘失败*/
+
+    if (!isConnected) /* ellison add ,2022-Jun-15 断开以后回到20 byte 兼容部分手机同步表盘失败*/
     {
         uteApplicationCommonSetMtuSize(20);
 #if UTE_MODULE_SCREENS_APP_BINDING_SUPPORT || UTE_USER_ID_FOR_BINDING_SUPPORT || UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT // dengli.lu, 2022-03-06
@@ -494,7 +533,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     {
 #if UTE_MODULE_SPORT_SUPPORT
         uteModuleSportSetTakePictureEnable(false);
-#endif
+        uteApplicationCommonSetAppClosed(true);
         if(!uteApplicationCommonData.isPowerOn)
         {
             // uteModulePlatformSetFastAdvertisingTimeCnt(0);
@@ -520,7 +559,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 #if UTE_MODUEL_QUICK_REPLY_SUPPORT
         uteModuleQuickReplySetStatus(false);
 #endif
-#if (UTE_MODULE_CYWEE_MOTION_SUPPORT&&(UTE_MODULE_LOG_SUPPORT && UTE_MODULE_RUNING_LOG_SUPPORT))
+#if (UTE_MODULE_LOG_SUPPORT && UTE_MODULE_RUNING_LOG_SUPPORT)
         uteModuleLogSetSendRuningLogSwitch(false);
 #endif
 #if BT_ID3_TAG_EN
@@ -536,7 +575,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     {
         // uteModulePlatformSetFastAdvertisingTimeCnt(0);
         // uteModulePlaformUpdateConnectParam(12,36,55000);
-        ble_update_conn_param(12,0,500);
+        // ble_update_conn_param(12,0,500);
     }
     uteModuleCallBleConnectState(isConnected);
 }
@@ -854,7 +893,7 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
     uint8_t writebuff[12];
     writebuff[0] = uteApplicationCommonData.quickSwitch.isFindband;
     writebuff[1] = uteApplicationCommonData.quickSwitch.isTurnTheWrist;
-    //writebuff[2] = uteApplicationCommonData.quickSwitch.isSedentary;
+    writebuff[2] = uteApplicationCommonData.quickSwitch.isSedentary;
     writebuff[3] = uteApplicationCommonData.quickSwitch.isNotDisturb;
     writebuff[4] = uteApplicationCommonData.quickSwitch.isFindPhone;
     writebuff[5] = uteApplicationCommonData.quickSwitch.isRejectCall;
@@ -862,8 +901,8 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
     writebuff[7] = uteApplicationCommonData.quickSwitch.isDisplayTime;
     writebuff[8] = uteApplicationCommonData.quickSwitch.isShockTime;
     writebuff[9] = uteApplicationCommonData.quickSwitch.isGoalReach;
-    //writebuff[10] = uteApplicationCommonData.quickSwitch.isDrinkWater;
-    //writebuff[11] = uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning;
+    writebuff[10] = uteApplicationCommonData.quickSwitch.isDrinkWater;
+    writebuff[11] = uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning;
     if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_QUICK_SWITCHINFO,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
     {
         uteModuleFilesystemWriteData(file,&writebuff[0],12);
@@ -885,15 +924,15 @@ void uteApplicationCommonStartPowerOffMsg(void)
     }
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
-#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
-#else
+// #if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+//     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
+// #else
     if(!sys_cb.gui_sleep_sta)
     {
         gui_sleep();
     }
     uteApplicationCommonData.isPowerOn = false;
-#endif
+// #endif
     uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
 #if UTE_MODULE_SPORT_SUPPORT
@@ -960,10 +999,10 @@ void uteApplicationCommonStartPowerOffMsg(void)
     // uteModuleFactoryTestStop();
     // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN|UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR|UTE_MODULE_PLATFORM_DLPS_BIT_KEYS|UTE_MODULE_PLATFORM_DLPS_BIT_UART);
 
-#if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+// #if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
 //    uteModuleGuiCommonDisplayOff(true);
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
-#endif
+// #endif
 }
 
 /**
@@ -1048,7 +1087,7 @@ void uteApplicationCommonSyncDataTimerMsg(void)
         uteApplicationCommonData.isSynchronizingData = false;
         return;
     }
-    if (is_le_buff_full(2))
+    if (!uteModulePlatformIsAllowBleSend())
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,le_buff_full!!!",__func__);
         uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);
@@ -1086,10 +1125,10 @@ void uteApplicationCommonSendQuickSwitchStatus(void)
     {
         setFlag|=QUICK_SWITCH_TURNTHEWRIST;
     }
-    // if(uteModuleSportSedentaryOpenCtrl(0,0))
-    // {
-    //     setFlag|=QUICK_SWITCH_SEDENTARY;
-    // }
+    if(uteModuleSportSedentaryOpenCtrl(0,0))
+    {
+        setFlag|=QUICK_SWITCH_SEDENTARY;
+    }
     if(uteApplicationCommonData.quickSwitch.isNotDisturb)
     {
         setFlag|=QUICK_SWITCH_NOT_DISTURB;
@@ -1122,10 +1161,10 @@ void uteApplicationCommonSendQuickSwitchStatus(void)
     // {
     //     setFlag|=QUICK_SWITCH_DRINK_WATER;
     // }
-    // if(uteModuleHeartWaringOpenCtrl(0,0))
-    // {
-    //     setFlag|=QUICK_SWITCH_HR_ABNORMAL_WARNING;
-    // }
+    if(uteModuleHeartWaringOpenCtrl(0,0))
+    {
+        setFlag|=QUICK_SWITCH_HR_ABNORMAL_WARNING;
+    }
 #if QUICK_SWITCH_LOCAL_IS24HOUR_SUPPORT
     if(uteModuleSystemtime12HOn()==false)
     {
@@ -1169,9 +1208,9 @@ void uteApplicationCommonSetQuickSwitchStatusFromApp(uint8_t *pData)
 
     uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_FINDBAND)?1:0;
     uteApplicationCommonData.quickSwitch.isTurnTheWrist = (setFlag&QUICK_SWITCH_TURNTHEWRIST)?1:0;
-    //uteApplicationCommonData.quickSwitch.is = (setFlag&QUICK_SWITCH_SEDENTARY)?1:0;
+    uteApplicationCommonData.quickSwitch.isSedentary = (setFlag&QUICK_SWITCH_SEDENTARY)?1:0;
 
-    // uteModuleSportSedentaryOpenCtrl(1,(setFlag&QUICK_SWITCH_SEDENTARY)?1:0);
+    uteModuleSportSedentaryOpenCtrl(1,(setFlag&QUICK_SWITCH_SEDENTARY)?1:0);
 
     uteApplicationCommonData.quickSwitch.isNotDisturb = (setFlag&QUICK_SWITCH_NOT_DISTURB)?1:0;
     uteApplicationCommonData.quickSwitch.isFindPhone = (setFlag&QUICK_SWITCH_ANTILOST)?1:0;
@@ -1181,10 +1220,10 @@ void uteApplicationCommonSetQuickSwitchStatusFromApp(uint8_t *pData)
     uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_SHOCK_TIME)?1:0;
     uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_NOT_DISTURB_MODE)?1:0;
     uteApplicationCommonData.quickSwitch.isGoalReach = (setFlag&QUICK_SWITCH_GOAL_REACH)?1:0;
-    //uteApplicationCommonData.quickSwitch.isDrinkWater = (setFlag&QUICK_SWITCH_DRINK_WATER)?1:0;
+    uteApplicationCommonData.quickSwitch.isDrinkWater = (setFlag&QUICK_SWITCH_DRINK_WATER)?1:0;
     // uteModuleDrinkWaterOpenCtrl(1,(setFlag&QUICK_SWITCH_DRINK_WATER)?1:0);
-    // uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning = (setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0;
-    // uteModuleHeartWaringOpenCtrl(1,(setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0);
+    uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning = (setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0;
+    uteModuleHeartWaringOpenCtrl(1,(setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0);
     uteApplicationCommonSaveQuickSwitchInfo();
 }
 
@@ -1316,6 +1355,10 @@ void uteApplicationCommonSetMtuSize(uint16_t mtu)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,mtu=%d,%d", __func__,mtu,ble_get_gatt_mtu());
     uteApplicationCommonData.mtuSize = mtu;
+    if(uteApplicationCommonData.mtuSize > (UTE_BLE_MTU_MAX_SIZE - 3))
+    {
+        uteApplicationCommonData.mtuSize = (UTE_BLE_MTU_MAX_SIZE - 3);
+    }
 }
 /**
 *@brief   获取当前ble连接最大mtu size
@@ -1898,6 +1941,32 @@ float ExactDecimalPoint(float data,uint8_t bit)
 }
 
 /**
+ * @brief        Hardfaul复位标志
+ * @details
+ * @return       true Hardfaul复位,false 正常复位
+ * @author       Wang.Luo
+ * @date         2025-06-11
+ */
+bool uteApplicationCommonIsHardfaultReboot(void)
+{
+    return uteApplicationCommonHardfaultFlag;
+}
+
+/**
+ * @brief        设置Hardfaul复位标志位
+ * @details
+ * @param[in]    isHardfaul 是否是Hardfaul复位
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-06-11
+ */
+void uteApplicationCommonSetHardfaultReboot(bool isHardfaul)
+{
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isHardfaul:%d", __func__, isHardfaul);
+    uteApplicationCommonHardfaultFlag = isHardfaul;
+}
+
+/**
  * @brief        保存重启信息
  * @details
  * @author       Wang.Luo
@@ -1911,16 +1980,21 @@ void uteModuleHardfaultInfoSave(void)
         printf("restart reason: %d\n", cause);
         return;
     }
-    tm_t rtc_tm;
-    rtc_tm = time_to_tm(RTCCNT);
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
     char *buf = (char *)uteModulePlatformMemoryAlloc(1024);
     memset(buf,0,1024);
     // print_r32(exception_debug_info_get(),32);
-    sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d\n", rtc_tm.year, rtc_tm.mon, rtc_tm.day, rtc_tm.hour, rtc_tm.min, rtc_tm.sec);
+    sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d\n", time.year, time.month, time.day, time.hour, time.min, time.sec);
     u32 cpu_gprs[32];
     u32 halt_err[16];
     memcpy(cpu_gprs, exception_debug_info_get(), sizeof(cpu_gprs));
     memcpy(halt_err, halt_err_debug_info_get(), sizeof(halt_err));
+
+    strcat(buf, "Version:\n");
+    strcat(buf, UTE_SW_VERSION);
+    strcat(buf, "\n");
+
     strcat(buf, "Cause:\n");
     switch (cause)
     {
@@ -1979,17 +2053,62 @@ void uteModuleHardfaultInfoSave(void)
         uteModuleFilesystemDelFile((char *)&path[0]);
     }
     memset(&path[0], 0, 42);
-    sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, rtc_tm.year, rtc_tm.mon, rtc_tm.day, rtc_tm.hour, rtc_tm.min);
+    sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, time.year, time.month, time.day, time.hour, time.min);
     void *file;
-    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT))
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT | FS_O_APPEND))
     {
-        uteModuleFilesystemSeek(file, 0, FS_SEEK_SET);
         uteModuleFilesystemWriteData(file, &buf[0], strlen(buf));
         uteModuleFilesystemCloseFile(file);
     }
     uteModulePlatformMemoryFree(dirInfo);
 #endif
     uteModulePlatformMemoryFree(buf);
+}
+
+/**
+ * @brief        保持自定义信息到重启log文件
+ * @details
+ * @param[in]    buf: 保存的信息(字符串)
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-06-24
+ */
+void uteModuleHardfaultCustInfoSave(char *buf, uint16_t len)
+{
+    if (buf == NULL)
+    {
+        return;
+    }
+#if UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+
+    uint8_t path[42];
+    memset(&path[0], 0, sizeof(path));
+    ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, dirInfo, NULL);
+    if (dirInfo->filesCnt >= UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT)
+    {
+        memset(&path[0], 0, sizeof(path));
+        sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, &dirInfo->filesName[0][0]);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,del file=%s", __func__, &path[0]);
+        uteModuleFilesystemDelFile((char *)&path[0]);
+    }
+    memset(&path[0], 0, 42);
+    sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, time.year, time.month, time.day, time.hour, time.min);
+    void *file;
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT | FS_O_APPEND))
+    {
+        char *head = (char *)uteModulePlatformMemoryAlloc(256);
+        memset(&head[0], 0, 256);
+        snprintf(head, 256, "%04d-%02d-%02d %02d:%02d:%02d\nVersion:\n%s\n", time.year, time.month, time.day, time.hour, time.min, time.sec,UTE_SW_VERSION);
+        uteModuleFilesystemWriteData(file, &head[0], strlen(head));
+        uteModuleFilesystemWriteData(file, &buf[0], len);
+        uteModuleFilesystemCloseFile(file);
+        uteModulePlatformMemoryFree(head);
+    }
+    uteModulePlatformMemoryFree(dirInfo);
+#endif
 }
 
 /*!

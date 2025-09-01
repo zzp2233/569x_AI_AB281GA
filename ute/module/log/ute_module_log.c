@@ -16,7 +16,7 @@ uint8_t uteModuleRuningLogSwitch = false;
 static uint8_t uteModuleLogRuningArray[UTE_MODULE_LOG_RUNING_MAX_BUFF_SIZE];
 #endif
 /** log打印的tag字符串 */
-const uint8_t uteModuleLogTagString[][31] =
+const uint8_t uteModuleLogTagString[][32] =
 {
     {" "},
     {"LOG_SYSTEM"},
@@ -49,6 +49,7 @@ const uint8_t uteModuleLogTagString[][31] =
     {"LOG_ALI_UPAY"},
     {"LOG_CWM"},
     {"LOG_MEMORY"},
+    {"LOG_COMPASS"},
 };
 #if UTE_MODULE_RUNING_LOG_SUPPORT
 static uint8_t writeLogTobuff(uint8_t *pLogData, uint8_t logLen);
@@ -63,7 +64,7 @@ void uteModuleLogSetSendRuningLogSwitch(bool status)
 
     if (status)
     {
-        le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
+        // le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
         uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleLogBleSend);
         uteApplicationCommonSyncDataTimerStart();
     }
@@ -76,24 +77,24 @@ void uteModuleLogSetSendRuningLogSwitch(bool status)
 
 void uteModuleLogRuningPrintf(uint8_t log_lvl, const char * format,...)
 {
-    if ((log_lvl != 0) && (log_lvl < 30))
+    if ((log_lvl != 0) && (log_lvl < 32))
     {
         va_list    args;
 
         va_start(args, format);
 
-        vsprintf((char *)&uteModuleLogRuningArray[0], format, args);
+        vsnprintf((char *)&uteModuleLogRuningArray[0], UTE_MODULE_LOG_RUNING_MAX_BUFF_SIZE, format, args);
 
         va_end(args);
 
         if(uteModuleRuningLogSwitch)
         {
-            if(uteApplicationCommonGetHasUpdateConnectionParam() == false)
-            {
-                le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
-                UTE_MODULE_LOG(1,"le_update_conn_param");
-            }
-            uteApplicationCommonSetHasUpdateConnectionParam(true); //调整蓝牙连接间隔，处理丢包问题
+            // if(uteApplicationCommonGetHasUpdateConnectionParam() == false)
+            // {
+            //     le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
+            //     UTE_MODULE_LOG(1,"le_update_conn_param");
+            // }
+            // uteApplicationCommonSetHasUpdateConnectionParam(true); //调整蓝牙连接间隔，处理丢包问题
             //加入缓存
             if(strstr((char *)&uteModuleLogRuningArray[0],"IDX(0)") ==0)  //过滤 IDX_ACCEL 的日志
             {
@@ -111,7 +112,7 @@ void uteModuleLogBleSend(void)
 {
     while(uteModulePlatformIsAllowBleSend())
     {
-        strncpy((char *)uteModuleLogRuningArray, "\xFE\x08\x02",3);
+        memcpy((char *)uteModuleLogRuningArray, "\xFE\x08\x02",3);
         uint8_t logLen = readLogFormBuff(&uteModuleLogRuningArray[4]);
         if(logLen > 200-4)      //200是协议中设定的单条数据最大长度
         {

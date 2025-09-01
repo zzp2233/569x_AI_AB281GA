@@ -111,7 +111,8 @@
 
 #define CMD_SYNC_CONTACTS                   0x37
 #define CMD_BT30_CTRL                       0x38
-
+#define CMD_SET_HAND_WASHING_PARAM          0x41
+#define CMD_SET_TIME_ZONE                   0x43
 #define CMD_EMOTION_PRESSURE_TEST           0x44
 
 #define CMD_QUICK_REPLY_GET_PHONE_NUMBER    0x45

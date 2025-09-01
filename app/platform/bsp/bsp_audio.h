@@ -13,6 +13,8 @@
 void audio_path_init(u8 path_idx);
 void audio_path_exit(u8 path_idx);
 void audio_path_start(u8 path_idx);
+void bt_sco_pcm_set_dump_pass_cnt(u8 cnt);
+u8 bt_sco_pcm_dump_pass_cnt_sub1(bool sub);
 
 
 #endif //__BSP_AUDIO_H__

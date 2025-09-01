@@ -261,40 +261,6 @@ void param_fot_type_read(u8 *param)
 
 #endif
 
-#if (ASR_SELECT == ASR_WS_AIR && IR_AIR_FUNC)
-/*********************************************************************************
- * ¿Õ°é£ºflash Êý¾Ý
- *********************************************************************************/
-#include "../ws_air/air/asr_config.h"
-AT(.text.air.param)
-void air_flash_write(void)
-{
-    _ISD_REMOTE_DATA isd_remote_data_tmp;
-    isd_remote_data_tmp = isd_remote_data;
-    param_write(&isd_remote_data_tmp, PARAM_AIR_REMOTE, sizeof(_ISD_REMOTE_DATA));
-    param_sync();
-}
-
-AT(.text.air.param)
-int air_flash_read(void)
-{
-    _ISD_REMOTE_DATA isd_remote_data_tmp;
-    param_read(&isd_remote_data_tmp, PARAM_AIR_REMOTE, sizeof(_ISD_REMOTE_DATA));
-    isd_remote_data = isd_remote_data_tmp;
-
-    printf("read---> offset=%d, len=%d, brand=%d, index=%d \n",
-           isd_remote_data.offset, isd_remote_data.len,
-           isd_remote_data.brand_id, isd_remote_data.brand_index);
-
-    if(isd_remote_data.len == 0)
-    {
-        return -1;
-    }
-    return 0;
-}
-#endif
-
-
 #if VDDHR_TRIM_EN
 AT(.text.bsp.param.vddhr)
 void param_vddhr_trim_write(u8 *param)
@@ -302,7 +268,6 @@ void param_vddhr_trim_write(u8 *param)
     param_write((u8 *)param, PARAM_VDDHR_TRIM_VAL, 1);
     param_sync();
 }
-
 AT(.text.bsp.param.vddhr)
 void param_vddhr_trim_read(u8 *param)
 {

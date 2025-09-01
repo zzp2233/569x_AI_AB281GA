@@ -12,8 +12,1731 @@
 
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
 
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#define FINT_HEIGHT 24
+#define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
+#define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
+#define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
+#define GUI_PAGE_TITLE_WIDTH            (GUI_SCREEN_WIDTH * 2 / 5)
+#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH - FORM_TITLE_RIGHT - GUI_SCREEN_WIDTH/12)//(GUI_SCREEN_WIDTH / 3)
+#define CONTROL_Y  16
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+enum
+{
+    COMPO_ID_TEXT_DEEP_TIME_HOUR = 1,
+    COMPO_ID_TEXT_DEEP_TIME_MIN,
+    COMPO_ID_TEXT_LIGHT_TIME_HOUR,
+    COMPO_ID_TEXT_LIGHT_TIME_MIN,
+
+    COMPO_ID_CHART_SHALLOW,
+    COMPO_ID_CHART_DEEP,
+    COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
+};
+
+enum
+{
+    CHART_ANIM_STA_IDLE,
+    CHART_ANIM_STA_START,
+    CHART_ANIM_STA_END,
+
+};
+
+typedef struct f_sleep_t_
+{
+    page_tp_move_t *ptm;
+} f_sleep_t;
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sleep_form_create(void)
+{
+    compo_textbox_t * txt;
+    compo_picturebox_t *pic;
+    char buf[50];
+
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
+    // sleep_data->totalSleepMin = 480;
+    // sleep_data->fallAsSleepTime.hour =0;
+    // sleep_data->fallAsSleepTime.min =0;
+    // sleep_data->getUpSleepTime.hour =8;
+    // sleep_data->getUpSleepTime.min = 0;
+
+    // sleep_data->lightSleepMin= 480;
+    // sleep_data->deepSleepMin= 480;
+    // sleep_data->wakeSleepMin= 480;
+    // sleep_data->RemSleepMin= 480;
+
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 30;
+    // sleep_data->sleep_record[1].period = 30;
+    // sleep_data->sleep_record[2].period = 30;
+    // sleep_data->sleep_record[3].period = 30;
+    // sleep_data->sleep_record[4].period = 30;
+
+    // sleep_data->fallAsSleepTime.hour = 8;
+    // sleep_data->fallAsSleepTime.min  = 30;
+    // sleep_data->getUpSleepTime.hour  = 11;
+    // sleep_data->getUpSleepTime.min  = 30;
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_title(frm, i18n[STR_SLEEP]);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_9_SLEEP_1_SLEEP_ICON_SLEEP_44X44_X98_Y51_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 52/2+55);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_pos(txt,37+25,125+28/2);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,37+58,125+28/2,30,30);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_pos(txt,47+105,125+28/2);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,47+135,125+28/2,30,30);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
+//////////////////////////////////////////////////////////////////////
+    pic = compo_picturebox_create(frm,sleep_data->totalSleepMin ? UI_BUF_I335001_9_SLEEP_1_SLEEP_00_BIN : UI_BUF_I335001_9_SLEEP_2_NO_DATA_SLEEP_ICON_NO_DATA_216X78_Y12_Y168_BIN);///* 无数据*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 225);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,20,270,50,30);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+    compo_textbox_set(txt, buf);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH-50-20,270,50,30);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+    compo_textbox_set(txt, buf);
+///////////////////////////////////////////////////////////////////////////
+#define height_spacing 80
+#define first_y GUI_SCREEN_HEIGHT+30
+
+    for (int i = 0; i < 3; i++)
+    {
+        compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape,GUI_SCREEN_CENTER_X, first_y+45+(height_spacing*i), 220, 1);
+        compo_shape_set_color(shape, make_color(0x2c,0x2c,0x2c));
+    }
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEEP_SLEEP]));///* 深睡*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 20, first_y,100,32);
+    compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(127, 43, 235));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 20, first_y+height_spacing,100,32);
+    compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(192, 67, 255));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 20, first_y+height_spacing*3,100,32);
+    compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(254, 255, 210));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 20, first_y+height_spacing*2,100,32);
+    compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(245, 170, 68));
+//////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->deepSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->deepSleepMin/60,i18n[STR_HOUR], sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y,100,32);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->lightSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->lightSleepMin/60,i18n[STR_HOUR], sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing,100,32);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->wakeSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->wakeSleepMin/60,i18n[STR_HOUR], sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*3,100,32);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->RemSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->RemSleepMin/60,i18n[STR_HOUR], sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*2,100,32);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    uint16_t width = (203);    // 总宽度
+    uint8_t fillRect_h = 77; // 绘制单个高度
+    uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
+    uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1+10;
+
+    for(int k=0; k<sleep_data->recordCnt; k++)
+    {
+        TRACE("SLEEP={state[%d] data[%d]}\n",sleep_data->sleep_record[k].state,sleep_data->sleep_record[k].period);
+    }
+
+    if (sleep_data->totalSleepMin) //是否有睡眠时长
+    {
+        uint16_t fillRect_x = 0;
+        uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
+        uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
+        uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
+        if (timeInterval == 0)
+            timeInterval = 24 * 60;
+
+        fillRect_y = 224;
+        for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
+        {
+            compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 最后一段画满图表
+            if (i == sleep_data->recordCnt - 1)
+            {
+                if (fillRect_x + fillRect_w < width)
+                {
+                    fillRect_w = width - fillRect_x;
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 设置矩形位置和颜色
+            if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(127, 43, 235));
+            }
+            else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(192, 67, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(254, 255, 210));
+            }
+            else if (sleep_data->sleep_record[i].state == REM_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(245, 170, 68));
+            }
+
+            // 更新起始点
+            fillRect_x += fillRect_w;
+
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
+        }
+    }
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_9_SLEEP_2_NO_DATA_SLEEP_YUANJIAO_204X9_X48_Y168_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 225-35);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    ab_free(sleep_data);
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#define FINT_HEIGHT 24
+#define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
+#define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
+#define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
+#define GUI_PAGE_TITLE_WIDTH            (GUI_SCREEN_WIDTH * 2 / 5)
+#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH - FORM_TITLE_RIGHT - GUI_SCREEN_WIDTH/12)//(GUI_SCREEN_WIDTH / 3)
+#define CONTROL_Y  16
+
+enum
+{
+    COMPO_ID_TEXT_DEEP_TIME_HOUR = 1,
+    COMPO_ID_TEXT_DEEP_TIME_MIN,
+    COMPO_ID_TEXT_LIGHT_TIME_HOUR,
+    COMPO_ID_TEXT_LIGHT_TIME_MIN,
+
+    COMPO_ID_CHART_SHALLOW,
+    COMPO_ID_CHART_DEEP,
+    COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
+};
+
+enum
+{
+    CHART_ANIM_STA_IDLE,
+    CHART_ANIM_STA_START,
+    CHART_ANIM_STA_END,
+
+};
+
+typedef struct f_sleep_t_
+{
+    page_tp_move_t *ptm;
+} f_sleep_t;
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sleep_form_create(void)
+{
+    compo_textbox_t * txt;
+    compo_picturebox_t *pic;
+    char buf[50];
+
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
+    //sleep_data->totalSleepMin = 480;
+    //sleep_data->fallAsSleepTime.hour =0;
+    //sleep_data->fallAsSleepTime.min =0;
+    //sleep_data->getUpSleepTime.hour =8;
+    //sleep_data->getUpSleepTime.min = 0;
+
+    //sleep_data->lightSleepMin= 480;
+    //sleep_data->deepSleepMin= 480;
+    //sleep_data->wakeSleepMin= 480;
+    //sleep_data->RemSleepMin= 480;
+
+    //sleep_data->recordCnt = 5;
+    //sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    //sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    //sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    //sleep_data->sleep_record[2].state = REM_SLEEP;
+    //sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    //sleep_data->sleep_record[0].period = 20;
+    //sleep_data->sleep_record[1].period = 100;
+    //sleep_data->sleep_record[2].period = 100;
+    //sleep_data->sleep_record[3].period = 120;
+    //sleep_data->sleep_record[4].period = 20;
+
+    //sleep_data->fallAsSleepTime.hour = 8;
+    //sleep_data->fallAsSleepTime.min  = 30;
+    //sleep_data->getUpSleepTime.hour  = 11;
+    //sleep_data->getUpSleepTime.min  = 30;
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_title(frm, i18n[STR_SLEEP]);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I341001_9_SLEEP_ICON_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, 152+32, 82+32);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
+    compo_textbox_set_pos(txt,75+32,157+32);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,145+14,177+28/2,50,50);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
+    compo_textbox_set_pos(txt,203+32,157+32);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,272+14,177+28/2,50,50);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
+//////////////////////////////////////////////////////////////////////
+    pic = compo_picturebox_create(frm, UI_BUF_I341001_9_SLEEP_NO_DATE_BIN);///* 无数据*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 316);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->fallAsSleepTime.min)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,30,382,85,50);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+    compo_textbox_set(txt, buf);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->getUpSleepTime.min)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH-85-33,382,85,50);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+    compo_textbox_set(txt, buf);
+///////////////////////////////////////////////////////////////////////////
+#define height_spacing 96
+#define first_y 451
+
+    for (int i = 0; i < 3; i++)
+    {
+        compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape,GUI_SCREEN_CENTER_X, 517+(height_spacing*i), 320, 1);
+        compo_shape_set_color(shape, make_color(0x2c,0x2c,0x2c));
+    }
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEEP_SLEEP]));///* 深睡*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y,160,40);
+    compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(127, 43, 235));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y+height_spacing,160,40);
+    compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(192, 67, 255));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y+height_spacing*3,160,40);
+    compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(254, 255, 210));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y+height_spacing*2,160,40);
+    compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(245, 170, 68));
+//////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->deepSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->deepSleepMin/60,i18n[STR_HOUR], sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 207, first_y,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->lightSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->lightSleepMin/60,i18n[STR_HOUR], sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 207, first_y+height_spacing,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->wakeSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->wakeSleepMin/60,i18n[STR_HOUR], sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 207, first_y+height_spacing*3,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->RemSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->RemSleepMin/60,i18n[STR_HOUR], sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 207, first_y+height_spacing*2,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    uint16_t width = (311);    // 总宽度
+    uint8_t fillRect_h = 120; // 绘制单个高度
+    uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
+    uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1+10;
+
+//    sleep_data->recordCnt = 5;
+//    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+//    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+//    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+//    sleep_data->sleep_record[2].state = REM_SLEEP;
+//    sleep_data->sleep_record[4].state = DEEP_SLEEP;
+//    sleep_data->sleep_record[0].period = 1;
+//    sleep_data->sleep_record[1].period = 100;
+//    sleep_data->sleep_record[2].period = 120;
+//    sleep_data->sleep_record[3].period = 119;
+//    sleep_data->sleep_record[4].period = 20;
+
+    for(int k=0; k<sleep_data->recordCnt; k++)
+    {
+        TRACE("SLEEP={state[%d] data[%d]}\n",sleep_data->sleep_record[k].state,sleep_data->sleep_record[k].period);
+    }
+
+    if (sleep_data->totalSleepMin) //是否有睡眠时长
+    {
+        uint16_t fillRect_x = 0;
+        uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
+        uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
+        uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
+        if (timeInterval == 0)
+            timeInterval = 24 * 60;
+
+        fillRect_y = 257 + 60;
+        for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
+        {
+            compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 最后一段画满图表
+            if (i == sleep_data->recordCnt - 1)
+            {
+                if (fillRect_x + fillRect_w < width)
+                {
+                    fillRect_w = width - fillRect_x;
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 设置矩形位置和颜色
+            if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(127, 43, 235));
+            }
+            else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(192, 67, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(254, 255, 210));
+            }
+            else if (sleep_data->sleep_record[i].state == REM_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(245, 170, 68));
+            }
+
+            // 更新起始点
+            fillRect_x += fillRect_w;
+
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
+        }
+    }
+    pic = compo_picturebox_create(frm, UI_BUF_I341001_9_SLEEP_YUANJIAO_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 257+6);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    ab_free(sleep_data);
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+#define FINT_HEIGHT 24
+#define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
+#define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
+#define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
+#define GUI_PAGE_TITLE_WIDTH            (GUI_SCREEN_WIDTH * 2 / 5)
+#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH - FORM_TITLE_RIGHT - GUI_SCREEN_WIDTH/12)//(GUI_SCREEN_WIDTH / 3)
+#define CONTROL_Y  16
+
+enum
+{
+    COMPO_ID_TEXT_DEEP_TIME_HOUR = 1,
+    COMPO_ID_TEXT_DEEP_TIME_MIN,
+    COMPO_ID_TEXT_LIGHT_TIME_HOUR,
+    COMPO_ID_TEXT_LIGHT_TIME_MIN,
+
+    COMPO_ID_CHART_SHALLOW,
+    COMPO_ID_CHART_DEEP,
+    COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
+};
+
+enum
+{
+    CHART_ANIM_STA_IDLE,
+    CHART_ANIM_STA_START,
+    CHART_ANIM_STA_END,
+
+};
+
+typedef struct f_sleep_t_
+{
+    page_tp_move_t *ptm;
+} f_sleep_t;
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sleep_form_create(void)
+{
+    compo_textbox_t * txt;
+    compo_picturebox_t *pic;
+    char buf[50];
+
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
+    //sleep_data->totalSleepMin = 480;
+    //sleep_data->fallAsSleepTime.hour =0;
+    //sleep_data->fallAsSleepTime.min =0;
+    //sleep_data->getUpSleepTime.hour =8;
+    //sleep_data->getUpSleepTime.min = 0;
+
+    //sleep_data->lightSleepMin= 480;
+    //sleep_data->deepSleepMin= 480;
+    //sleep_data->wakeSleepMin= 480;
+    //sleep_data->RemSleepMin= 480;
+
+    //sleep_data->recordCnt = 5;
+    //sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    //sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    //sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    //sleep_data->sleep_record[2].state = REM_SLEEP;
+    //sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    //sleep_data->sleep_record[0].period = 20;
+    //sleep_data->sleep_record[1].period = 100;
+    //sleep_data->sleep_record[2].period = 100;
+    //sleep_data->sleep_record[3].period = 120;
+    //sleep_data->sleep_record[4].period = 20;
+
+    //sleep_data->fallAsSleepTime.hour = 8;
+    //sleep_data->fallAsSleepTime.min  = 30;
+    //sleep_data->getUpSleepTime.hour  = 11;
+    //sleep_data->getUpSleepTime.min  = 30;
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_title(frm, i18n[STR_SLEEP]);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I343001_9_SLEEP_ICON_SLEEP_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, 133+54/2, 71+54/2);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
+    compo_textbox_set_pos(txt,54,137);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,126,154+28/2,50,50);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
+    compo_textbox_set_pos(txt,164,137);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,238,154+28/2,50,50);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
+//////////////////////////////////////////////////////////////////////
+    pic = compo_picturebox_create(frm, UI_BUF_I343001_9_SLEEP_NODATE_BG_BIN);///* 无数据*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 224+139/2);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->fallAsSleepTime.min)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,16,328,85,50);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+    compo_textbox_set(txt, buf);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->getUpSleepTime.min)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH-85-16,328,85,50);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+    compo_textbox_set(txt, buf);
+///////////////////////////////////////////////////////////////////////////
+#define height_spacing 84
+#define first_y 392
+
+    for (int i = 0; i < 3; i++)
+    {
+        compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape,GUI_SCREEN_CENTER_X, 449+(height_spacing*i), 320, 1);
+        compo_shape_set_color(shape, make_color(0x2c,0x2c,0x2c));
+    }
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEEP_SLEEP]));///* 深睡*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y,160,40);
+    compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(127, 43, 235));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y+height_spacing,160,40);
+    compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(192, 67, 255));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y+height_spacing*3,160,40);
+    compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(254, 255, 210));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 25, first_y+height_spacing*2,160,40);
+    compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(245, 170, 68));
+//////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->deepSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->deepSleepMin/60,i18n[STR_HOUR], sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 170, first_y,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->lightSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->lightSleepMin/60,i18n[STR_HOUR], sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 170, first_y+height_spacing,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->wakeSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->wakeSleepMin/60,i18n[STR_HOUR], sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 170, first_y+height_spacing*3,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->RemSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->RemSleepMin/60,i18n[STR_HOUR], sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 170, first_y+height_spacing*2,140,40);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    uint16_t width = (272);    // 总宽度
+    uint8_t fillRect_h = 104; // 绘制单个高度
+    uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
+    uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1+10;
+
+    sleep_data->recordCnt = 5;
+    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    sleep_data->sleep_record[2].state = REM_SLEEP;
+    sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    sleep_data->sleep_record[0].period = 1;
+    sleep_data->sleep_record[1].period = 100;
+    sleep_data->sleep_record[2].period = 120;
+    sleep_data->sleep_record[3].period = 119;
+    sleep_data->sleep_record[4].period = 20;
+
+    for(int k=0; k<sleep_data->recordCnt; k++)
+    {
+        TRACE("SLEEP={state[%d] data[%d]}\n",sleep_data->sleep_record[k].state,sleep_data->sleep_record[k].period);
+    }
+
+    if (1)//(sleep_data->totalSleepMin) //是否有睡眠时长
+    {
+        uint16_t fillRect_x = 0;
+        uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
+        uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
+        uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
+        if (timeInterval == 0)
+            timeInterval = 24 * 60;
+
+        fillRect_y = 224 + 104/2;
+        for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
+        {
+            compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 最后一段画满图表
+            if (i == sleep_data->recordCnt - 1)
+            {
+                if (fillRect_x + fillRect_w < width)
+                {
+                    fillRect_w = width - fillRect_x;
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 设置矩形位置和颜色
+            if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(127, 43, 235));
+            }
+            else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(192, 67, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(254, 255, 210));
+            }
+            else if (sleep_data->sleep_record[i].state == REM_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(245, 170, 68));
+            }
+
+            // 更新起始点
+            fillRect_x += fillRect_w;
+
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
+        }
+    }
+    pic = compo_picturebox_create(frm, UI_BUF_I343001_9_SLEEP_YUANJIAO_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 224+11/2);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    ab_free(sleep_data);
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#define FINT_HEIGHT 24
+#define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
+#define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
+#define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
+#define GUI_PAGE_TITLE_WIDTH            (GUI_SCREEN_WIDTH * 2 / 5)
+#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH - FORM_TITLE_RIGHT - GUI_SCREEN_WIDTH/12)//(GUI_SCREEN_WIDTH / 3)
+#define CONTROL_Y  16
+
+enum
+{
+    COMPO_ID_TEXT_DEEP_TIME_HOUR = 1,
+    COMPO_ID_TEXT_DEEP_TIME_MIN,
+    COMPO_ID_TEXT_LIGHT_TIME_HOUR,
+    COMPO_ID_TEXT_LIGHT_TIME_MIN,
+
+    COMPO_ID_CHART_SHALLOW,
+    COMPO_ID_CHART_DEEP,
+    COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
+};
+
+enum
+{
+    CHART_ANIM_STA_IDLE,
+    CHART_ANIM_STA_START,
+    CHART_ANIM_STA_END,
+
+};
+
+typedef struct f_sleep_t_
+{
+    page_tp_move_t *ptm;
+} f_sleep_t;
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sleep_form_create(void)
+{
+
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
+    // sleep_data->totalSleepMin = 480;
+    // sleep_data->fallAsSleepTime.hour =0;
+    // sleep_data->fallAsSleepTime.min =0;
+    // sleep_data->getUpSleepTime.hour =8;
+    // sleep_data->getUpSleepTime.min = 0;
+
+    // sleep_data->lightSleepMin= 480;
+    // sleep_data->deepSleepMin= 480;
+    // sleep_data->wakeSleepMin= 480;
+    // sleep_data->RemSleepMin= 480;
+
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 20;
+    // sleep_data->sleep_record[1].period = 100;
+    // sleep_data->sleep_record[2].period = 100;
+    // sleep_data->sleep_record[3].period = 120;
+    // sleep_data->sleep_record[4].period = 20;
+    // sleep_data->getUpSleepTime.min = 30;
+    // sleep_data->fallAsSleepTime.min = 40;
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_textbox_t * txt;
+    compo_picturebox_t *pic;
+    char buf[50];
+
+    pic = compo_picturebox_create(frm, UI_BUF_I338002_9_SLEEP_SLEEP_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 44/2+16);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_pos(txt,88,79);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,145,94,32,32);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_pos(txt,175,79);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,232,94,60,32);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
+
+////////////////////////////////柱形图//////////////////////////////////////////
+    pic = compo_picturebox_create(frm, UI_BUF_I338002_9_SLEEP_BG_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 96/2+132);
+
+    uint16_t width = (296);    // 总宽度
+    uint8_t fillRect_h = 96; // 绘制单个高度
+    uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
+    uint16_t fillRect_y = 96/2+132;
+
+    if (sleep_data->totalSleepMin) //是否有睡眠时长
+    {
+        uint16_t fillRect_x = 0;
+        uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
+        uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
+        uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
+        if (timeInterval == 0)
+        {
+            timeInterval = 24 * 60;
+        }
+
+        for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
+        {
+            compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 最后一段画满图表
+            if (i == sleep_data->recordCnt - 1)
+            {
+                if (fillRect_x + fillRect_w < width)
+                {
+                    fillRect_w = width - fillRect_x;
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 设置矩形位置和颜色
+            if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(158, 28, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(196, 120, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(255, 255, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == REM_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(255, 222, 90));
+            }
+
+            // 更新起始点
+            fillRect_x += fillRect_w;
+
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
+        }
+    }
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
+    {
+
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    // txt = compo_textbox_create(frm,strlen(buf));
+    // compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    // compo_textbox_set_align_center(txt, false);
+    // compo_textbox_set_location(txt,32,235,51,33);
+    // compo_textbox_set(txt, buf);
+    // compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+
+    // memset(buf,0,sizeof(buf));
+    // if(sleep_data->totalSleepMin)   ///是否有睡眠时长
+    // {
+    //     snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起 点*/
+    // }
+    // else
+    // {
+    //     snprintf(buf, sizeof(buf), "--:--");
+    // }
+    // txt = compo_textbox_create(frm,strlen(buf));
+    // compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    // compo_textbox_set_align_center(txt, false);
+    // compo_textbox_set_right_align(txt, true);
+    // compo_textbox_set_location(txt,275,235,51,33);
+    // compo_textbox_set(txt, buf);
+    // compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d - %02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min,sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///*睡 起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:-- - --:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,38/2+263);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SLEEP]));
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+297,150,32);
+    compo_textbox_set(txt, i18n[STR_SLEEP]);
+    compo_textbox_set_forecolor(txt,make_color(161,72,253));
+
+    pic = compo_picturebox_create(frm, UI_BUF_I338002_5_ACTIVITY_NEXT_BIN);
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,328+24/2);
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    const u32 res_addr[4]= {UI_BUF_I338002_9_SLEEP_ICON_DEEP_SLEEP_BIN,UI_BUF_I338002_9_SLEEP_ICON_LIGHT_SLEEP_BIN,UI_BUF_I338002_9_SLEEP_ICON_AWAKE_BIN,UI_BUF_I338002_9_SLEEP_ICON_RAPID_EYE_MOVEMENT_BIN};
+    const u16 str_idx[4] = {STR_DEEP_SLEEP,STR_LIGHT_SLEEP,STR_ALWAKE_SLEEP,STR_EYE_MOVE_SLEEP};
+    uint16_t  sleep_date[4]=
+    {
+        sleep_data->deepSleepMin,  ///* 深睡数据*/
+        sleep_data->lightSleepMin,///* 浅睡数据*/
+        sleep_data->wakeSleepMin, ///* 清醒数据*/
+        sleep_data->RemSleepMin, ///* 快速眼动数据*/
+    };
+    const u16 widget_first_x_y[3][2]=
+    {
+        {92,GUI_SCREEN_HEIGHT+56}, //照片
+        {128,GUI_SCREEN_HEIGHT+27},//文本
+        {128,GUI_SCREEN_HEIGHT+65},//数据
+    };
+#define Spacing    82
+
+    for (size_t i = 0; i < 4; i++)
+    {
+        pic = compo_picturebox_create(frm, res_addr[i]);
+        compo_picturebox_set_pos(pic, widget_first_x_y[0][0], widget_first_x_y[0][1]+i*Spacing);
+
+        txt = compo_textbox_create(frm,strlen(i18n[str_idx[i]]));
+        compo_textbox_set_align_center(txt, false);
+        compo_textbox_set_location(txt,widget_first_x_y[1][0],widget_first_x_y[1][1]+i*Spacing,150,32);
+        compo_textbox_set(txt, i18n[str_idx[i]]);
+        compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+
+        memset(buf,0,sizeof(buf));
+        if(sleep_date[i])
+        {
+            if(sleep_date[i]/60)
+            {
+                snprintf(buf, sizeof(buf), "%02d%s %02d%s",sleep_date[i]/60,i18n[STR_HOUR],sleep_date[i]%60,i18n[STR_MIN]);
+            }
+            else
+            {
+                snprintf(buf, sizeof(buf),"%02d",sleep_date[i]%60);
+            }
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "--");
+        }
+        txt = compo_textbox_create(frm,strlen(buf));
+        compo_textbox_set_location(txt,widget_first_x_y[2][0],widget_first_x_y[2][1]+i*Spacing,200,32);
+        compo_textbox_set_align_center(txt, false);
+        compo_textbox_set(txt, buf);
+    }
+
+
+    ab_free(sleep_data);
+    return frm;
+
+#else
+    compo_textbox_t * txt;
+    compo_picturebox_t *pic;
+    char buf[50];
+
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_title(frm, i18n[STR_SLEEP]);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I338001_9_SLEEP_ICON_SLEEP_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 54/2+81);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_pos(txt,73,155);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,146,170,32,32);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_pos(txt,185,155);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,258,170,60,32);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
+//////////////////////////////////////////////////////////////////////
+    pic = compo_picturebox_create(frm, UI_BUF_I338001_9_SLEEP_NODATE_BG_BIN);///* 无数据*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 104/2+234);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->fallAsSleepTime.min)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,46,348,75,33);
+    compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->getUpSleepTime.min)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,348,136,33);
+    compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+///////////////////////////////////////////////////////////////////////////
+#define height_spacing 84
+#define first_y 408
+
+    // for (int i = 0; i < 3; i++)
+    // {
+    //     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    //     compo_shape_set_location(shape,GUI_SCREEN_CENTER_X, first_y+45+(height_spacing*i), 220, 1);
+    //     compo_shape_set_color(shape, make_color(0x2c,0x2c,0x2c));
+    // }
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEEP_SLEEP]));///* 深睡*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 42, first_y,100,32);
+    compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(127, 43, 235));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 42, first_y+height_spacing,100,32);
+    compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(192, 67, 255));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 42, first_y+height_spacing*2,100,32);
+    compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(254, 255, 220));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 42, first_y+height_spacing*3,100,32);
+    compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(214, 149, 49));
+//////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->deepSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->deepSleepMin/60,i18n[STR_HOUR], sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y,120,32);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->lightSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->lightSleepMin/60,i18n[STR_HOUR], sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing,120,32);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->wakeSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->wakeSleepMin/60,i18n[STR_HOUR], sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*2,120,32);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->RemSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->RemSleepMin/60,i18n[STR_HOUR], sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*3,120,32);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    uint16_t width = (272);    // 总宽度
+    uint8_t fillRect_h = 104; // 绘制单个高度
+    uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
+    uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1+10;
+
+    for(int k=0; k<sleep_data->recordCnt; k++)
+    {
+        TRACE("SLEEP={state[%d] data[%d]}\n",sleep_data->sleep_record[k].state,sleep_data->sleep_record[k].period);
+    }
+
+    if (sleep_data->totalSleepMin) //是否有睡眠时长
+    {
+        uint16_t fillRect_x = 0;
+        uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
+        uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
+        uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
+        if (timeInterval == 0)
+            timeInterval = 24 * 60;
+
+        fillRect_y = (104/2+234);
+        for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
+        {
+            compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 最后一段画满图表
+            if (i == sleep_data->recordCnt - 1)
+            {
+                if (fillRect_x + fillRect_w < width)
+                {
+                    fillRect_w = width - fillRect_x;
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 设置矩形位置和颜色
+            if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x69, 0x7e, 0xff));
+            }
+            else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x36, 0xb7, 0xff));
+            }
+            else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0xff, 0x87, 0x0f));
+            }
+            else if (sleep_data->sleep_record[i].state == REM_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x00, 0xf7, 0xd6));
+            }
+
+            // 更新起始点
+            fillRect_x += fillRect_w;
+
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
+        }
+    }
+    pic = compo_picturebox_create(frm, UI_BUF_I338001_9_SLEEP_YJ_BIN);///* 无数据*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, fillRect_y-fillRect_h/2+5);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    ab_free(sleep_data);
+    return frm;
+#endif
+}
+#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 #define FINT_HEIGHT 24
 #define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
 #define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
@@ -411,6 +2134,7 @@ typedef struct f_sleep_t_
     u8          page_num;
     uint32_t    tick;
     u8          switch_page_state;
+    page_tp_move_t *ptm;
 } f_sleep_t;
 
 enum
@@ -441,11 +2165,16 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-    // sleep_data->totalSleepMin = 480;
+    // sleep_data->totalSleepMin = 38;
     // sleep_data->fallAsSleepTime.hour =0;
     // sleep_data->fallAsSleepTime.min =0;
     // sleep_data->getUpSleepTime.hour =8;
     // sleep_data->getUpSleepTime.min = 0;
+
+    // sleep_data->lightSleepMin= 480;
+    // sleep_data->deepSleepMin= 480;
+    // sleep_data->wakeSleepMin= 480;
+    // sleep_data->RemSleepMin= 480;
 
     // sleep_data->recordCnt = 5;
     // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
@@ -458,6 +2187,7 @@ compo_form_t *func_sleep_form_create(void)
     // sleep_data->sleep_record[2].period = 100;
     // sleep_data->sleep_record[3].period = 120;
     // sleep_data->sleep_record[4].period = 20;
+
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -478,13 +2208,14 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_location(txt,83,229,58,65);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(txt,74,228,66,65);
     compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
-    compo_textbox_set_location(txt,145,258,30,34);
+    compo_textbox_set_location(txt,145,265,30,34);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set(txt, i18n[STR_HOUR]);
 
@@ -498,14 +2229,15 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_location(txt,187,229,58,65);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(txt,178,228,66,65);
     compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,248,258,30,34);
+    compo_textbox_set_location(txt,248,265,60,34);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_autoroll_mode(txt, 0);
     compo_textbox_set(txt, i18n[STR_MIN]);
@@ -520,7 +2252,8 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:-- - --:--");///* 睡-起 点*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,292,140,30);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,307+15,150,30);
     compo_textbox_set(txt, buf);
 
     ///* 第二页*/
@@ -547,7 +2280,8 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:--");///* 睡眠初始点*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_location(txt, 63,GUI_SCREEN_HEIGHT+206,47,24);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt, 63,GUI_SCREEN_HEIGHT+206,65,30);
     compo_textbox_set(txt, buf);
     compo_textbox_set_forecolor(txt, COLOR_GRAY);
 
@@ -560,7 +2294,8 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:--");///* 睡眠结束点*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_location(txt, 295,GUI_SCREEN_HEIGHT+203,47,24);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt, 295,GUI_SCREEN_HEIGHT+203,65,30);
     compo_textbox_set(txt, buf);
     compo_textbox_set_forecolor(txt, COLOR_GRAY);
 
@@ -578,31 +2313,38 @@ compo_form_t *func_sleep_form_create(void)
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_DEEP_SLEEP]));///* 深睡*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+237,100,32);
+    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+237,110,32);
     compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0x69, 0x7e, 0xff));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+290,100,32);
+    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+290,110,32);
     compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0x36, 0xb7, 0xff));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+396,100,32);
+    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+396,110,32);
     compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0xff, 0x87, 0x0f));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+343,100,32);
+    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+343,110,32);
     compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0x00, 0xf7, 0xd6));
 //////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {
-        snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->deepSleepMin/60,i18n[STR_HOUR], sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        if(sleep_data->deepSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->deepSleepMin/60,i18n[STR_HOUR], sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
     }
     else
     {
@@ -610,12 +2352,21 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+235,112,36);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+235,120,36);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {
-        snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->lightSleepMin/60,i18n[STR_HOUR], sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        if(sleep_data->lightSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->lightSleepMin/60,i18n[STR_HOUR], sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+
     }
     else
     {
@@ -623,12 +2374,20 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+288,112,36);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+288,120,36);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {
-        snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->wakeSleepMin/60,i18n[STR_HOUR], sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        if(sleep_data->wakeSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->wakeSleepMin/60,i18n[STR_HOUR], sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
     }
     else
     {
@@ -636,12 +2395,20 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+394,112,36);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+394,120,36);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {
-        snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->RemSleepMin/60,i18n[STR_HOUR], sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        if(sleep_data->RemSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->RemSleepMin/60,i18n[STR_HOUR], sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
     }
     else
     {
@@ -649,7 +2416,8 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209,GUI_SCREEN_HEIGHT+341,122,36);
+    compo_textbox_set_location(txt, 200,GUI_SCREEN_HEIGHT+341,120,36);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 /////////////////////////////////////////////////////////////////////////////////////////////////////
     for(int i=0; i<3; i++)
@@ -833,13 +2601,9 @@ static void func_sleep_move(void)
                 {
                     f_sleep->switch_page_state = SWITCH_YES;
                 }
-                else if(f_sleep->move_offset > -GUI_SCREEN_HEIGHT)
-                {
-                    f_sleep->switch_page_state = SWITCH_NO;
-                }
                 else
                 {
-                    f_sleep->switch_page_state = TOTCH_MOVE;
+                    f_sleep->switch_page_state = SWITCH_NO;
                 }
             }
         }
@@ -863,13 +2627,7 @@ static void func_sleep_move(void)
                     }
                     else if(f_sleep->switch_page_state == SWITCH_NO)
                     {
-                        f_sleep->move_offset-=STEP_NUM;
-
-                        if(f_sleep->move_offset <= -(GUI_SCREEN_HEIGHT))
-                        {
-                            f_sleep->move_offset = -GUI_SCREEN_HEIGHT;
-                            f_sleep->touch_state = TOUCH_FINISH_STATE;
-                        }
+                        f_sleep->touch_state = TOUCH_FINISH_STATE;
                     }
                 }
                 f_sleep->page_old_y = f_sleep->move_offset;
@@ -878,7 +2636,904 @@ static void func_sleep_move(void)
         }
     }
 
-//        printf("move_offset:%d\n",f_sleep->move_offset);
+    //    printf("move_offset:%d\n",f_sleep->move_offset);
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+#define FINT_HEIGHT 24
+#define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
+#define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
+#define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
+#define GUI_PAGE_TITLE_WIDTH            (GUI_SCREEN_WIDTH * 2 / 5)
+#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH - FORM_TITLE_RIGHT - GUI_SCREEN_WIDTH/12)//(GUI_SCREEN_WIDTH / 3)
+#define CONTROL_Y  16
+
+enum
+{
+    COMPO_ID_TEXT_DEEP_TIME_HOUR = 1,
+    COMPO_ID_TEXT_DEEP_TIME_MIN,
+    COMPO_ID_TEXT_LIGHT_TIME_HOUR,
+    COMPO_ID_TEXT_LIGHT_TIME_MIN,
+
+    COMPO_ID_CHART_SHALLOW,
+    COMPO_ID_CHART_DEEP,
+    COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
+};
+
+enum
+{
+    CHART_ANIM_STA_IDLE,
+    CHART_ANIM_STA_START,
+    CHART_ANIM_STA_END,
+
+};
+typedef struct f_sleep_t_
+{
+    bool        touch_flag;
+    s32         move_offset;
+    s32         page_old_y;
+    u8          touch_state;
+    u8          page_num;
+    uint32_t    tick;
+    u8          switch_page_state;
+    page_tp_move_t *ptm;
+} f_sleep_t;
+
+enum
+{
+    TOUCH_FINISH_STATE=0,
+    AUTO_STATE,
+
+};
+enum
+{
+    PAGE_1=0,
+    PAGE_2,
+};
+enum
+{
+    SWITCH_YES=0,
+    SWITCH_NO,
+    TOTCH_MOVE,
+};
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sleep_form_create(void)
+{
+    compo_textbox_t * txt;
+    compo_picturebox_t *pic;
+    char buf[50];
+
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
+    // sleep_data->totalSleepMin = 38;
+    // sleep_data->fallAsSleepTime.hour =0;
+    // sleep_data->fallAsSleepTime.min =0;
+    // sleep_data->getUpSleepTime.hour =8;
+    // sleep_data->getUpSleepTime.min = 0;
+
+    // sleep_data->lightSleepMin= 480;
+    // sleep_data->deepSleepMin= 480;
+    // sleep_data->wakeSleepMin= 480;
+    // sleep_data->RemSleepMin= 480;
+
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 20;
+    // sleep_data->sleep_record[1].period = 100;
+    // sleep_data->sleep_record[2].period = 100;
+    // sleep_data->sleep_record[3].period = 120;
+    // sleep_data->sleep_record[4].period = 20;
+
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    // //设置标题栏
+    // compo_form_set_title(frm, i18n[STR_SLEEP]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I340001_SLEEP_BG_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+#if UTE_GUI_SCREEN_TITLE_SUPPORT
+    //设置标题栏
+    compo_textbox_t *title = compo_textbox_create(frm,20);
+    compo_textbox_set_location(title,20,20,300,0);
+    compo_textbox_set_right_align(title, false);
+    compo_textbox_set_align_center(title,false);
+    compo_textbox_set(title, i18n[STR_SLEEP]);
+#endif
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(txt,74,228,66,65);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
+    compo_textbox_set_location(txt,145,265,30,34);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(txt,178,228,66,65);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,248,265,60,34);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d - %02d:%02d", sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min,sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 睡-起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:-- - --:--");///* 睡-起 点*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,307+15,150,30);
+    compo_textbox_set(txt, buf);
+
+    ///* 第二页*/
+
+    ///设置标题栏名字///
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SLEEP]));
+    compo_textbox_set(txt, i18n[STR_SLEEP]);
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/2,390+38/2,120,38);
+    compo_textbox_set(txt, i18n[STR_SLEEP]);
+
+    if(sleep_data->totalSleepMin == 0) ///是否有睡眠时长
+    {
+        txt = compo_textbox_create(frm,strlen(i18n[STR_NO_DATA]));
+        compo_textbox_set(txt, i18n[STR_NO_DATA]);
+        compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,142+GUI_SCREEN_HEIGHT);
+    }
+
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡眠初始点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");///* 睡眠初始点*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt, 63,GUI_SCREEN_HEIGHT+206,65,30);
+    compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, COLOR_GRAY);
+
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 睡眠结束点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");///* 睡眠结束点*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt, 295,GUI_SCREEN_HEIGHT+203,65,30);
+    compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, COLOR_GRAY);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I340001_SLEEP_DOT1_BIN);///* 深度睡眠图*/
+    compo_picturebox_set_pos(pic, 45, GUI_SCREEN_HEIGHT+253);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I340001_SLEEP_DOT2_BIN);///* 浅度睡眠图*/
+    compo_picturebox_set_pos(pic, 45, GUI_SCREEN_HEIGHT+306);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I340001_SLEEP_DOT3_BIN);///* 清醒睡眠图*/
+    compo_picturebox_set_pos(pic, 45, GUI_SCREEN_HEIGHT+359);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I340001_SLEEP_DOT4_BIN);///* 快速眼动睡眠图*/
+    compo_picturebox_set_pos(pic, 45, GUI_SCREEN_HEIGHT+412);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEEP_SLEEP]));///* 深睡*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+237,110,32);
+    compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(0x69, 0x7e, 0xff));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+290,110,32);
+    compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(0x36, 0xb7, 0xff));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+396,110,32);
+    compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(0xff, 0x87, 0x0f));
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+343,110,32);
+    compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
+    compo_textbox_set_forecolor(txt, make_color(0x00, 0xf7, 0xd6));
+//////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->deepSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->deepSleepMin/60,i18n[STR_HOUR], sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->deepSleepMin%60,i18n[STR_MIN]);///* 深睡数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+235,120,36);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->lightSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->lightSleepMin/60,i18n[STR_HOUR], sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->lightSleepMin%60,i18n[STR_MIN]);///* 浅睡数据*/
+        }
+
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+288,120,36);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->wakeSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->wakeSleepMin/60,i18n[STR_HOUR], sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->wakeSleepMin%60,i18n[STR_MIN]);///* 清醒数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+394,120,36);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    if(sleep_data->totalSleepMin) ///是否有睡眠时长
+    {
+        if(sleep_data->RemSleepMin/60)
+        {
+            snprintf(buf, sizeof(buf), "%02d%s%02d%s",sleep_data->RemSleepMin/60,i18n[STR_HOUR], sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "%02d%s",sleep_data->RemSleepMin%60,i18n[STR_MIN]);///* 快速眼动数据*/
+        }
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--%s --%s",i18n[STR_HOUR],i18n[STR_MIN]);
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 200,GUI_SCREEN_HEIGHT+341,120,36);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set(txt, buf);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    for(int i=0; i<3; i++)
+    {
+        compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+279+i*53, 280, 1);
+        compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+    uint16_t width = 280;    // 总宽度
+    uint8_t fillRect_h = 28; // 绘制单个高度
+    uint16_t startX = 0;     // 相对坐标
+    uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1+10;
+
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+190, width, 1);
+    compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
+
+    for(int k=0; k<sleep_data->recordCnt; k++)
+    {
+        TRACE("SLEEP={state[%d] data[%d]}\n",sleep_data->sleep_record[k].state,sleep_data->sleep_record[k].period);
+    }
+
+    if (sleep_data->totalSleepMin) //是否有睡眠时长
+    {
+        uint16_t fillRect_x = 0;
+        uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
+        uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
+        uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
+        if (timeInterval == 0)
+            timeInterval = 24 * 60;
+        widget_page_t *page = widget_page_create(frm->page_body);
+        widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_WIDTH+129, width, fillRect_h*4);
+
+        // compo_shape_t *shapes = compo_shape_create_for_page(frm,page,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+        // compo_shape_set_location(shapes, GUI_SCREEN_CENTER_X,fillRect_h*2,GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT);
+
+        fillRect_y = fillRect_h*2+fillRect_h/2;
+        for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
+        {
+            compo_shape_t *shape = compo_shape_create_for_page(frm,page,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 设置矩形位置和颜色
+            if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y + fillRect_h, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x69, 0x7e, 0xff));
+            }
+            else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x36, 0xb7, 0xff));
+            }
+            else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y - fillRect_h * 2, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0xff, 0x87, 0x0f));
+            }
+            else if (sleep_data->sleep_record[i].state == REM_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y - fillRect_h, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x00, 0xf7, 0xd6));
+            }
+
+            // 更新起始点
+            fillRect_x += fillRect_w;
+
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
+        }
+        widget_page_set_client(page,(width-fillRect_x)/2, 0);
+    }
+
+    ab_free(sleep_data);
+    return frm;
+}
+//滑动处理
+static void func_sleep_move(void)
+{
+#define   PAGE_TWO_SIZE  510  //最底y轴
+#define   TOYCH_LAST_DY  40   //切换页滑动y
+#define   TICK_TIME      8   //步进y像素点时间
+#define   STEP_NUM       8    //步进y像素点
+    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
+
+
+    if(f_sleep->page_num == PAGE_1)//第一页
+    {
+        if(f_sleep->touch_flag)//触摸状态
+        {
+            s32 dx, dy;
+            f_sleep->touch_flag = ctp_get_dxy(&dx, &dy);
+            f_sleep->move_offset = dy;
+            if(f_sleep->move_offset > 0)
+            {
+                f_sleep->move_offset = 0;
+            }
+            widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+
+            if(f_sleep->touch_flag == false)//松手触发自动移动页
+            {
+                f_sleep->touch_state = AUTO_STATE;
+                if(f_sleep->move_offset <= (-TOYCH_LAST_DY))//满足切换下一页
+                {
+                    f_sleep->switch_page_state = SWITCH_YES;
+                }
+                else
+                {
+                    f_sleep->switch_page_state = SWITCH_NO;
+                }
+            }
+        }
+        else
+        {
+            if(f_sleep->touch_state == AUTO_STATE)
+            {
+                if(tick_check_expire(f_sleep->tick, TICK_TIME))//自动滑动
+                {
+                    if(f_sleep->switch_page_state == SWITCH_YES)//满足切换下一页
+                    {
+                        f_sleep->tick = tick_get();
+                        f_sleep->move_offset-=STEP_NUM;
+
+                        if(f_sleep->move_offset <= -GUI_SCREEN_HEIGHT)
+                        {
+                            f_sleep->move_offset = -GUI_SCREEN_HEIGHT;
+                            f_sleep->page_num = PAGE_2;//第2页
+                            f_sleep->touch_state = TOUCH_FINISH_STATE;
+                            f_sleep->page_old_y = f_sleep->move_offset;
+                        }
+                    }
+                    else if(f_sleep->switch_page_state == SWITCH_NO)
+                    {
+                        f_sleep->move_offset+=STEP_NUM;
+
+                        if(f_sleep->move_offset >= 0)
+                        {
+                            f_sleep->move_offset = 0;
+                            f_sleep->touch_state = TOUCH_FINISH_STATE;
+                        }
+                    }
+                }
+                widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+            }
+        }
+
+    }
+    else if(f_sleep->page_num == PAGE_2)
+    {
+        if(f_sleep->touch_flag)//触摸状态
+        {
+            s32 dx, dy;
+            f_sleep->touch_flag = ctp_get_dxy(&dx, &dy);
+            f_sleep->move_offset = f_sleep->page_old_y+dy;
+            if(f_sleep->move_offset < -PAGE_TWO_SIZE)
+            {
+                f_sleep->move_offset = -PAGE_TWO_SIZE;
+            }
+            widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+
+            if(f_sleep->touch_flag == false)//松手触发自动移动页
+            {
+                f_sleep->touch_state = AUTO_STATE;
+                if(f_sleep->move_offset >= -(GUI_SCREEN_HEIGHT-TOYCH_LAST_DY))//满足切换下一页
+                {
+                    f_sleep->switch_page_state = SWITCH_YES;
+                }
+                else
+                {
+                    f_sleep->switch_page_state = SWITCH_NO;
+                }
+            }
+        }
+        else
+        {
+            if(f_sleep->touch_state == AUTO_STATE)
+            {
+                if(tick_check_expire(f_sleep->tick, TICK_TIME))//自动滑动
+                {
+                    f_sleep->tick = tick_get();
+                    if(f_sleep->switch_page_state == SWITCH_YES)//满足切换下一页
+                    {
+                        f_sleep->move_offset+=STEP_NUM;
+
+                        if(f_sleep->move_offset >= 0)
+                        {
+                            f_sleep->move_offset = 0;
+                            f_sleep->page_num = PAGE_1;//第2页
+                            f_sleep->touch_state = TOUCH_FINISH_STATE;
+                        }
+                    }
+                    else if(f_sleep->switch_page_state == SWITCH_NO)
+                    {
+                        f_sleep->touch_state = TOUCH_FINISH_STATE;
+                    }
+                }
+                f_sleep->page_old_y = f_sleep->move_offset;
+                widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+            }
+        }
+    }
+
+    //    printf("move_offset:%d\n",f_sleep->move_offset);
+}
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+#define FINT_HEIGHT 24
+#define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
+#define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
+#define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
+#define GUI_PAGE_TITLE_WIDTH            (GUI_SCREEN_WIDTH * 2 / 5)
+#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH - FORM_TITLE_RIGHT - GUI_SCREEN_WIDTH/12)//(GUI_SCREEN_WIDTH / 3)
+#define CONTROL_Y  16
+
+enum
+{
+    COMPO_ID_TEXT_DEEP_TIME_HOUR = 1,
+    COMPO_ID_TEXT_DEEP_TIME_MIN,
+    COMPO_ID_TEXT_LIGHT_TIME_HOUR,
+    COMPO_ID_TEXT_LIGHT_TIME_MIN,
+
+    COMPO_ID_CHART_SHALLOW,
+    COMPO_ID_CHART_DEEP,
+    COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
+};
+
+enum
+{
+    CHART_ANIM_STA_IDLE,
+    CHART_ANIM_STA_START,
+    CHART_ANIM_STA_END,
+
+};
+
+typedef struct f_sleep_t_
+{
+    page_tp_move_t *ptm;
+} f_sleep_t;
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sleep_form_create(void)
+{
+
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
+    // sleep_data->totalSleepMin = 480;
+    // sleep_data->fallAsSleepTime.hour =0;
+    // sleep_data->fallAsSleepTime.min =0;
+    // sleep_data->getUpSleepTime.hour =8;
+    // sleep_data->getUpSleepTime.min = 0;
+
+    // sleep_data->lightSleepMin= 480;
+    // sleep_data->deepSleepMin= 480;
+    // sleep_data->wakeSleepMin= 480;
+    // sleep_data->RemSleepMin= 480;
+
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 20;
+    // sleep_data->sleep_record[1].period = 100;
+    // sleep_data->sleep_record[2].period = 100;
+    // sleep_data->sleep_record[3].period = 120;
+    // sleep_data->sleep_record[4].period = 20;
+    // sleep_data->getUpSleepTime.min = 30;
+    // sleep_data->fallAsSleepTime.min = 40;
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_textbox_t * txt;
+    compo_picturebox_t *pic;
+    char buf[50];
+
+    pic = compo_picturebox_create(frm, UI_BUF_I342001_9_SLEEP_SLEEP_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 30/2+11);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_pos(txt,50,42);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,96,47,32,32);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_pos(txt,116,42);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,160,47,60,32);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
+
+////////////////////////////////柱形图//////////////////////////////////////////
+    pic = compo_picturebox_create(frm, UI_BUF_I342001_9_SLEEP_BG_BIN);///* 背景图*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 64/2+87);
+
+    uint16_t width = (197);    // 总宽度
+    uint8_t fillRect_h = 64; // 绘制单个高度
+    uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
+    uint16_t fillRect_y = 64/2+87;
+
+    if (sleep_data->totalSleepMin) //是否有睡眠时长
+    {
+        uint16_t fillRect_x = 0;
+        uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
+        uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
+        uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
+        if (timeInterval == 0)
+        {
+            timeInterval = 24 * 60;
+        }
+
+        for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
+        {
+            compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 最后一段画满图表
+            if (i == sleep_data->recordCnt - 1)
+            {
+                if (fillRect_x + fillRect_w < width)
+                {
+                    fillRect_w = width - fillRect_x;
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 设置矩形位置和颜色
+            if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(158, 28, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(196, 120, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(255, 255, 255));
+            }
+            else if (sleep_data->sleep_record[i].state == REM_SLEEP)
+            {
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(255, 222, 90));
+            }
+
+            // 更新起始点
+            fillRect_x += fillRect_w;
+
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
+        }
+    }
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->fallAsSleepTime.min)   ///是否有睡眠时长
+    {
+
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,21,154,51,33);
+    compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->getUpSleepTime.min)   ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_location(txt,165,154,51,33);
+    compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+
+    memset(buf,0,sizeof(buf));
+    if(sleep_data->getUpSleepTime.min)   ///是否有睡眠时长
+    {
+        snprintf(buf, sizeof(buf), "%02d:%02d - %02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min,sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///*睡 起 点*/
+    }
+    else
+    {
+        snprintf(buf, sizeof(buf), "--:-- - --:--");
+    }
+    txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_28_BIN);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,28/2+174-10);
+    compo_textbox_set(txt, buf);
+
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SLEEP]));
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+198-5,150,32);
+    compo_textbox_set(txt, i18n[STR_SLEEP]);
+    compo_textbox_set_forecolor(txt,make_color(161,72,253));
+
+    pic = compo_picturebox_create(frm, UI_BUF_I342001_5_ACTIVITY_NEXT_BIN);
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,218+16/2);
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    const u32 res_addr[4]= {UI_BUF_I342001_9_SLEEP_ICON_DEEP_SLEEP_BIN,UI_BUF_I342001_9_SLEEP_ICON_LIGHT_SLEEP_BIN,UI_BUF_I342001_9_SLEEP_ICON_AWAKE_BIN,UI_BUF_I342001_9_SLEEP_ICON_RAPID_EYE_MOVEMENT_BIN};
+    const u16 str_idx[4] = {STR_DEEP_SLEEP,STR_LIGHT_SLEEP,STR_ALWAKE_SLEEP,STR_EYE_MOVE_SLEEP};
+    uint16_t  sleep_date[4]=
+    {
+        sleep_data->deepSleepMin,  ///* 深睡数据*/
+        sleep_data->lightSleepMin,///* 浅睡数据*/
+        sleep_data->wakeSleepMin, ///* 清醒数据*/
+        sleep_data->RemSleepMin, ///* 快速眼动数据*/
+    };
+    const u16 widget_first_x_y[3][2]=
+    {
+        {22/2+50,GUI_SCREEN_HEIGHT+26+22/2}, //照片
+        {85,GUI_SCREEN_HEIGHT+13},//文本
+        {85,GUI_SCREEN_HEIGHT+40},//数据
+    };
+#define Spacing    (45+22/2)
+
+    for (size_t i = 0; i < 4; i++)
+    {
+        pic = compo_picturebox_create(frm, res_addr[i]);
+        compo_picturebox_set_pos(pic, widget_first_x_y[0][0], widget_first_x_y[0][1]+i*Spacing);
+
+        txt = compo_textbox_create(frm,strlen(i18n[str_idx[i]]));
+        compo_textbox_set_align_center(txt, false);
+        compo_textbox_set_location(txt,widget_first_x_y[1][0],widget_first_x_y[1][1]+i*Spacing,150,32);
+        compo_textbox_set(txt, i18n[str_idx[i]]);
+        compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
+
+        memset(buf,0,sizeof(buf));
+        if(sleep_date[i])
+        {
+            if(sleep_date[i]/60)
+            {
+                snprintf(buf, sizeof(buf), "%02d%s %02d%s",sleep_date[i]/60,i18n[STR_HOUR],sleep_date[i]%60,i18n[STR_MIN]);
+            }
+            else
+            {
+                snprintf(buf, sizeof(buf),"%02d",sleep_date[i]%60);
+            }
+        }
+        else
+        {
+            snprintf(buf, sizeof(buf), "--");
+        }
+        txt = compo_textbox_create(frm,strlen(buf));
+        compo_textbox_set_location(txt,widget_first_x_y[2][0],widget_first_x_y[2][1]+i*Spacing,200,32);
+        compo_textbox_set_align_center(txt, false);
+        compo_textbox_set(txt, buf);
+    }
+
+
+    ab_free(sleep_data);
+    return frm;
+}
+
+#else
+enum
+{
+    COMPO_ID_TEXT_DEEP_TIME_HOUR = 1,
+    COMPO_ID_TEXT_DEEP_TIME_MIN,
+    COMPO_ID_TEXT_LIGHT_TIME_HOUR,
+    COMPO_ID_TEXT_LIGHT_TIME_MIN,
+
+    COMPO_ID_CHART_SHALLOW,
+    COMPO_ID_CHART_DEEP,
+    COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
+};
+
+enum
+{
+    CHART_ANIM_STA_IDLE,
+    CHART_ANIM_STA_START,
+    CHART_ANIM_STA_END,
+
+};
+
+typedef struct f_sleep_t_
+{
+    page_tp_move_t *ptm;
+} f_sleep_t;
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sleep_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    return frm;
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
@@ -886,9 +3541,11 @@ static void func_sleep_move(void)
 static void func_sleep_process(void)
 {
     f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-    compo_page_move_process(f_sleep->ptm);
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    if(f_sleep->ptm)
+    {
+        compo_page_move_process(f_sleep->ptm);
+    }
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
     func_sleep_move();
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
@@ -901,10 +3558,15 @@ static void func_sleep_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-            compo_page_move_touch_handler(f_sleep->ptm);
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-            f_sleep->touch_flag = true;
+            if(f_sleep->ptm)
+            {
+                compo_page_move_touch_handler(f_sleep->ptm);
+            }
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+            if(f_sleep->touch_state == TOUCH_FINISH_STATE)
+            {
+                f_sleep->touch_flag = true;
+            }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
 
@@ -915,29 +3577,31 @@ static void func_sleep_message(size_msg_t msg)
             break;
 
         case MSG_QDEC_BACKWARD:
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             if (func_cb.flag_sort)      //快捷应用状态下不滚动页面
             {
                 func_message(msg);
             }
             else
             {
-                compo_page_move_set_by_pages(f_sleep->ptm, -1);
+                if(f_sleep->ptm)
+                {
+                    compo_page_move_set_by_pages(f_sleep->ptm, -1);
+                }
             }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
 
         case MSG_QDEC_FORWARD:
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             if (func_cb.flag_sort)
             {
                 func_message(msg);
             }
             else
             {
-                compo_page_move_set_by_pages(f_sleep->ptm, 1);
+                if(f_sleep->ptm)
+                {
+                    compo_page_move_set_by_pages(f_sleep->ptm, 1);
+                }
             }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
 
         default:
@@ -965,19 +3629,72 @@ static void func_sleep_enter(void)
         .down_over_perc = 10,
     };
     compo_page_move_init(f_sleep->ptm, func_cb.frm_main->page_body, &info);
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    f_sleep->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used=true,         //是否使用了标题栏
+        .page_size = GUI_SCREEN_HEIGHT*2,
+        .page_count = 1,
+        .quick_jump_perc = 80,
+    };
+    compo_page_move_init(f_sleep->ptm, func_cb.frm_main->page_body, &info);
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+    f_sleep->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used=true,         //是否使用了标题栏
+        .page_size = 815,
+        .page_count = 1,
+        .quick_jump_perc = 80,
+    };
+    compo_page_move_init(f_sleep->ptm, func_cb.frm_main->page_body, &info);
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+    f_sleep->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used=true,         //是否使用了标题栏
+        .page_size = 709,
+        .page_count = 1,
+        .quick_jump_perc = 80,
+    };
+    compo_page_move_init(f_sleep->ptm, func_cb.frm_main->page_body, &info);
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+    f_sleep->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = false,
+        .page_size = GUI_SCREEN_HEIGHT,
+        .page_count = 2,
+        .quick_jump_perc = GUI_SCREEN_HEIGHT/2,
+        .jump_perc = 20,
+        .up_over_perc = 10,
+        .down_over_perc = 10,
+    };
+    compo_page_move_init(f_sleep->ptm, func_cb.frm_main->page_body, &info);
+#else
+    f_sleep->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used=true,         //是否使用了标题栏
+        .page_size = 762,
+        .page_count = 1,
+        .quick_jump_perc = 80,
+    };
+    compo_page_move_init(f_sleep->ptm, func_cb.frm_main->page_body, &info);
+#endif
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //退出睡眠功能
 static void func_sleep_exit(void)
 {
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
     if (f_sleep->ptm)
     {
         func_free(f_sleep->ptm);
     }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //睡眠功能

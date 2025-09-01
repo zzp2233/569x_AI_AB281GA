@@ -64,7 +64,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
     s16 click_wid = (BYTE0(uitool_res->param2) << 8) | BYTE3(uitool_res->param1);
     s16 click_hei = (BYTE2(uitool_res->param2) << 8) | BYTE1(uitool_res->param2);
 
-    TRACE("UITOOL_TYPE_IMAGE:%d, res_addr:%x, x:%d, y:%d\n", uitool_res->bond_type, uitool_res->res_addr, uitool_res->x, uitool_res->y);
+    TRACE("UITOOL_TYPE_IMAGE:%d, res_addr:%x, x:%d, y:%d, res_num:%d\n", uitool_res->bond_type, uitool_res->res_addr, uitool_res->x, uitool_res->y, uitool_res->res_num);
 
     switch (uitool_res->bond_type)
     {
@@ -127,12 +127,14 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         case COMPO_BOND_RESISTANCE_VALUE:
         case COMPO_BOND_SMOKE_COUNTVALUE:
         case COMPO_BOND_VBAT_PROGRESS:
+        case COMPO_BOND_TEMPERATURE_UNIT:
         {
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, res_addr);
             compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
+            compo_set_bonddata((component_t *)pic, time_to_tm(compo_cb.rtc_cnt));
             TRACE("type[%d]\n", uitool_res->bond_type);
         }
         break;
@@ -142,7 +144,6 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         case COMPO_BOND_TIME_WEEK:
         case COMPO_BOND_TIME_MONTH:
         case COMPO_BOND_DISTANCE_UNIT:
-        case COMPO_BOND_TEMPERATURE_UNIT:
         {
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, res_addr);
@@ -151,7 +152,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_bonddata(pic, uitool_res->bond_type);
             compo_set_bonddata((component_t *)pic, time_to_tm(compo_cb.rtc_cnt));
             TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
-            TRACE("has_default_lang_pic:%d",has_default_lang_pic);
+            TRACE("has_default_lang_pic:%d\n",has_default_lang_pic);
             if (uteModuleSystemtimeCompareLanguage(uitool_res->rsv))
             {
                 compo_picturebox_set_visible(pic, true);
@@ -175,11 +176,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
 
             if(uitool_res->bond_type == COMPO_BOND_TIME_AMPM)
             {
-                if(uteModuleSystemtime12HOn())
-                {
-                    compo_picturebox_set_visible(pic, true);
-                }
-                else
+                if(!uteModuleSystemtime12HOn())
                 {
                     compo_picturebox_set_visible(pic, false);
                 }
@@ -208,7 +205,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
     bool use_num = uitool_res->param1 & BIT(0);
     u8 max_cnt = 0;
     u8 bond_compo_type = COMPO_TYPE_NONE;
-    TRACE("UITOOL_TYPE_NUM:%d, x:%d, y:%d, res_num:%d\n", uitool_res->bond_type, uitool_res->x, uitool_res->y, uitool_res->res_num);
+    TRACE("UITOOL_TYPE_NUM:%d, res_addr:%x, x:%d, y:%d, res_num:%d\n", uitool_res->bond_type, res_addr, uitool_res->x, uitool_res->y, uitool_res->res_num);
     if (use_num)
     {
         switch (uitool_res->bond_type)
@@ -259,6 +256,10 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 bond_compo_type = COMPO_TYPE_NUMBER;
                 max_cnt = 5;
                 break;
+            case COMPO_BOND_TEMPERATURE:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
 
             case COMPO_BOND_SMOKECOUNT:
                 bond_compo_type = COMPO_TYPE_NUMBER;
@@ -281,7 +282,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
             bool num_part_en = uitool_res->param1 & BIT(2);
             s16 delt_x = num_part_en ? ((uitool_res->param1 >> 8) & 0xffff) : 0;
             s16 delt_y = num_part_en ? ((uitool_res->param1 >> 24) & 0xffff) : 0;
-            u8 cnt = num_part_en ? 5 : 1;
+            u8 cnt = num_part_en ? max_cnt : 1;
             max_cnt = num_part_en ? 1 : max_cnt;
             compo_number_t *num;
             for(u8 i=0; i<cnt; i++)
@@ -327,6 +328,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
             compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
+            compo_set_bonddata((component_t *)pic, time_to_tm(compo_cb.rtc_cnt));
         }
     }
     else
@@ -395,7 +397,6 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
             case COMPO_BOND_TIME_WEEK:
             case COMPO_BOND_TIME_MONTH:
             case COMPO_BOND_DISTANCE_UNIT:
-            case COMPO_BOND_TEMPERATURE_UNIT:
                 if (uteModuleSystemtimeCompareLanguage(uitool_res.rsv))
                 {
                     has_default_lang_pic = true;

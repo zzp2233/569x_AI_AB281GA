@@ -36,7 +36,7 @@ typedef struct
     u16 vbat_coef;
     u8  vbg_lv;             //vbg trim精度等级
     u8  vddhr;              //vddhr trim值
-    u8  resv[3];
+    u8  resv[2];
 } sys_trim_t;
 extern sys_trim_t sys_trim;
 
@@ -160,6 +160,18 @@ void halt_err_set(u32 halt_no);
  * [7]、halt_err[0] 为其他，请在halt头文件中查询
  */
 u32* halt_err_debug_info_get(void);
+bool sbc_encode_init(u8 spr, u8 nch);
+
+void spiflash_lock(void);
+void spiflash_unlock(void);
+bool spiflash_read_kick(void *buf, u32 addr, uint len);
+bool spiflash_read_wait(void);
+
+/**
+ * @brief 校验加密狗授权信息
+ * @return true: 授权成功 false: 授权失败
+ */
+bool check_uid_entryption(void);
 
 #endif // _API_SYS_H_
 

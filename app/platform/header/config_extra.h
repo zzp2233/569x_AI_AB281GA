@@ -1,8 +1,6 @@
 #ifndef __CONFIG_EXTRA_H__
 #define __CONFIG_EXTRA_H__
 
-#include "ute_project_config.h"
-
 /*****************************************************************************
  * Module    : 系统功能配置
  *****************************************************************************/
@@ -130,7 +128,8 @@
 #define TP_IIC_UPDATE_ADDR              0x6A
 #elif (CTP_SELECT == CTP_CHSC6X)
 #define TP_IIC_ADDR                     0x2E
-
+#elif (CTP_SELECT == CTP_SPT5113C)
+#define TP_IIC_ADDR                     0x13
 #endif
 
 #ifndef MODEM_CAT1_EN
@@ -496,11 +495,12 @@
 #define SENSOR_STEP_MSA310                       (SENSOR_STEP_EN | 0x1)
 #define SENSOR_STEP_INTER                        (SENSOR_STEP_EN | 0x2)
 
-#define SENSOR_HR_NULL                           0
-#define SENSOR_HR_EN                             0x200
-#define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
-#define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
-#define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
+// #define SENSOR_HR_NULL                           0
+// #define SENSOR_HR_EN                             0x200
+// #define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
+// #define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
+// #define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
+// #define SENSOR_HR_VCLC09A                        (SENSOR_HR_EN | 0x4)
 
 #define SENSOR_GEO_NULL                           0
 #define SENSOR_GEO_EN                             0x300

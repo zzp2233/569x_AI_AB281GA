@@ -9,7 +9,9 @@
 #endif
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
 
-#define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item) / sizeof(tbl_rotary_item[0])))
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+
+#define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item_en) / sizeof(tbl_rotary_item_en[0])))
 
 enum
 {
@@ -21,45 +23,212 @@ typedef struct f_menustyle_t_
     compo_rotary_t *rotary;
 } f_menustyle_t;
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-static const compo_rotary_item_t tbl_rotary_item[] =
+static const compo_rotary_item_t tbl_rotary_item_en[] =
 {
-
-// {UI_BUF_I330001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
-// {UI_BUF_I330001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
-// {UI_BUF_I330001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
-// {UI_BUF_I330001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
-// {UI_BUF_I330001_THEME_PREVIEW_02_BIN,           STR_HALO},
-// {UI_BUF_I330001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
-// {UI_BUF_I330001_THEME_PREVIEW_06_BIN,           STR_SIX_PALACE_GRID},
-// {UI_BUF_I330001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
-// {UI_BUF_I330001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
-
-
-
-    [MENU_STYLE_LIST]               = {UI_BUF_I330001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
-    [MENU_STYLE_GRID]               = {UI_BUF_I330001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
-    [MENU_STYLE_KALE]               = {UI_BUF_I330001_THEME_PREVIEW_02_BIN,           STR_HALO},
-    [MENU_STYLE_SKYRER]             = {UI_BUF_I330001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
-    [MENU_STYLE_CUM_SUDOKU]         = {UI_BUF_I330001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
-    [MENU_STYLE_CUM_GRID]           = {UI_BUF_I330001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
-    [MENU_STYLE_CUM_FOURGRID]       = {UI_BUF_I330001_THEME_PREVIEW_06_BIN,           STR_SIX_PALACE_GRID},
-    [MENU_STYLE_HONEYCOMB]          = {UI_BUF_I330001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
-    [MENU_STYLE_WATERFALL]          = {UI_BUF_I330001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
-    //    [MENU_STYLE_FOOTBALL]           = {UI_BUF_I330001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_02_BIN,           STR_HALO},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I330001_THEME_PREVIEW_EN_09_BIN,           STR_SPHERE},
 };
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-static const compo_rotary_item_t tbl_rotary_item[] =
+
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
 {
-//    [MENU_STYLE_LIST]               = {UI_BUF_I330001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
-//    [MENU_STYLE_GRID]               = {UI_BUF_I330001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
-//    [MENU_STYLE_KALE]               = {UI_BUF_I330001_THEME_PREVIEW_02_BIN,           STR_HALO},
-//    [MENU_STYLE_SKYRER]             = {UI_BUF_I330001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
-//    [MENU_STYLE_CUM_SUDOKU]         = {UI_BUF_I330001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
-//    [MENU_STYLE_CUM_GRID]           = {UI_BUF_I330001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
-//    [MENU_STYLE_CUM_FOURGRID]       = {UI_BUF_I330001_THEME_PREVIEW_06_BIN,           STR_SIX_PALACE_GRID},
-//    [MENU_STYLE_HONEYCOMB]          = {UI_BUF_I330001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
-//    [MENU_STYLE_WATERFALL]          = {UI_BUF_I330001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
-//    [MENU_STYLE_FOOTBALL]           = {UI_BUF_I330001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
+    {UI_BUF_I330001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I330001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I330001_THEME_PREVIEW_02_BIN,           STR_HALO},
+    {UI_BUF_I330001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I330001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I330001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I330001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I330001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I330001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
+};
+
+static const compo_menu_Mapping_Table[]=  //菜单映射表
+{
+    MENU_STYLE_LIST,
+    MENU_STYLE_GRID,
+    MENU_STYLE_KALE,
+    MENU_STYLE_SKYRER,
+    MENU_STYLE_CUM_SUDOKU,
+    MENU_STYLE_CUM_GRID,
+    MENU_STYLE_HONEYCOMB,
+    MENU_STYLE_WATERFALL,
+    MENU_STYLE_FOOTBALL,
+};
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+static const compo_rotary_item_t tbl_rotary_item_en[] =
+{
+    {UI_BUF_I332001_THEME_PREVIEW_EN_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_02_BIN,           STR_HALO},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I332001_THEME_PREVIEW_EN_09_BIN,           STR_SPHERE},
+};
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
+{
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_02_BIN,           STR_HALO},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I332001_THEME_PREVIEW_ZH_09_BIN,           STR_SPHERE},
+};
+
+static const compo_menu_Mapping_Table[]=    //菜单映射表
+{
+    MENU_STYLE_LIST,
+    MENU_STYLE_GRID,
+    MENU_STYLE_KALE,
+    MENU_STYLE_SKYRER,
+    MENU_STYLE_CUM_SUDOKU,
+    MENU_STYLE_CUM_GRID,
+    MENU_STYLE_HONEYCOMB,
+    MENU_STYLE_WATERFALL,
+    MENU_STYLE_FOOTBALL,
+};
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+static const compo_rotary_item_t tbl_rotary_item_en[] =
+{
+    {UI_BUF_I340001_THEME_PREVIEW_EN_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_09_BIN,           STR_SPHERE},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_02_BIN,           STR_HALO},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I340001_THEME_PREVIEW_EN_08_BIN,           STR_STYLE_WATERFALL},
+};
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
+{
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_09_BIN,           STR_SPHERE},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_02_BIN,           STR_HALO},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I340001_THEME_PREVIEW_ZH_08_BIN,           STR_STYLE_WATERFALL},
+};
+
+static const compo_menu_Mapping_Table[]=    //菜单映射表
+{
+    MENU_STYLE_LIST,
+    MENU_STYLE_CUM_SUDOKU,
+    MENU_STYLE_HONEYCOMB,
+    MENU_STYLE_FOOTBALL,
+    MENU_STYLE_GRID,
+    MENU_STYLE_KALE,
+    MENU_STYLE_SKYRER,
+    MENU_STYLE_CUM_GRID,
+    MENU_STYLE_WATERFALL,
+};
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+static const compo_rotary_item_t tbl_rotary_item_en[] =
+{
+    {UI_BUF_I335001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I335001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I335001_THEME_PREVIEW_02_BIN,           STR_HALO},
+    {UI_BUF_I335001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I335001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I335001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I335001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I335001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I335001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
+};
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
+{
+    {UI_BUF_I335001_THEME_PREVIEW_10_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I335001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I335001_THEME_PREVIEW_02_BIN,           STR_HALO},
+    {UI_BUF_I335001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I335001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I335001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I335001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I335001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I335001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
+};
+
+static const compo_menu_Mapping_Table[]=    //菜单映射表
+{
+    MENU_STYLE_LIST,
+    MENU_STYLE_GRID,
+    MENU_STYLE_KALE,
+    MENU_STYLE_SKYRER,
+    MENU_STYLE_SUDOKU,
+    MENU_STYLE_CUM_GRID,
+    MENU_STYLE_HONEYCOMB,
+    MENU_STYLE_WATERFALL,
+    MENU_STYLE_FOOTBALL,
+};
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+static const compo_rotary_item_t tbl_rotary_item_en[] =
+{
+    {UI_BUF_I335001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I335001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I335001_THEME_PREVIEW_02_BIN,           STR_HALO},
+    {UI_BUF_I335001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I335001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I335001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I335001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I335001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I335001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
+};
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
+{
+    {UI_BUF_I335001_THEME_PREVIEW_10_BIN,           STR_STYLE_LIST_1},
+    {UI_BUF_I335001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
+    {UI_BUF_I335001_THEME_PREVIEW_02_BIN,           STR_HALO},
+    {UI_BUF_I335001_THEME_PREVIEW_03_BIN,           STR_STYLE_SKYRER},
+    {UI_BUF_I335001_THEME_PREVIEW_04_BIN,           STR_GONG_GE},
+    {UI_BUF_I335001_THEME_PREVIEW_05_BIN,           STR_STYLE_GRID_1},
+    {UI_BUF_I335001_THEME_PREVIEW_07_BIN,           STR_STYLE_HONEYCOMB},
+    {UI_BUF_I335001_THEME_PREVIEW_08_BIN,           STR_STYLE_WATERFALL},
+    {UI_BUF_I335001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
+};
+
+static const compo_menu_Mapping_Table[]=    //菜单映射表
+{
+    MENU_STYLE_LIST,
+    MENU_STYLE_GRID,
+    MENU_STYLE_KALE,
+    MENU_STYLE_SKYRER,
+    MENU_STYLE_SUDOKU,
+    MENU_STYLE_CUM_GRID,
+    MENU_STYLE_HONEYCOMB,
+    MENU_STYLE_WATERFALL,
+    MENU_STYLE_FOOTBALL,
+};
+
+#else
+static const compo_rotary_item_t tbl_rotary_item_en[] =
+{
+    [0]               = {0,           0},
+};
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
+{
+    [0]               = {0,           0},
+};
+
+static const compo_menu_Mapping_Table[]=    //菜单映射表
+{
+    0,
 };
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建转盘，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -73,7 +242,15 @@ static compo_form_t *func_menustyle_rotary_form_create(void)
     compo_shape_set_location(rect, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
 
     //创建转盘
-    compo_rotary_t *rotary = compo_rotary_create(frm, tbl_rotary_item, TBL_ROTARY_ITEM_CNT);
+    compo_rotary_t *rotary;
+    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    {
+        rotary = compo_rotary_create(frm, tbl_rotary_item_zh,TBL_ROTARY_ITEM_CNT);
+    }
+    else
+    {
+        rotary = compo_rotary_create(frm, tbl_rotary_item_en,TBL_ROTARY_ITEM_CNT);
+    }
     compo_setid(rotary, COMPO_ID_ROTARY);
     compo_rotary_update(rotary);
     return frm;
@@ -101,7 +278,7 @@ static void func_menustyle_message(size_msg_t msg)
     switch (msg)
     {
         case KU_BACK:
-            func_cb.menu_style = compo_rotary_get_idx(rotary);
+            func_cb.menu_style = compo_menu_Mapping_Table[compo_rotary_get_idx(rotary)];
             uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
             break;
 
@@ -116,7 +293,7 @@ static void func_menustyle_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
             //单击屏幕
-            func_cb.menu_style = compo_rotary_get_idx(rotary);
+            func_cb.menu_style = compo_menu_Mapping_Table[compo_rotary_get_idx(rotary)];
             compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
             uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
             break;
@@ -142,7 +319,16 @@ static void func_menustyle_enter(void)
     {
         halt(HALT_GUI_COMPO_ROTARY_TYPE);
     }
-    compo_rotary_set_rotation_byidx(rotary, func_cb.menu_style);
+    // printf("%s: menu_style = %d\n", __func__, func_cb.menu_style);
+    // compo_rotary_set_rotation_byidx(rotary, func_cb.menu_style);
+    for(int i = 0; i < TBL_ROTARY_ITEM_CNT; i++)
+    {
+        if (compo_menu_Mapping_Table[i] == func_cb.menu_style)
+        {
+            compo_rotary_set_rotation_byidx(rotary, i);//设置旋转角度，根据compo_menu_Mapping_Table内容的下标匹配
+            break;
+        }
+    }
     compo_rotary_update(rotary);
     if(menustyle_refresh == true)
     {
@@ -173,4 +359,5 @@ void func_menustyle(void)
     }
     func_menustyle_exit();
 }
+
 #endif

@@ -2,7 +2,7 @@
 #include "ute_module_music.h"
 #include "ute_application_common.h"
 
-#define TRACE_EN                0
+#define TRACE_EN                UTE_LOG_MUSIC_LVL
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

@@ -88,6 +88,7 @@ enum NR_TYPE
     NR_TYPE_NONE            = 0,
     NR_TYPE_AINS3,
     NR_TYPE_DNN,
+    NR_TYPE_AIAEC,
 };
 
 enum NR_CFG_EN
@@ -95,6 +96,41 @@ enum NR_CFG_EN
     NR_CFG_FAR_EN           = BIT(0),           //使能远端降噪
     NR_CFG_SCO_FADE_EN      = BIT(3),           //使能通话前500ms淡入
 };
+
+typedef struct
+{
+    s16 gamma;
+    u8  nlp_en;
+    u8  nlp_level;
+
+    s16 nt;
+    u8 param_printf;
+    u8  music_lev;
+    //s16 exp_range_H;
+    //s16 exp_range_L;
+    u8  noise_ps_rate;
+    u8  prior_opt_idx;
+    u8  prior_opt_ada_en;
+    u8  wind_level;
+    u16 wind_range;
+    u16 mask_floor;
+    u16 low_fre_range;
+    u8  nn_only;
+    u16 nn_only_len;
+    u8  sin_gain_post_en;
+    u16 sin_gain_post_len;
+    u16 sin_gain_post_len_f;
+    u8  smooth_en;
+    u16 far_post_thr;
+    u32 dtd_post_thr;
+    u16 gain_assign;
+    u16 echo_gain_floor;
+    s16 dtd_smooth;
+    s16 single_floor;
+    s16 gain_assign_nlp;
+    u16 gain_st_thr;
+    s32 intensity;
+} dnn_aec_ns_cb_t;
 
 typedef struct
 {
@@ -234,4 +270,8 @@ void bt_ains3_init(void *alg_cb);
 void bt_ains3_exit(void);
 void bt_dnn_init(void *alg_cb);
 void bt_dnn_exit(void);
+void bt_aiaec_dnn_init(void *alg_cb);
+void bt_aiaec_dnn_exit(void);
+
+bool sco_get_incall_flag(u8 bit);
 #endif // _API_NR_H

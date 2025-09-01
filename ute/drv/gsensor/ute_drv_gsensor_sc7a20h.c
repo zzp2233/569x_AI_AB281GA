@@ -19,7 +19,7 @@
 #if UTE_DRV_GSENSOR_SC7A20H_SUPPORT
 
 bool isSleep=false;//当前是否休眠
-static uint8_t buffer[29] = {0};
+// static uint8_t buffer[29] = {0};
 static uint8_t validValue = 0;
 
 bool uteDrvGsensorSc7a20hWriteReg(uint8_t reg,uint8_t data);
@@ -149,6 +149,10 @@ bool uteDrvGsensorSc7a20hAccInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accR
     {
         accPmSleepMs = SC7A20H_ACC_10MS;
     }
+
+    uteDrvGsensorSc7a20hWriteReg(0x68,0xa5);
+    uteModulePlatformDelayMs(200);
+
     uteDrvGsensorSc7a20hDeepSleep();
     //uteDrvGsensorSc7a20hSoftwareReset();
     if(accRange==8)
@@ -399,7 +403,7 @@ void uteDrvGsensorSc7a20hReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
     bool isException =false;
 #if 1  /*MTP写入和CRC校验*/
     uint8_t retReadValue = 0;
-    uint8_t retWriteValue = 0;
+    // uint8_t retWriteValue = 0;
 
     retReadValue = SL_SC7A20_MTP_READ(2,buff,0); //0下拉 1上拉
     // UTE_MODULE_LOG(1, "7a20hReadFifo log---,retReadValue=%d",retReadValue);
@@ -425,7 +429,8 @@ void uteDrvGsensorSc7a20hReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
             /*读取错误时(retReadValue不等于29时是错误的)，把正确的buff从flash中读出来重新写入 dengli.lu 2024.04.17*/
             ute_application_sn_data_t snData;
             uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
-            retWriteValue = SL_SC7A20_MTP_WRITE(2,snData.sc7a20hTempBuffer);
+            // retWriteValue = SL_SC7A20_MTP_WRITE(2,snData.sc7a20hTempBuffer);
+            SL_SC7A20_MTP_WRITE(2,snData.sc7a20hTempBuffer);
         }
         // UTE_MODULE_LOG(1, "7a20hReadFifo log---,retWriteValue=%d",retWriteValue);
         // return ;

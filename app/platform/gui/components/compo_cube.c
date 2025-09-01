@@ -381,13 +381,15 @@ void compo_cube_move(compo_cube_t *cube)
     {
         return;
     }
+
     if (mcb->flag_drag)
     {
+        // 拖动逻辑保持不变
         s32 dx, dy, ax, ay;
         mcb->flag_drag = ctp_get_dxy(&dx, &dy);
         if (mcb->flag_drag)
         {
-            //拖动菜单图标
+            // 拖动菜单图标
             ax = dx * 1800 / CUBE_HALF_CIRCUM(cube->radius);
             ay = dy * 1800 / CUBE_HALF_CIRCUM(cube->radius);
 #if CUBE_ROLL360_MODE
@@ -402,7 +404,7 @@ void compo_cube_move(compo_cube_t *cube)
         }
         else
         {
-            //抬手后开始自动移动
+            // 抬手后开始自动移动
             point_t last_dxy = ctp_get_last_dxy();
             int da;
 #if CUBE_ROLL360_MODE
@@ -417,9 +419,10 @@ void compo_cube_move(compo_cube_t *cube)
             mcb->tick = tick_get();
         }
     }
+
     if (mcb->flag_move_auto)
     {
-        //自动移动
+        // 自动移动逻辑
         if (mcb->start_a == mcb->moveto_a)
         {
             mcb->flag_move_auto = false;              //移动完成
@@ -519,10 +522,11 @@ void compo_cube_move_control(compo_cube_t *cube, int cmd)
     {
         return;
     }
+
     switch (cmd)
     {
         case COMPO_CUBE_MOVE_CMD_DRAG:
-            //开始拖动
+            // 开始拖动
             mcb->flag_drag = true;
             mcb->flag_move_auto = false;
             mcb->flag_auto_spin = false;
@@ -531,7 +535,7 @@ void compo_cube_move_control(compo_cube_t *cube, int cmd)
             break;
 
         case COMPO_CUBE_MOVE_CMD_FORWARD:
-            //向前滚动
+            // 向前滚动
             if (!mcb->flag_move_auto)
             {
                 mcb->flag_move_auto = true;
@@ -543,7 +547,7 @@ void compo_cube_move_control(compo_cube_t *cube, int cmd)
             break;
 
         case COMPO_CUBE_MOVE_CMD_BACKWARD:
-            //向后滚动
+            // 向后滚动
             if (!mcb->flag_move_auto)
             {
                 mcb->flag_move_auto = true;

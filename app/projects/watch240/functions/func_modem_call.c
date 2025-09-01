@@ -2,7 +2,6 @@
 #include "func.h"
 #include "func_bt.h"
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 enum
 {
     COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
@@ -19,6 +18,7 @@ typedef struct f_modem_call_t_
     u32 clcc_tick;              //主动查询号码计时
     u32 exit_tick;              //页面退出计时
 } f_modem_call_t;
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 static void func_modem_call_back_to(void)
 {
@@ -137,22 +137,6 @@ static void func_modem_call_exit_process(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-enum
-{
-    COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
-    COMPO_ID_TXT_TIME,
-    COMPO_ID_BTN_REJECT,
-    COMPO_ID_BTN_MIC,
-};
-
-typedef struct f_modem_call_t_
-{
-    bool sta;                   //0:呼出(outgoing); 1:通话(call);
-
-    char call_time_str[10];     //通话计时字符串
-    u32 clcc_tick;              //主动查询号码计时
-    u32 exit_tick;              //页面退出计时
-} f_modem_call_t;
 
 static void func_modem_call_back_to(void)
 {
@@ -269,6 +253,143 @@ static void func_modem_call_exit_process(void)
         f_modem_call->exit_tick = 0;
         func_modem_call_back_to();
     }
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+static void func_modem_call_back_to(void)
+{
+    u8 last_func = func_directly_back_to();
+    if (last_func == FUNC_MODEM_RING)
+    {
+        func_directly_back_to();
+    }
+}
+
+void modem_incall_time_update(void)
+{
+    f_modem_call_t *f_modem_call = (f_modem_call_t *)func_cb.f_cb;
+    char *call_time_str = f_modem_call->call_time_str;
+
+    u16 call_times = bsp_modem_call_get_times();
+    u8 hours   = call_times / 3600;
+    u8 minutes = (call_times % 3600) / 60;
+    u8 seconds = call_times % 60;
+    sprintf(call_time_str, "%02d:%02d:%02d", hours, minutes, seconds);
+//    printf("call_time_str: %s\n", call_time_str);
+
+    compo_textbox_t *time_txt = compo_getobj_byid(COMPO_ID_TXT_TIME);
+    compo_textbox_set(time_txt, call_time_str);
+    compo_textbox_set_visible(time_txt, true);
+}
+
+void func_modem_call_number_update(void)
+{
+    // if (modem_cb.number_sta) {
+    compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
+    compo_textbox_set(number_txt, modem_cb.number);
+    // }
+}
+
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_modem_call_form_create(void)
+{
+    //printf("%s\n", __func__);
+    //新建窗体, 通话页面
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_autosize(number_txt, true);
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
+    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_autosize(time_txt, true);
+    compo_setid(time_txt, COMPO_ID_TXT_TIME);
+
+    //挂断按钮
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
+//    compo_setid(btn, COMPO_ID_BTN_REJECT);
+//    compo_button_set_pos(btn, 160, 240);
+//
+//    //mic
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
+//    compo_setid(btn, COMPO_ID_BTN_MIC);
+//    compo_button_set_pos(btn, 49, 313);
+
+    return frm;
+}
+
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_modem_outgoing_form_create(void)
+{
+    //新建窗体, 呼出页面
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_autosize(number_txt, true);
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    //挂断按钮
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
+//    compo_setid(btn, COMPO_ID_BTN_REJECT);
+//    compo_button_set_pos(btn, 160, 240);
+
+    return frm;
+}
+
+AT(.text.func.bt)
+static void func_modem_call_interface(void)
+{
+    f_modem_call_t *f_modem_call = (f_modem_call_t *)func_cb.f_cb;
+
+    if (modem_cb.disp_status == BT_STA_INCALL && f_modem_call->sta == false)
+    {
+        //销毁窗体
+        if (func_cb.frm_main != NULL)
+        {
+            compo_form_destroy(func_cb.frm_main);
+        }
+
+        func_cb.frm_main = func_modem_call_form_create();
+        f_modem_call->sta = true;
+    }
+}
+
+AT(.text.func.bt)
+static void func_modem_call_exit_process(void)
+{
+    f_modem_call_t *f_modem_call = (f_modem_call_t *)func_cb.f_cb;
+
+    if (f_modem_call->exit_tick && tick_check_expire(f_modem_call->exit_tick, 1000))          //强制退出, 防呆
+    {
+        f_modem_call->exit_tick = 0;
+        func_modem_call_back_to();
+    }
+}
+
+#else
+
+compo_form_t *func_modem_outgoing_form_create(void)
+{
+
+}
+void func_modem_call_number_update(void)
+{
+}
+void modem_incall_time_update(void)
+{
+}
+static void func_modem_call_interface(void)
+{
+}
+static void func_modem_call_exit_process(void)
+{
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

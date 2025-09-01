@@ -19,7 +19,7 @@ enum
 
     REMIND_COVER_LOW_BATTERY,    //低电提醒
     REMIND_COVER_TIMER_FINISH,    //秒表计时结束
-    REMIND_COVER_TARGET_SMOKE_FINISH,    //目标口数达成
+    REMIND_COVER_BLE_OFF,       //BLE断开连接
 };
 
 /////消息弹窗界面

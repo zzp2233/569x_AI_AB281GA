@@ -29,6 +29,31 @@ compo_arc_t *compo_arc_create(compo_form_t *frm)
 }
 
 /**
+ * @brief 创建一个圆弧组件(默认0°位置在12点钟方向)
+ * @param[in] frm : 窗体指针
+ * @param[in] page : 窗体页面
+ * @return 返回圆弧指针
+ **/
+compo_arc_t *compo_arc_create_page(compo_form_t *frm,widget_page_t *page)
+{
+#if GUI_USE_ARC
+    compo_arc_t *compo_arc = compo_create(frm, COMPO_TYPE_ARC);
+    if (NULL == compo_arc)
+    {
+        halt(HALT_GUI_COMPO_ARC_FAIL);
+    }
+    compo_arc->arc = widget_arc_create(page);
+    compo_arc->prec = ARC_ANGLE_PREC_DEFAULT; //默认精度
+    compo_arc->rotation_offset = ARC_ROTATION_DEFAULT;
+    widget_arc_set_angles(compo_arc->arc, compo_arc->rotation_offset, compo_arc->rotation_offset);
+
+    return compo_arc;
+#else
+    return NULL;
+#endif
+}
+
+/**
  * @brief 设置圆弧的坐标及大小(指的是圆弧组件自身的大小，而非圆弧宽度)
           注意：该设置默认的坐标是以中心点作为参考点
  * @param[in] arc : 圆弧指针

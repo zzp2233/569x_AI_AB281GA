@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        gui ������
+*@brief        gui 公共层
 *@details
 *@author       zn.zeng
 *@date       2021-09-03
@@ -18,14 +18,15 @@
 #include "ute_module_filesystem.h"
 #include "ute_module_watchonline.h"
 #include "ute_drv_battery_common.h"
+#include "ute_module_emotionPressure.h"
 
-/*! gui�����ݽṹ zn.zeng, 2021-09-03  */
+/*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
 // void *displayOffTimerPointer;
 void *clearDepthAfterOffTimerPointer;
 
 /**
-*@brief        �Զ�������ʱ���ص�
+*@brief        自动灭屏定时器回调
 *@details
 *@author       zn.zeng
 *@date       2021-09-03
@@ -46,8 +47,8 @@ void *clearDepthAfterOffTimerPointer;
 // }
 
 /**
-*@brief        ��ʱ�����ʾ��ȶ�ʱ���ص�
-*@details       �ر���ʾ��ʼ��ʱ
+*@brief        延时清除显示深度定时器回调
+*@details       关闭显示后开始定时
 *@author       zn.zeng
 *@date       2021-11-03
 */
@@ -59,7 +60,7 @@ void uteModuleGuiCommonClearDepthTimerCallback(void *pxTimer)
 
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
 /**
-*@brief        Ϩ�����̳�ʼ��
+*@brief        熄屏表盘初始化
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -92,7 +93,7 @@ void uteModuleGuiCommonScreenSaverConfigInit(void)
 }
 
 /**
-*@brief        ��ȡϨ�����̵�����ָ��
+*@brief        获取熄屏表盘的配置指针
 *@details
 *@param[out] UI_WatchConfigTypeDef **config
 *@param[in] uint8_t index
@@ -108,7 +109,7 @@ void uteModuleGuiCommonGetScreenSaverConfig(UI_WatchConfigTypeDef **config,uint8
     }
 }
 /**
-*@brief        ��ȡ��ǰ���̵���������
+*@brief        获取当前表盘的配置索引
 *@details
 *@param[out] uint8_t *index
 *@author       cxd
@@ -119,7 +120,7 @@ void uteModuleGuiCommonGetCurrScreenSaverIndex(uint8_t *index)
     *index = uteModuleGuiCommonData.displayCtrl.currScreenSaverIndex;
 }
 /**
-*@brief        ���õ�ǰϨ�����̵���������
+*@brief        设置当前熄屏表盘的配置索引
 *@details
 *@param[out] uint8_t *index
 *@author       cxd
@@ -146,7 +147,7 @@ void uteModuleGuiCommonSetCurrSreenSaverIndex(uint8_t index)
     uteModuleGuiCommonSaveConfig();
 }
 /**
-*@brief        ��ȡ��ǰ����Ԥ������������ָ��
+*@brief        获取当前表盘预览的配置索引指针
 *@details
 *@param[out] uint8_t **index0
 *@param[out] uint8_t **index1
@@ -171,7 +172,7 @@ void uteModuleGuiCommonGetSreenSaverPreviewsIndex(uint8_t **index0,uint8_t **ind
 }
 
 /**
-*@brief        Ϩ�����̹����Ƿ���
+*@brief        熄屏表盘功能是否开启
 *@author       cxd
 *@date       2022-05-03
 */
@@ -192,7 +193,7 @@ bool uteModuleGuiCommonIsScreenSaverSetOn(void)
     return uteModuleGuiCommonData.displayCtrl.isScreenSaverSetOn;
 }
 /**
-*@brief        Ϩ�����̹��ܿ�������
+*@brief        熄屏表盘功能开关设置
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -204,7 +205,7 @@ void uteModuleGuiCommonScreenSaverSetSwitch(void)
 }
 
 /**
-*@brief        ����Ϩ������ǰ�رռ�����ʱ��
+*@brief        进入熄屏表盘前关闭几个定时器
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -217,7 +218,7 @@ void uteModuleGuiCommonStopTimerForScreenSaver(void)
 }
 
 /**
-*@brief        ����Ϣ������״̬
+*@brief        设置息屏界面状态
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -228,7 +229,7 @@ void uteModuleGuiCommonSetInScreenSaver(bool isScreenSaver)
 }
 
 /**
-*@brief        �Ƿ���Ϣ������
+*@brief        是否在息屏界面
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -240,7 +241,7 @@ bool uteModuleGuiCommonIsInScreenSaver(void)
 #endif
 
 /**
- * @brief        ����һ��������ʾ���Ʋ���
+ * @brief        保存一级界面显示控制参数
  * @details
  * @return       void*
  * @author       Wang.Luo
@@ -270,7 +271,7 @@ void uteModuleGuiCommonSavescreenTblSort(uint8_t *tblSort, uint8_t sortCnt)
 }
 
 /**
- * @brief        ��ȡһ��������ʾ���Ʋ���
+ * @brief        读取一级界面显示控制参数
  * @details
  * @return       void*
  * @author       Wang.Luo
@@ -299,7 +300,7 @@ void uteModuleGuiCommonReadScreenTblSort(void)
 }
 
 /**
- * @brief        �ⲿ��ȡһ��������ʾ���Ʋ���
+ * @brief        外部获取一级界面显示控制参数
  * @details
  * @return       void*
  * @author       Wang.Luo
@@ -316,7 +317,7 @@ void uteModuleGuiCommonGetScreenTblSort(uint8_t *tblSort, uint8_t *sortCnt)
 }
 
 /**
-*@brief        ��ȡ��ʾ����
+*@brief        读取显示参数
 *@details
 *@author       zn.zeng
 *@date       2021-10-23
@@ -324,21 +325,31 @@ void uteModuleGuiCommonGetScreenTblSort(uint8_t *tblSort, uint8_t *sortCnt)
 void uteModuleGuiCommonReadConfig(void)
 {
     void *file;
-    uint8_t readbuff[11];
-    memset(readbuff,0,11);
-    /*! ��ʾ����zn.zeng, 2021-08-20  */
+    uint8_t readbuff[12];
+    memset(readbuff,0,sizeof(readbuff));
+    /*! 显示参数zn.zeng, 2021-08-20  */
     readbuff[0] = DEFAULT_SCREEN_ON_TIME_SECOND;
     readbuff[1] = DEFAULT_TEMPERATURE_IS_FAHRENHEIT;
     readbuff[2] = DEFAULT_SCREEN_BACKLIGHT_PERCENT;
     readbuff[3] = DEFAULT_WATCH_INDEX;
+
+    /*! 显示菜单参数zn.zeng, 2021-08-20  */
+    readbuff[4] = DEFAULT_THEMETYPE_INDEX>>24&0xff;
+    readbuff[5] = DEFAULT_THEMETYPE_INDEX>>16&0xff;
+    readbuff[6] = DEFAULT_THEMETYPE_INDEX>>8&0xff;
+    readbuff[7] = DEFAULT_THEMETYPE_INDEX&0xff;
+
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     readbuff[8] = UTE_MODULE_DIAL_SCREEN_DEFAULT_STATUS;
     readbuff[9] = 0;
 #endif
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    readbuff[11] = DEFAULT_SWITCHOVER_WATCHMAIN_LOCK;
+#endif
     if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DISPLAYINFO,&file,FS_O_RDONLY))
     {
         uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
-        uteModuleFilesystemReadData(file,&readbuff[0],11);
+        uteModuleFilesystemReadData(file,&readbuff[0],sizeof(readbuff));
         uteModuleFilesystemCloseFile(file);
     }
     uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond = readbuff[0];
@@ -351,6 +362,9 @@ void uteModuleGuiCommonReadConfig(void)
     uteModuleGuiCommonData.displayCtrl.currScreenSaverIndex = readbuff[9];
 #endif
     uteModuleGuiCommonData.isPowerSavingOpen = readbuff[10];
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    uteModuleGuiCommonData.displayCtrl.isWatchMainLock = readbuff[11];
+#endif
     uteModuleGuiCommonReadScreenTblSort();
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,displayOffTime=%d,isFahrenheit=%d,backLightPercent=%d,currWatchIndex=%d,themeTypeId=%d", __func__,uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond,uteModuleGuiCommonData.displayCtrl.isFahrenheit,
                    uteModuleGuiCommonData.displayCtrl.backLightPercent,uteModuleGuiCommonData.displayCtrl.currWatchIndex,uteModuleGuiCommonData.themeTypeId);
@@ -365,7 +379,7 @@ void uteModuleGuiCommonReadConfig(void)
 void uteModuleGuiCommonInit(void)
 {
     memset(&uteModuleGuiCommonData,0,sizeof(ute_module_gui_common_t));
-    /*! ������ʱ�� zn.zeng, 2021-09-03  */
+    /*! 创建定时器 zn.zeng, 2021-09-03  */
     // uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
     uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
     uteModuleGuiCommonReadConfig();
@@ -378,7 +392,7 @@ void uteModuleGuiCommonInit(void)
 }
 
 /**
-*@brief        �ⲿ�����������ȵķ���
+*@brief        外部用清除所有深度的方法
 *@details
 *@param[in]
 *@author      casen
@@ -387,15 +401,15 @@ void uteModuleGuiCommonInit(void)
 void uteModuleGuiCommonDisplayExternalClearDepth(void)
 {
     task_stack_init();
-    latest_task_init(); //�������
+    // latest_task_init(); //最近任务
     task_stack_push(FUNC_CLOCK);
     func_cb.sta = FUNC_CLOCK;
 }
 
 /**
-*@brief        �����ʾ���
+*@brief        清除显示深度
 *@details
-*@param[in] bool isAllClear  �Ƿ�ȫ���������ֻ������һ��
+*@param[in] bool isAllClear  是否全部清除，否只清除最后一级
 *@author       zn.zeng
 *@date       2021-10-22
 */
@@ -409,21 +423,21 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     {
         return;
     }
-#if UTE_MODULE_SPORT_SUPPORT
+
     if(uteModuleSportMoreSportIsRuning() && func_cb.sta != FUNC_SPORT_SUB_RUN)
     {
         func_cb.sta = FUNC_SPORT_SUB_RUN;
         return;
     }
-#endif
+
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,isAllClear = %d", __func__,isAllClear);
     if (isAllClear)
     {
         task_stack_init();
-        latest_task_init(); // �������
+        // latest_task_init(); // 最近任务
         if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
         {
-            printf("%s,return FUNC_CHARGE\r\n", __func__);
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return FUNC_CHARGE", __func__);
             func_cb.sta = FUNC_CHARGE;
             task_stack_push(FUNC_CHARGE);
         }
@@ -438,14 +452,14 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
         func_cb.sta = task_stack_pop();
         if (!func_cb.sta)
         {
-            func_cb.sta = FUNC_CLOCK;                                 //�쳣���ر���
+            func_cb.sta = FUNC_CLOCK;                                 //异常返回表盘
         }
     }
 }
 
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
 /**
-*@brief        ��ȡ��ʱ�������Ļid
+*@brief        获取临时保存的屏幕id
 *@details
 *@author       xjc
 *@date       2022-10-31
@@ -478,7 +492,7 @@ int uteModuleGuiCommonGetTempUIConfigId(void)
 }
 #endif
 /**
-*@brief        �ر���ʾ
+*@brief        关闭显示
 *@details
 *@author       zn.zeng
 *@date       2021-09-18
@@ -492,6 +506,9 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         {
             uteModulePlatformRestartTimer(&clearDepthAfterOffTimerPointer,UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND*1000);
         }
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        uteDrvScreenEsdTeIntErrorCheckTimerStop();
+#endif
         // uteDrvScreenCommonDisplayOff();
         // uteDrvTpCommonSleep();
         uteModuleGuiCommonData.isDisplayOn = false;
@@ -499,8 +516,8 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         // uteModulePlatformStopTimer(&displayOffTimerPointer);
 #if UTE_MODULE_SPORT_SUPPORT
         uteModuleSprotResetRovllverScreenMode();
-#endif
-        //����У����س�����
+
+        //充电中，返回充电界面
         if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE && func_cb.sta != FUNC_CHARGE)
         {
             func_cb.sta = FUNC_CHARGE;
@@ -511,13 +528,16 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
     {
         uteModulePlatformStopTimer(&clearDepthAfterOffTimerPointer);
         uteModuleGuiCommonData.isDisplayOn = true;
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        uteDrvScreenEsdTeIntErrorCheckTimerStart(1000);
+#endif
     }
 }
 
 /**
- * @brief        ����Ϩ���Ƿ��������ر���
+ * @brief        设置熄屏是否允许返回表盘
  * @details
- * @param[in]    allow true ������false ������
+ * @param[in]    allow true 允许，false 不允许
  * @return       void*
  * @author       Wang.Luo
  * @date         2024-10-29
@@ -528,7 +548,7 @@ void uteModuleGuiCommonDisplayOffAllowGoBack(bool allow)
 }
 
 /**
-*@brief    ̧������msg��������
+*@brief    抬手亮屏msg处理函数
 *@details
 *@author        zn.zeng
 *@date        2021-08-06
@@ -550,26 +570,27 @@ void uteModuleGuiCommonHandScreenOnMsg(void)
     }
 }
 /**
-*@brief    ̧������msg��������
+*@brief    抬下灭屏msg处理函数
 *@details
 *@author        zn.zeng
 *@date        2021-08-06
 */
 void uteModuleGuiCommonHandScreenOffMsg(void)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, gui_sleep_sta=%d", __func__, sys_cb.gui_sleep_sta);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, gui_sleep_sta=%d,guioff_delay=%d", __func__, sys_cb.gui_sleep_sta, sys_cb.guioff_delay);
     // uteModuleGuiCommonDisplayOff(false);
-    if(!sys_cb.gui_sleep_sta)
+    if(!sys_cb.gui_sleep_sta && sys_cb.guioff_delay)
     {
-        sys_cb.guioff_delay = 0;
-        gui_sleep();                //��Ϩ��
+        sys_cb.guioff_delay = 1;
+        // gui_sleep();                //仅熄屏
+        uteModuleSprotResetRovllverScreenMode();
     }
 }
 
 #if UTE_CUSTOM_HAND_SCREEN_ON_DISPLAY_OFF_TIME
 /**
-* @brief        ����̧��������־
-* @details      �����Զ���̧������ʱ��ʱ������̧��������־
+* @brief        重置抬手亮屏标志
+* @details      用于自定义抬手亮屏时长时，重置抬手亮屏标志
 * @author       Wang.Luo
 *@date          2022-09-02
 * @return       void*
@@ -581,9 +602,9 @@ void uteResetHandScreenOnFlag(void)
 #endif
 
 /**
-*@brief        ��������timer
+*@brief        重置亮屏timer
 *@details
-*@param[in] UI_ConfigTypeDef *pMenu������ָ��
+*@param[in] UI_ConfigTypeDef *pMenu，界面指针
 *@param[in] int16_t displayOffTimeSecond     If the value is not 0, the display off time is the set value (unit: second)
 *@author       wuhuowang
 *@date       2023-04-25
@@ -595,7 +616,7 @@ void uteResetHandScreenOnFlag(void)
 // }
 
 /**
-*@brief        ��ȡ��ǰ���̵���������
+*@brief        获取当前表盘的配置索引
 *@details
 *@param[out] uint8_t *index
 *@author       zn.zeng
@@ -607,9 +628,9 @@ void uteModuleGuiCommonGetCurrWatchIndex(uint8_t *index)
 }
 
 /**
-*@brief        ��ȡ��ǰ�ܱ��̸���
+*@brief        获取当前总表盘个数
 *@details
-*@param[out] WatchMaxIndex  �����ܸ������������߱��̸�����
+*@param[out] WatchMaxIndex  返回总个数（包括在线表盘个数）
 *@author       pcm
 *@date       2022-8-11
 */
@@ -621,7 +642,7 @@ uint8_t uteModuleGuiCommonGetCurrWatchMaxIndex(void)
 }
 
 /**
-*@brief        ���õ�ǰ���̵���������
+*@brief        设置当前表盘的配置索引
 *@details
 *@param[out] uint8_t *index
 *@author       zn.zeng
@@ -647,12 +668,13 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 */
 void uteModuleGuiCommonWatchConfigInit(void)
 {
+    uteModuleWatchOnlineDataInit();
     uteModuleWatchOnlineUpateConfigFromFlash();
     uteModuleGuiCommonSetCurrWatchIndex(uteModuleGuiCommonData.displayCtrl.currWatchIndex);
 }
 
 /**
-*@brief  ��������ʱ����¶ȵ�λ
+*@brief  设置亮屏时间和温度单位
 *@details
 *@param[in] displayOffTime,isOpenHandScreenOn,isFahrenheit
 *@author        zn.zeng
@@ -666,9 +688,9 @@ void uteModuleGuiCommonSetDisplayTemperatureUtil(bool isFahrenheit)
 }
 
 /**
-*@brief  ��ȡ������ʾ������ز���
+*@brief  获取控制显示内容相关参数
 *@details
-*@param[in] displayOffTimeSecond,backLightPercent,isFahrenheit��currWatchIndex
+*@param[in] displayOffTimeSecond,backLightPercent,isFahrenheit，currWatchIndex
 *@author    dengli.lu
 *@date      2021-10-27
 */
@@ -677,17 +699,17 @@ void uteModuleGuiCommonGetDisplayInfo(ute_display_ctrl_t *displayInfo)
     memcpy(displayInfo, &uteModuleGuiCommonData.displayCtrl, sizeof(ute_display_ctrl_t));
 }
 /**
-*@brief  ������ʾ������Ϣ
+*@brief  保存显示参数信息
 *@details
 *@author        zn.zeng
 *@date        2021-08-20
 */
 void uteModuleGuiCommonSaveConfig(void)
 {
-    /*! ���浽�ļ�zn.zeng, 2021-08-20*/
+    /*! 保存到文件zn.zeng, 2021-08-20*/
     void *file;
-    uint8_t writebuff[11];
-    memset(writebuff,0,11);
+    uint8_t writebuff[12];
+    memset(writebuff,0,sizeof(writebuff));
     writebuff[0] = uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond;
     writebuff[1] = uteModuleGuiCommonData.displayCtrl.isFahrenheit;
     writebuff[2] = uteModuleGuiCommonData.displayCtrl.backLightPercent;
@@ -703,15 +725,18 @@ void uteModuleGuiCommonSaveConfig(void)
 #if UTE_MODULE_POWER_SAVING_SUPPORT
     writebuff[10] = uteModuleGuiCommonData.isPowerSavingOpen;
 #endif
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    writebuff[11] = uteModuleGuiCommonData.displayCtrl.isWatchMainLock;
+#endif
     if( uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DISPLAYINFO,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
     {
-        uteModuleFilesystemWriteData(file,&writebuff[0],11);
+        uteModuleFilesystemWriteData(file,&writebuff[0],sizeof(writebuff));
         uteModuleFilesystemCloseFile(file);
     }
 }
 
 /**
-*@brief        ���ñ������Ȱٷֱ�
+*@brief        设置背光亮度百分比
 *@details
 *@author       dengli.lu
 *@date       2021-10-30
@@ -724,7 +749,7 @@ void uteModuleGuiCommonSetBackLightPercent(uint8_t setBackLightPercent)
 }
 
 /**
-*@brief        ��ȡ�������Ȱٷֱ�
+*@brief        获取背光亮度百分比
 *@details
 *@author       xiaodong.chen
 *@date       2022.4.15
@@ -743,7 +768,7 @@ uint8_t uteModuleGuiCommonGetBackLightPercent(void)
     }
 }
 /**
-*@brief        ��������ʱ��
+*@brief        设置亮屏时长
 *@details
 *@author       dengli.lu
 *@date       2021-12-02
@@ -754,8 +779,39 @@ void uteModuleGuiCommonSetDisplayOffTime(uint8_t displayOffTimeSecond)
     uteModuleGuiCommonSaveConfig();
 }
 
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
 /**
-*@brief        ��ȡ��ǰ����ʱ��
+ * @brief        设置编码器切换表盘锁定开关
+ * @details
+ * @param[in]    isLock true 锁定，false 不锁定
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-06-18
+ */
+void uteModuleGuiCommonSwitchEncoderKeysSwitchoverWatchMainLock(void)
+{
+    uteModuleGuiCommonData.displayCtrl.isWatchMainLock = !uteModuleGuiCommonData.displayCtrl.isWatchMainLock;
+    uteModuleGuiCommonSaveConfig();
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isWatchMainLock=%d",__func__,uteModuleGuiCommonData.displayCtrl.isWatchMainLock);
+}
+
+/**
+ * @brief        获取编码器切换表盘锁定状态
+ * @details
+ * @return       bool 锁定状态 false:未锁定 true:锁定
+ * @author       Wang.Luo
+ * @date         2025-06-18
+ */
+bool uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock(void)
+{
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isWatchMainLock=%d",__func__,uteModuleGuiCommonData.displayCtrl.isWatchMainLock);
+    return uteModuleGuiCommonData.displayCtrl.isWatchMainLock;
+}
+
+#endif
+
+/**
+*@brief        获取当前亮屏时长
 *@details
 *@author       dengli.lu
 *@date       2021-12-02
@@ -766,7 +822,7 @@ uint8_t uteModuleGuiCommonGetDisplayOffTime(void)
     return uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond;
 }
 /**
-*@brief        ������һ������
+*@brief        返回上一级界面
 *@detail
 *@author       zn.zeng
 *@date       2021-11-03
@@ -786,9 +842,9 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 }
 
 /**
-*@brief        ��ʼ��ʾ����
+*@brief        开始显示界面
 *@detail
-*@param[in] int screenId ����Ψһid
+*@param[in] int screenId 界面唯一id
 *@author       zn.zeng
 *@date       2021-09-03
 */
@@ -817,6 +873,12 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
     if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start() || screenId == FUNC_NULL)
     {
         return;
+    }
+
+    if(func_cb.flag_sort) //在快捷任务界面跳转到其他界面
+    {
+        func_cb.flag_sort_jump = true;
+        func_cb.flag_sort = false;
     }
 
     if (func_cb.sta != screenId)
@@ -848,8 +910,8 @@ void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu)
 }
 
 /**
- * @brief        ��ջ��ɾ��ĳ������
- * @param[in]    screenId ����ID
+ * @brief        从栈中删除某个界面
+ * @param[in]    screenId 界面ID
  * @author       Wang.Luo
  * @date         2025-03-14
  */
@@ -863,7 +925,7 @@ void uteTaskGuiStackRemoveScreenId(uint8_t screenId)
 }
 
 /**
-*@brief        �����������ͣ�������Ҫ��������type
+*@brief        设置主题类型，如有需要，可增加type
 *@details
 *@author       dengli.lu
 *@date       2021-11-08
@@ -878,7 +940,7 @@ void uteModuleGuiCommonSetThemeTypeId(int themeTypeId)
     }
 }
 /**
-*@brief        ��ȡ�������ͣ�������Ҫ��������type
+*@brief        获取主题类型，如有需要，可增加type
 *@details
 *@author       dengli.lu
 *@date       2021-11-17
@@ -889,7 +951,7 @@ int uteModuleGuiCommonGetThemeTypeId(void)
 }
 
 /**
-*@brief        ��ȡ��ǰ����״̬
+*@brief        获取当前亮屏状态
 *@details
 *@author       zn.zeng
 *@date       2021-11-30
@@ -900,7 +962,7 @@ bool uteModuleGuiCommonIsDisplayOn(void)
 }
 
 /**
-*@brief        ��ȡ��ǰ��ʾ�����ID
+*@brief        获取当前显示界面的ID
 *@details
 *@author       xjc
 *@date       2022-01-11
@@ -911,7 +973,7 @@ int uteModuleGuiCommonGetCurrentScreenId(void)
 }
 
 /**
-*@brief        ��ȡ�ϸ���ʾ�����ID
+*@brief        获取上个显示界面的ID
 *@details
 *@author       xjc
 *@date       2022-01-11
@@ -924,8 +986,8 @@ int uteModuleGuiCommonGetLastScreenId(void)
 
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
 /**
-*@brief     �Ƿ���Ҫ��ʾ��Ϣ���ѽ���
-*@details   ����Щ���湦�ܲ����в���Ҫ��Ϣ���ѣ����ǻᱣ�浽��ʷ�б����棩
+*@brief     是否需要显示消息提醒界面
+*@details   在这些界面功能测试中不需要消息提醒（但是会保存到历史列表里面）
 *@author    xjc
 *@date      2022-05-23
 */
@@ -952,7 +1014,7 @@ bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void)
     }
 #endif
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-    if((id == UTE_MOUDLE_SCREENS_PRESSURE_ID || id == UTE_MOUDLE_SCREENS_EMOTION_ID || id == UTE_MOUDLE_SCREENS_FATIGUE_ID)\
+    if((id == FUNC_PRESSURE || id == FUNC_MOOD || id == UTE_MOUDLE_SCREENS_FATIGUE_ID)\
        &&(uteModuleEmotionPressureIsTesting()))
     {
         result =true;
@@ -1031,7 +1093,7 @@ bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void)
 #endif //end UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
 
 /**
-*@brief     ��ȡ��ǰ��Ч������
+*@brief     获取当前有效表盘数
 *@details
 *@author    zn.zeng
 *@date      2022-06-28
@@ -1047,7 +1109,7 @@ uint8_t uteModuleGuiCommonGetVailWatchCnt(void)
     return maxCnt;
 }
 /*
-*@brief     ����㵽Բ�ĵľ���
+*@brief     计算点到圆心的距离
 *@details
 *@author    cxd
 *@date      2022-05-30
@@ -1060,7 +1122,7 @@ int16_t uteModuleGuiGetDistanceFromCenter(UTE_UI_Point_t p)
 }
 
 /*
-*@brief     ��Բ����Ļ��ʾ��Χ�ڻ�ȡĳ�����ε������ʼλ��
+*@brief     在圆形屏幕显示范围内获取某个矩形的随机起始位置
 *@details
 *@author    cxd
 *@date      2022-05-30
@@ -1088,7 +1150,7 @@ RESTART_LINE:
 
 #if UTE_MODULE_POWER_SAVING_SUPPORT
 /**
-*@brief  ����ʡ��ģʽ����
+*@brief  设置省电模式开关
 *@details
 *@author      dengli.lu
 *@date        2022-06-17
@@ -1107,7 +1169,7 @@ void uteModuleGuiCommonSetPowerSavingModeOpen(bool isPowerSavingModeOpen)
     uteModuleGuiCommonSaveConfig();
 }
 /**
-*@brief  ��ȡʡ��ģʽ����
+*@brief  获取省电模式开关
 *@details
 *@author      dengli.lu
 *@date        2022-06-17
@@ -1118,7 +1180,7 @@ bool uteModuleGuiCommonGetPowerSavingModeOpen(void)
 }
 #endif
 /**
-*@brief  �Ƿ���������Ϣ��,����״̬������Ϣ����������������Ϣ��������Ϣ����,�����������������
+*@brief  是否允许手势息屏,下列状态不允许息屏（可运用于落腕息屏、覆盖息屏）,其他界面可自行添加
 *@details
 *@author      dengli.lu
 *@date        2022-06-17
@@ -1140,13 +1202,13 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
             return false;
         }
 #endif
-#if 0// UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         if ((
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-                (id == UTE_MOUDLE_SCREENS_PRESSURE_ID)
+                (id == FUNC_PRESSURE)
 #endif
 #if UTE_MODULE_SCREENS_EMOTION_SUPPORT
-                || (id == UTE_MOUDLE_SCREENS_EMOTION_ID)
+                || (id == FUNC_MOOD)
 #endif
 #if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
                 || (id == UTE_MOUDLE_SCREENS_FATIGUE_ID)
@@ -1158,10 +1220,10 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
         }
 #endif
 #if UTE_BT30_CALL_SUPPORT
-//         if((id == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID) || (id == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID))
-//         {
-//             return false;
-//         }
+        if (id == FUNC_BT_CALL)
+        {
+            return false;
+        }
 #endif
 #if UTE_MOUDLE_SCREENS_BREATH_TRAINING_ID
         if(id == UTE_MOUDLE_SCREENS_BREATH_TRAINING_ID)
@@ -1187,10 +1249,10 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
         }
 #endif
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-//        if(id == UTE_MOUDLE_SCREENS_FLASHLIGHT_ID)
-//        {
-//            return false;
-//        }
+        if(id == FUNC_FLASHLIGHT)
+        {
+            return false;
+        }
 #endif
 #if UTE_MODULE_SCREENS_OTA_SUPPORT
         if(id == UTE_MOUDLE_SCREENS_OTA_ID)

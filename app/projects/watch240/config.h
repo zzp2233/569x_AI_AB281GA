@@ -62,8 +62,8 @@
 #define UART0_PRINTF_SEL                PRINTF_PB3                  //选择UART打印信息输出IO，或关闭打印信息输出
 #define SYS_INIT_VOLUME                 xcfg_cb.sys_init_vol        //系统默认音量
 
-#define HEAP_FUNC_SIZE                  4096                        //FUNC HEAP SIZE
-#define CUSTOMER_HEAP_SIZE              (64 * 1024)                 //malloc 空间大小
+#define HEAP_FUNC_SIZE                  (1024*6)                        //FUNC HEAP SIZE
+#define CUSTOMER_HEAP_SIZE              (16 * 1024)                 //malloc 空间大小
 
 #define TS_MODE_EN                      0                           //内部NTC模块是否开启
 #define MODEM_CAT1_EN                   0                           //cat1测试功能
@@ -163,9 +163,9 @@
 #define BT_HFP_CALL_PRIVATE_SWITCH_EN   1   //是否打开按键切换私密接听与蓝牙接听功能
 #define BT_HFP_CALL_PRIVATE_FORCE_EN    0   //是否强制使用私密接听（仅在手机接听，不通过蓝牙外放）
 #define BT_HFP_RECORD_DEVICE_VOL_EN     0   //是否支持分别记录不同连接设备的通话音量
-#define BT_HFP_RING_NUMBER_EN           1   //是否支持来电报号
+#define BT_HFP_RING_NUMBER_EN           0   //是否支持来电报号
 #define BT_HFP_INBAND_RING_EN           1   //是否支持手机来电铃声（部分android不支持，默认用本地RING提示音）
-#define BT_HFP_BAT_REPORT_EN            1   //是否支持电量显示
+#define BT_HFP_BAT_REPORT_EN            0   //是否支持电量显示
 #define BT_HFP_MSBC_EN                  1   //是否打开宽带语音功能
 #define BT_HFP_3WAY_CTRL_EN             1   //是否使能三方通话管理
 #define BT_HFP_SWITCH_EN                1   //是否使能通话切换功能，包括主动切换和哪边接听哪边出声
@@ -362,9 +362,9 @@
 #define USER_ADKEY_QDEC_NO_STD          0           //是否使用非标准电平判断(适用编码器漏电平时)
 #define USER_QDEC_ADCH                  ADCCH_PA0   //选择旋钮的ADC通道
 
-#define USER_IO_QEDC_EN                 1           //旋钮, 使用两个普通IO方式
-#define QEDC_IO_A                       IO_PB0
-#define QEDC_IO_B                       IO_PB1
+#define USER_IO_QEDC_EN                 DRV_ENCODER_KEYS_SUPPORT           //旋钮, 使用两个普通IO方式
+#define QEDC_IO_A                       UTE_DRV_QDEC_Y_PHA_GPIO_PIN
+#define QEDC_IO_B                       UTE_DRV_QDEC_Y_PHB_GPIO_PIN
 
 #define USER_MULTI_PRESS_EN             1           //按键多击检测使能
 #define USER_MULTI_KEY_TIME             4           //按键多击响应时间（单位100ms）
@@ -385,7 +385,7 @@
 #define VBAT_FILTER_USE_PEAK            0           //电池检测滤波选则://0 取平均值.//1 取峰值(适用于播放音乐时,电池波动比较大的音箱方案).
 #define LPWR_WARNING_VBAT               UTE_DRV_BATTERY_010        //低电提醒电压   0：表示关闭此功能
 #define LPWR_OFF_VBAT                   UTE_DRV_BATTERY_POWER_ON_VOLTAGE        //低电关机电压   0：表示关闭此功能
-#define LOWPWR_REDUCE_VOL_EN            1           //低电时是否降低音量
+#define LOWPWR_REDUCE_VOL_EN            0           //低电时是否降低音量
 #define LPWR_WARING_TIMES               0xff        //报低电次数
 #define LPWR_WARNING_PERIOD             30          //低电播报周期(单位：秒)
 
@@ -420,6 +420,13 @@
 #define CHARGE_NTC_ADC_MAX_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_TEMPERATURE  //设置恢复温度 摄氏度     48
 #define CHARGE_NTC_ADC_MIN_TEMP         UTE_DRV_BATTERY_CE_AUTH_NOT_ALLOW_LOW_TEMPERATURE  //设置最高温度 摄氏度0
 #define CHARGE_NTC_ADC_MIN_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_LOW_TEMPERATURE  //设置恢复温度 摄氏度5
+
+/*****************************************************************************
+* Module : VDDHR 补偿配置 PB2用为IO口时不能打开这个宏
+*****************************************************************************/
+#define VDDHR_TRIM_EN 0 //校准使能
+#define VDDHR_TRIM_TEST_EN 0 //上电测试 默认关闭 生产时需要关闭
+
 /*****************************************************************************
  * Module    : 硬件I2C配置
  *****************************************************************************/
@@ -448,7 +455,7 @@
  * Module    : 传感器配置
  *****************************************************************************/
 #define SENSOR_STEP_SEL                 SENSOR_STEP_NULL
-#define SENSOR_HR_SEL                   SENSOR_HR_NULL//SENSOR_HR_VC30FX
+#define SENSOR_HR_SEL                   UTE_DRV_HR_SENSOR_SELECT
 #define SENSOR_GEO_SEL                  SENSOR_GEO_NULL
 
 /*****************************************************************************

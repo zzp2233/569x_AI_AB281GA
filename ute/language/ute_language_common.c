@@ -160,6 +160,18 @@ void uteLanguageCommonSelect(MULTIPLE_LANGUAGE_ID langId)
             break;
 #endif
         default :
+            if(DEFAULT_LANGUAGE == CHINESE_LANGUAGE_ID)
+            {
+                i18n = i18n_zh_rcn;
+            }
+            else
+            {
+                i18n = i18n_en_rus;
+            }
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, Language ID 0x%x is not supported", __func__, langId);
+            break;
+#endif
+        default :
             // if(DEFAULT_LANGUAGE == CHINESE_LANGUAGE_ID)
             // {
             //     i18n = i18n_zh_rcn;

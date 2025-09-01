@@ -1010,7 +1010,7 @@ void uteModulePlatformScreenDspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,u
 */
 void uteModulePlatformPwmInit(pwm_gpio id,uint8_t pinNum,uint8_t duty,uint32_t rateHz)
 {
-    bsp_pwm_freq_set(rateHz); /*! 使用多路pwm时，平台不支持设置频率，会影响其他路,wang.luo 2024-10-23 */
+    // bsp_pwm_freq_set(rateHz); /*! 使用多路pwm时，平台不支持设置频率，会影响其他路,wang.luo 2024-10-23 */
     bsp_pwm_duty_set(id,duty,false);
 }
 /**
@@ -1293,12 +1293,12 @@ void uteModulePlatformUpdateDevName(void)
     memset(name, 0, 32);
     memset(devName, 0, 32);
     devNameSize = 0;
-    uint8_t size=0;
+    uint8_t size = 0;
 #if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
     uint16_t snDataLen = sizeof(ute_application_sn_data_t);
     ute_application_sn_data_t *snData = uteModulePlatformMemoryAlloc(snDataLen);
     memset(snData, 0, snDataLen);
-    uteModulePlatformFlashNorRead(snData, UTE_USER_PARAM_ADDRESS, snDataLen);
+    uteModulePlatformFlashNorRead((uint8_t *)snData, UTE_USER_PARAM_ADDRESS, snDataLen);
     if (snData->bleDevNameLen > 0 && snData->bleDevNameLen <= sizeof(devName))
     {
         size = snData->bleDevNameLen;
@@ -1315,7 +1315,7 @@ void uteModulePlatformUpdateDevName(void)
             memcpy(snData->bleDevName, xcfg_cb.le_name, size);
             snData->bleDevNameLen = size;
             uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
-            uteModulePlatformFlashNorWrite(snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
+            uteModulePlatformFlashNorWrite((uint8_t *)snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,DevName from xcfg_cb, size=%d", __func__,size);
         }
         else
@@ -1349,9 +1349,40 @@ void uteModulePlatformUpdateDevName(void)
             BleId[2*i] = (device_MAC_address_buf[i]/16)+ (((device_MAC_address_buf[i]/16)>9)?(-10 +'A'):(+'0'));
             BleId[2*i+1] = (device_MAC_address_buf[i]%16)+ (((device_MAC_address_buf[i]%16)>9)?(-10 +'A'):(+'0'));
         }
-        if((size+9+2)<=(remainLength))   //total char "(namelen+0x09)+...+(ID-XXXX)" 12byte
+#if UTE_MODULE_BLE_NAME_FORMET1_SUPPORT
+        if((size+9+2)<=(remainLength))   //total char "(namelen+0x09)+...+"_XXXX"
+        {
+            memcpy(&BleId[7],"_",1);
+            len = 5;
+            memcpy(&name[size],&BleId[7],len);
+            size = size + len;
+        }
+        else if((size+5+2)<=(remainLength)) //total char "(namelen+0x07)+...+-XXXX" 7byte
+        {
+            BleId[7]='-';
+            memcpy(&name[size],&BleId[7],5);
+            size = size + 5;
+        }
+        else if((size+4+2)<=(remainLength))
+        {
+            BleId[7]='-';
+            memcpy(&name[size],&BleId[7],4);
+            size = size + 4;
+        }
+        else if((size+2)<=(remainLength))
         {
 
+        }
+        else
+        {
+            if(remainLength>2)
+            {
+                size = remainLength-2;
+            }
+        }
+#else
+        if((size+9+2)<=(remainLength))   //total char "(namelen+0x09)+...+(ID-XXXX)" 12byte
+        {
             memcpy(&BleId[4],"(ID-",4);
             len = 9;
             memcpy(&name[size],&BleId[4],len-1);
@@ -1381,6 +1412,7 @@ void uteModulePlatformUpdateDevName(void)
                 size = remainLength-2;
             }
         }
+#endif
     }
 #endif
     name[size] = 0;
@@ -1476,6 +1508,19 @@ void uteModulePlatformAdvDataInit(void)
 }
 
 /**
+*@brief  是否允许ble发送数据的
+*@details
+*@author  zn.zeng
+*@date    2022-04-15
+*/
+bool uteModulePlatformIsAllowBleSend(void)
+{
+    bool isAllowBleSend = !is_le_buff_full(2);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isAllowBleSend:%d", __func__, isAllowBleSend);
+    return isAllowBleSend;
+}
+
+/**
 *@brief   使能休眠
 *@details
 *@param[in] uint32_t bit ,功能位
@@ -1489,9 +1534,9 @@ void uteModulePlatformDlpsEnable(uint32_t bit)
     uint32_t lastDlpsBit = uteModulePlatformDlpsBit;
 #endif
     uteModulePlatformDlpsBit &= ~bit;
-    if (uteModulePlatformDlpsBit  == 0)
+    if (sys_cb.sleep_delay && uteModulePlatformDlpsBit == 0)
     {
-        sys_cb.sleep_delay = 0;
+        sys_cb.sleep_delay = 1;
         // sys_cb.guioff_delay = 0;
     }
 #if UTE_LOG_SYSTEM_LVL

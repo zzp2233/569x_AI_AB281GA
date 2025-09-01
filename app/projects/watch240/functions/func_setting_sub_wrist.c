@@ -88,7 +88,8 @@ compo_form_t *func_set_sub_wrist_form_create(void)
 
     return frm;
 }
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+
 typedef struct f_wrist_t_
 {
     bool value;
@@ -104,8 +105,8 @@ enum
 
 static const u32 tbl_wrist_switch_res[] =
 {
-//    UI_BUF_I330001_PUBLIC_SWITCH02_BIN,         //ON
-//    UI_BUF_I330001_PUBLIC_SWITCH00_BIN,         //OFF
+    UI_BUF_I335001_27_MORE_28_SET_7_RAISE_SWITCH_ICON_PIC40X20_X184_Y66_OPEN_BIN,         //OFF
+    UI_BUF_I335001_27_MORE_28_SET_7_RAISE_SWITCH_ICON_PIC40X20_X184_Y66_CLOSE_BIN,         //ON
 };
 
 static void switch_set_sub_wrist(void)
@@ -162,6 +163,471 @@ compo_form_t *func_set_sub_wrist_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    UI_BUF_I341001_20_ALARM_CLOCK_OPEN_BIN,         //ON
+    UI_BUF_I341001_20_ALARM_CLOCK_GRAY_BUTTON_BIN,  //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_UP]);
+
+    //创建卡片
+    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 320, 100);
+    compo_cardbox_set_visible(card, true);
+    compo_cardbox_set_location(card, 24 + 320/2, 60 + 100/2, 320, 100);
+    compo_setid(card, COMPO_CARD_1);
+
+    compo_cardbox_rect_set_color(card, 0, COLOR_BLACK);
+    compo_cardbox_rect_set_location(card, 0, 0, 0, 320, 100, 16);
+
+    compo_cardbox_icon_set_location(card, 0,
+                                    320/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
+
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    }
+    else
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
+    }
+
+    compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
+    compo_cardbox_text_set_location(card, 0, 10-320/2, -14,
+                                    320 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 50,
+                                    30);
+    compo_cardbox_text_set_align_center(card, 0, false);
+    widget_text_set_color(card->text[0], make_color(255,255,255));
+    compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
+
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    UI_BUF_I343001_28_SET_OPEN_BIN,         //ON
+    UI_BUF_I343001_28_SET_CLOSE_BIN,        //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_UP]);
+
+    //创建卡片
+    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 278, 100);
+    compo_cardbox_set_visible(card, true);
+    compo_cardbox_set_location(card, 24 + 278/2, 60 + 100/2, 278, 100);
+    compo_setid(card, COMPO_CARD_1);
+
+    compo_cardbox_rect_set_color(card, 0, COLOR_BLACK);
+    compo_cardbox_rect_set_location(card, 0, 0, 0, 278, 100, 16);
+
+    compo_cardbox_icon_set_location(card, 0,
+                                    278/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
+
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    }
+    else
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
+    }
+
+    compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
+    compo_cardbox_text_set_location(card, 0, 10-278/2, -14,
+                                    278 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 50,
+                                    30);
+    compo_cardbox_text_set_align_center(card, 0, false);
+    widget_text_set_color(card->text[0], make_color(255,255,255));
+    compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
+
+    return frm;
+}
+
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    UI_BUF_I338001_28_SET_OPEN_BIN,         //ON
+    UI_BUF_I338001_28_SET_CLOSE_BIN,         //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_UP]);
+
+    //创建卡片
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 1, 1, 1, 324, 80);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,80/2+102,324, 80);
+    compo_setid(cardbox, COMPO_CARD_1);
+    compo_cardbox_rect_set_location(cardbox,0,0,30,278, 1,16);
+    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+    compo_cardbox_text_set_location(cardbox, 0, 25-324/2,  -(34/2), 200, 30);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_SETTING_UP]);
+    compo_cardbox_text_set_align_center(cardbox, 0, false);
+    compo_cardbox_icon_set_location(cardbox, 0, 116, 0, 50, 30);
+    compo_cardbox_icon_set(cardbox,0,uteModuleSportGetIsOpenHandScreenOn() ? tbl_wrist_switch_res[0] : tbl_wrist_switch_res[1]);
+    compo_cardbox_text_scroll_process(cardbox, true);
+
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    UI_BUF_I332001_PUBLIC_SWITCH02_BIN,         //ON
+    UI_BUF_I332001_PUBLIC_SWITCH00_BIN,         //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_UP]);
+
+    //创建卡片
+    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 324, 80);
+    compo_cardbox_set_visible(card, true);
+    compo_cardbox_set_location(card, GUI_SCREEN_CENTER_X, 80/2+102, 324, 80);
+    compo_setid(card, COMPO_CARD_1);
+
+    compo_cardbox_rect_set_color(card, 0, make_color(41,41,41));
+    compo_cardbox_rect_set_location(card, 0, 0, 0, 324, 80, 10);
+
+    compo_cardbox_icon_set_location(card, 0,
+                                    254/2-36 + gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
+
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    }
+    else
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
+    }
+
+    compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
+    compo_cardbox_text_set_location(card, 0, 10-324/2,-(34/2), 200, 30);
+    compo_cardbox_text_set_align_center(card, 0, false);
+    widget_text_set_color(card->text[0], make_color(255,255,255));
+    compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
+
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    UI_BUF_I340001_PUBLIC_SWITCH02_BIN,         //ON
+    UI_BUF_I340001_PUBLIC_SWITCH00_BIN,         //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_UP]);
+
+    //创建卡片
+    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 324, 80);
+    compo_cardbox_set_visible(card, true);
+    compo_cardbox_set_location(card, GUI_SCREEN_CENTER_X, 80/2+102, 324, 80);
+    compo_setid(card, COMPO_CARD_1);
+
+    compo_cardbox_rect_set_color(card, 0, make_color(41,41,41));
+    compo_cardbox_rect_set_location(card, 0, 0, 0, 324, 80, 10);
+
+    compo_cardbox_icon_set_location(card, 0,
+                                    254/2-36 + gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
+
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    }
+    else
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
+    }
+
+    compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
+    compo_cardbox_text_set_location(card, 0, 10-324/2,-(34/2), 200, 30);
+    compo_cardbox_text_set_align_center(card, 0, false);
+    widget_text_set_color(card->text[0], make_color(255,255,255));
+    compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
+
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    UI_BUF_I342001_28_SET_OPEN_BIN,         //OFF
+    UI_BUF_I342001_28_SET_CLOSE_BIN,         //ON
+};
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_UP]);
+
+    //创建卡片
+    compo_cardbox_t * card = compo_cardbox_create(frm, 0, 1, 1, 232, 72);
+    compo_cardbox_set_visible(card, true);
+    compo_cardbox_set_location(card, 4 + 232/2, 54 + 72/2, 232, 72);
+    compo_setid(card, COMPO_CARD_1);
+
+    compo_cardbox_icon_set_location(card, 0,
+                                    232/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
+
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    }
+    else
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
+    }
+
+    compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
+    compo_cardbox_text_set_location(card, 0, 10-232/2, -14,
+                                    232 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 50,
+                                    30);
+    compo_cardbox_text_set_align_center(card, 0, false);
+    widget_text_set_color(card->text[0], make_color(255,255,255));
+    compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
+
+    return frm;
+}
+
+
+#else
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    0,         //ON
+    0,         //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //抬腕亮屏事件处理
 static void func_set_sub_wrist_process(void)
@@ -213,8 +679,8 @@ static u16 func_wrist_card_get_id(point_t pt)
 //单击按钮
 static void func_wrist_button_click(void)
 {
-    u8 ret = 0;
-    f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
+//    u8 ret = 0;
+//    f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
 
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_wrist_card_get_id(pt);
@@ -229,20 +695,7 @@ static void func_wrist_button_click(void)
     {
         if (compo_id == COMPO_CARD_1)
         {
-//            ret = msgbox((char *)i18n[STR_SETTING_UP], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-
-//            if (ret == MSGBOX_RES_OK)
-//            {
-//                if (wrs->value) {
-//                    wrs->value = false;
-//                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[1]);
-//                } else {
-//                    wrs->value = true;
-//                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
-//                }
             switch_set_sub_wrist();
-//            }
-#if UTE_MODULE_SPORT_SUPPORT
             if(uteModuleSportGetIsOpenHandScreenOn())
             {
                 compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);

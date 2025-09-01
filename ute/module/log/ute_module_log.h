@@ -30,7 +30,7 @@
 #define UTE_LOG_DRV_MOTOR_LVL 0 //15
 #define UTE_LOG_SLEEP_LVL 0 //16
 #define UTE_LOG_BT_AUDIO_LVL 0 //17
-#define UTE_LOG_DRV_BAT_LVL 0//18
+#define UTE_LOG_DRV_BAT_LVL 18//18
 #define UTE_LOG_MUSIC_LVL 0 //19
 #define UTE_LOG_WATCHONLINE_LVL 0 //20
 #define UTE_LOG_TEMPERATURE_LVL 0 //21
@@ -43,19 +43,20 @@
 #define UTE_LOG_ALI_UPAY_LVL 0//28
 #define UTE_LOG_CYWEE_MOTION_LVL 0 //29
 #define UTE_LOG_MEMORY_LVL 0 //30
+#define UTE_LOG_COMPASS_LVL 0 //31
 
 /** 打印log，输入log等级和格式等*/
-extern const uint8_t uteModuleLogTagString[][31];
+extern const uint8_t uteModuleLogTagString[][32];
 #define UTE_MODULE_LOG(log_lvl,format,...) \
 {\
-  if((log_lvl!=0)&&(log_lvl<31))\
+  if((log_lvl!=0)&&(log_lvl<32))\
   {\
-   printf("%s:"format"\n",&uteModuleLogTagString[log_lvl][0],##__VA_ARGS__);\
+   printe("%s:"format"\n",&uteModuleLogTagString[log_lvl][0],##__VA_ARGS__);\
   }\
 }
 #define UTE_MODULE_LOG_BUFF(log_lvl,buff, size)\
 {\
-  if((log_lvl!=0)&&(log_lvl<31))\
+  if((log_lvl!=0)&&(log_lvl<32))\
   {\
    printf("%s:",&uteModuleLogTagString[log_lvl][0]);\
    uint8_t *tmpBuff = (uint8_t *)buff;\

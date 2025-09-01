@@ -223,40 +223,23 @@ u8 bt_sco_pcm_dump_pass_cnt_sub1(bool sub)
 
 #define SCO_TX_OBUF_LEN    4*1024
 
-typedef struct
-{
-    u32 sample;
-    int ch_mode;
-    u32 tick;
-    u16 delay;
-    au_stm_t *stm;
-    u8 *obuf;
-    u8 *temp;
-    u32 obuf_len;
-    u32 temp_len;
-} sco_tx_delay_t;
+u8 sco_pcm_dump_pass_cnt = 0;
 
-sco_tx_delay_t sco_tx_delay AT(.asr_sco);
-au_stm_t sco_tx_stm AT(.asr_sco);
-u8 sco_tx_obuf[SCO_TX_OBUF_LEN] AT(.asr_sco);
-u8 sco_tx_temp[SCO_TX_OBUF_LEN >> 2] AT(.asr_sco);
-
-void bt_sco_tx_delay_init(void)
+//设置要跳过多少次处理PCM函数的次数
+AT(.com_text.bt_voice.sco.pcm)
+void bt_sco_pcm_set_dump_pass_cnt(u8 cnt)
 {
-    memset(&sco_tx_obuf, 0, sizeof(sco_tx_obuf));
-    memset(&sco_tx_temp, 0, sizeof(sco_tx_temp));
-    memset(&sco_tx_delay, 0, sizeof(sco_tx_delay));
-    memset(&sco_tx_stm, 0, sizeof(sco_tx_stm));
-    sco_tx_stm.buf = sco_tx_stm.rptr = sco_tx_stm.wptr = sco_tx_obuf;
-    sco_tx_stm.size = SCO_TX_OBUF_LEN;
-    sco_tx_delay.temp_len = SCO_TX_OBUF_LEN >> 2;
-    sco_tx_delay.obuf_len = SCO_TX_OBUF_LEN;
-    sco_tx_delay.obuf = sco_tx_obuf;
-    sco_tx_delay.temp = sco_tx_temp;
-    sco_tx_delay.stm  = &sco_tx_stm;
-    sco_tx_delay.delay = 100;//ms
-    sco_tx_delay.tick = tick_get();
-    bt_sco_tx_delay_set(&sco_tx_delay);
+    sco_pcm_dump_pass_cnt = cnt;
 }
 
-#endif
+//获取还剩下要跳过多少次处理PCM函数的次数
+AT(.com_text.bt_voice.sco.pcm)
+u8 bt_sco_pcm_dump_pass_cnt_sub1(bool sub)
+{
+    if (sco_pcm_dump_pass_cnt > 0 && sub == true)
+    {
+        sco_pcm_dump_pass_cnt--;
+    }
+
+    return sco_pcm_dump_pass_cnt;
+}

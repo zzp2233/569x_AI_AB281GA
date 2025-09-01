@@ -26,6 +26,39 @@
 #define UTE_MOUDLE_SCREENS_APP_BINDING_ID FUNC_POWER_ON_SCAN
 #define UTE_MOUDLE_SCREENS_POWER_ON_LANGUAGE_SELECT_ID FUNC_POWER_ON_LANGUAGE
 #define UTE_MOUDLE_SCREENS_LANGUAGE_SELECT_LIST_ID FUNC_LANGUAGE
+#define UTE_MOUDLE_SCREENS_POWEROFF_ID FUNC_POWER_OFF
+
+//菜单样式ID
+typedef enum
+{
+
+    MENU_STYLE_HONEYCOMB,               //蜂窝
+    MENU_STYLE_WATERFALL,               //瀑布流
+    MENU_STYLE_LIST,                    //菜单列表
+    MENU_STYLE_FOOTBALL,                //足球
+    MENU_STYLE_GRID,                    //棋盘
+    MENU_STYLE_KALE,                    //万花筒
+    MENU_STYLE_SKYRER,                  //天圆地方
+    MENU_STYLE_CUM_SUDOKU,              //九宫格(上下边缘图标自动缩放)
+    MENU_STYLE_CUM_GRID,                //华为风格网格
+
+    MENU_STYLE_CUM_FOURGRID,            //六宫格
+    MENU_STYLE_SUDOKU,                  //九宫格
+    MENU_STYLE_SUDOKU_HRZ,              //横向九宫格
+    MENU_STYLE_DISK,                    //圆盘
+    MENU_STYLE_RING,                    //环形
+//    客户新加菜单样式
+    MENU_STYLE_CUM_HEXAGON,             //六边型菜单风格
+    MENU_STYLE_CUM_HONEYGRID,           //网格蜂窝（华为风格）
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+    MENU_STYLE_CUM_RING1,               //环形菜单风格1
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+    MENU_STYLE_CUM_RING2,               //环形菜单风格1
+#endif
+
+    MENU_STYLE_CNT,
+} MENU_THEMETYPE_INDEX;
 
 /*! 控制显示内容相关参数zn.zeng, 2021-08-18  */
 typedef struct
@@ -40,6 +73,9 @@ typedef struct
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     uint8_t currScreenSaverIndex;
     bool isScreenSaverSetOn;
+#endif
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    bool isWatchMainLock;
 #endif
 } ute_display_ctrl_t;
 
@@ -97,7 +133,10 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
 void uteTaskGuiStackRemoveScreenId(uint8_t screenId);
 bool uteModuleGuiCommonIsSwitchToMenu(void);
 void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu);
-
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+void uteModuleGuiCommonSwitchEncoderKeysSwitchoverWatchMainLock(void);
+bool uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock(void);
+#endif
 uint8_t uteModuleGuiCommonGetBackLightPercent(void);
 bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void);
 uint8_t uteModuleGuiCommonGetVailWatchCnt(void);

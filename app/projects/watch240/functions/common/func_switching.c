@@ -1434,8 +1434,6 @@ bool func_switching(u16 switch_mode, void *param)
         res = func_switching_zoom_fade(switch_mode, flag_auto);                //缩放加淡入淡出
     }
     func_switching_flag = false;
-#if ASR_SELECT
-    bsp_asr_start();
-#endif
+    uteModuleGuiCommonSetSwitchToMenu(false);
     return res;
 }

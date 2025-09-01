@@ -18,6 +18,16 @@
 /*! 心率24小时自动测试数据保存目录 zn.zeng, 2021-08-30  */
 #define UTE_MODULE_FILESYSTEM_BLOODOXYGEN_AUTO_DATA_DIR "bloodoxygenAutoData"
 
+typedef struct
+{
+    uint16_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t min;
+    uint8_t sec;
+} ute_module_bloodoxygen_test_time_t;
+
 /*! 血氧数据结构zn.zeng, 2021-07-21  */
 typedef struct
 {
@@ -33,6 +43,7 @@ typedef struct
     uint8_t dayMinValue;
     uint8_t dayMaxValue;
     uint8_t lastValue;
+    ute_module_bloodoxygen_test_time_t lastTestTime;
 } ute_module_bloodoxygen_data_t;
 void uteModuleBloodoxygenInit(void);
 void uteModuleBloodoxygenReadConfig(void);
@@ -52,7 +63,9 @@ bool uteModuleBloodoxygenIsBloodOxygenAutoTesting(void);
 uint8_t uteModuleBloodoxygenGetTestingSecond(void);
 void uteModuleBloodoxygenSetFirstEnterAppFlag(bool flag);
 void uteModuleBloodoxygenGetMinMaxValue(uint8_t *min,uint8_t *max);
+bool uteModuleBloodoxygenGetTodayHistoryData(uint8_t *Bloodoxygen, uint8_t BloodoxygenCount);
 void uteModuleBloodoxygenSetBloodOxygenAutoTesting(bool isAutoTest);
+void uteModuleBloodoxygenGetLastTestTime(ute_module_bloodoxygen_test_time_t *time);
 #endif //UTE_MODULE_BLOODOXYGEN_SUPPORT
 #endif //_UTE_MODULE_BLOODOXYGEN_H_
 

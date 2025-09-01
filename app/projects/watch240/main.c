@@ -1,5 +1,6 @@
 #include "include.h"
-#include "api_iis.h"
+#include "ute_application_common.h"
+
 #if (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
 //样机只能到20M以下
 const u8 tbl_despi_clk1[] =
@@ -166,28 +167,21 @@ int main(void)
         // bsp_rtc_recode_set(1);
         printf("WDT reset\n");
     }
-#if ASR_SELECT
-    thread_asr_create();
-#endif //ASR_STACK_EN
+
+    u8 cause = exception_restart_cause();
+    if(cause == RESTART_WDT)
+    {
+        uteApplicationCommonSetHardfaultReboot(true);
+    }
+    else
+    {
+        uteApplicationCommonSetHardfaultReboot(false);
+    }
+
     bsp_sys_init();
-//    GPIOEDIR &= ~(BIT(7) | BIT(2) | BIT(1));
-//    GPIOEFEN &= ~(BIT(7) | BIT(2) | BIT(1));
-//    GPIOEDE |= (BIT(7) | BIT(2) | BIT(1));
-
-    // GPIOBFEN &= ~BIT(0);                        // CS
-    // GPIOBDE  |=  BIT(0);
-    // GPIOBDIR &= ~BIT(0);
-    // GPIOBSET = BIT(0);
-
-    // GPIOBFEN &= ~BIT(1);                        // CS
-    // GPIOBDE  |=  BIT(1);
-    // GPIOBDIR &= ~BIT(1);
-    // GPIOBSET = BIT(1);
-    // printf("GPIOA & BIT(7) = %d\n", GPIOA & BIT(7));
-    // GPIOASET = BIT(7);
-    // printf("GPIOA & BIT(7) = %d\n", GPIOA & BIT(7));
 
     func_run();
+
     return 0;
 }
 

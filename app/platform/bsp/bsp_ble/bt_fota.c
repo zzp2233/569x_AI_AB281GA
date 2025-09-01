@@ -298,6 +298,8 @@ void bsp_fot_exit(void)
     fot_remote_seq = 0;
     fot_flag &= ~FOT_FLAG_APP_CONNECT;
 
+    FOT_DEBUG("fot exit\n");
+
     if(fot_var.sys_clk)
     {
         sys_clk_set(fot_var.sys_clk);

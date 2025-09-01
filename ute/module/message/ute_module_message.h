@@ -58,10 +58,10 @@ enum
     TO_APP_TASK_STOP_RING,
     MSG_TYPE_EMOTION_PRESSURE_START_SINGLE_TESTING,
     MSG_TYPE_EMOTION_PRESSURE_STOP_SINGLE_TESTING,
-    MSG_TYPE_SMOKE_REMIND,
     MSG_TYPE_FACTORY_WRITE_RECORD_DATA_TO_FLASH, // 工厂录音写入数据到flash
     MSG_TYPE_FACTORY_PLAY_RECORD, // 工厂录音播放
     MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET, //屏幕ESD测试时TE中断错误处理
+    MSG_TYPE_COMPASS_TESTING,  //指南针测试中断  add by pcm 2024-11-27
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

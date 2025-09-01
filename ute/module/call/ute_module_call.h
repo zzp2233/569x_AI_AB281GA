@@ -54,6 +54,10 @@
 
 #define UTE_MODULE_CALL_RECORDS_MAX_COUNT               20
 
+#ifndef UTE_MODULE_BT_ONCE_PAIR_TIMEOUT_SECOND
+#define UTE_MODULE_BT_ONCE_PAIR_TIMEOUT_SECOND          40 //配对超时，用于计时，一键配对过程中禁用休眠，防止连接过慢
+#endif
+
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
 typedef enum
 {
@@ -69,6 +73,41 @@ typedef enum
     UTE_BT_POWER_ON_VOICE_ASSISTANT   = 2,
     UTE_BT_POWER_ON_FORM_BLE_CALL_NOTIFY = 3,
 } ute_bt_power_on_type_t;
+
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+//多方通话，用于通话中，又来电
+#define UTE_CALL_MULTIPARTY_MAX 2
+typedef enum
+{
+    CALL_STATUS_ACTIVE = 0,    // 活动中
+    CALL_STATUS_HOLD = 1,      // 挂起
+    CALL_STATUS_DIALING = 2,   // 拨号中（仅去电）
+    CALL_STATUS_ALERTING = 3,  // 提醒中（仅去电）
+    CALL_STATUS_INCOMING = 4,  // 来电中（仅来电）
+    CALL_STATUS_WAITING = 5    // 等待中（仅来电）
+} CALL_TEMP_DATA_STATUS_T;
+typedef enum
+{
+    CALL_TYPE_MISSED = 0,
+    CALL_TYPE_RECEIVED,
+    CALL_TYPE_DIALED,
+} CALL_TEMP_TYPE_T;
+/**
+ * @brief     通话数据临时存储
+ * @details   用于拨出/来电，在通话中时又来电情况
+ */
+typedef struct
+{
+    uint8_t numberAscii[UTE_CALL_DIAL_NUMBERS_MAX]; //电话号码
+    uint8_t numberAsciiLen;
+    uint8_t nameUnicode[UTE_CALL_NAME_MAX];         //备注
+    uint8_t nameUnicodeLen;
+    CALL_TEMP_DATA_STATUS_T status; //记录当前号码的状态
+    CALL_TEMP_TYPE_T callType; // 0:MISSED 1:RECEIVED 2:DIALED
+    ute_module_systemtime_time_t recordTime;  //记录来电时间
+} ute_module_call_temp_data_t;
+#endif
+
 /*! call数据zn.zeng, 2021-10-28  */
 typedef struct
 {
@@ -119,6 +158,7 @@ typedef struct
     ute_bt_call_data_t callData;
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
     UTE_BT_DISCONNECT_REASON disconnectReason;
+    uint8_t onePairTimeoutSec;
 #endif
     bool muteActive; //静音键是否有效
     uint32_t muteRecordSecond; //记录音源切换的时间
@@ -137,6 +177,11 @@ typedef struct
     uint8_t needRemindBtDisconnectCnt;
 #endif
     bool isBleLinkBackFlag;
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+    ute_module_call_temp_data_t tempData[UTE_CALL_MULTIPARTY_MAX]; //用于拨出/来电，在通话中时又来电情况
+    uint8_t callTempCount;      //记录当前拨出/来电次数
+    uint8_t callActiveIndex;        //记录当前通话中是临时中的索引
+#endif
 } ute_module_call_data_t;
 
 /**
@@ -263,5 +308,11 @@ void uteModuleCallEntertranmentVoiceSwitchReadConfig(void);
 void uteModuleCallChangeEntertranmentVoiceSwitchStatus(void);
 bool uteModuleCallIsEntertranmentVoiceOn(void);
 #endif
-
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+void uteModuleCallSetClccTempData(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type);
+void uteModuleCallSetTempDataName(uint8_t *name,uint8_t nameSize);
+void uteModuleCallGetCurrentNumbereAndName(uint8_t *number,uint8_t *name);
+void uteModuleCallUpdateTempRecordsData(void);
+void uteModuleCallCleanTempData(void);
+#endif
 #endif //_UTE_MODULE_BT_AUDIO_H_

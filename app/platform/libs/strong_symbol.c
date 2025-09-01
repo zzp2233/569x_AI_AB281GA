@@ -28,7 +28,7 @@ bool mpa_encode_init(u32 spr, u32 nchannel, u32 bitrate)
 void mpa_encode_exit(void) {}
 #endif
 
-#if !REC_SBC_SUPPORT
+#if (!REC_SBC_SUPPORT && !BT_EMIT_EN)
 bool sbc_encode_init(u8 spr, u8 nch)
 {
     return false;
@@ -39,6 +39,28 @@ u16 sbc_encode_frame(u8 *buf, u16 len)
 }
 void sbc_encode_process(void) {}
 void sbc_encode_exit(void) {}
+AT(.com_text.bsp.emit)
+bool sbcen_puts_buf(u8 *buf, u16 len)
+{
+    return false;
+}
+AT(.com_text.bsp.emit)
+bool sbcen_gets_buf(u8 *buf, u16 len)
+{
+    return false;
+}
+AT(.com_text.bsp.emit)
+u16 sbcen_get_data_size(void)
+{
+    return 0;
+}
+AT(.com_text.bsp.emit)
+bool emit_gets_pcm_obuf(u8 *buf, u16 len)
+{
+    return false;
+}
+void emit_count_add(void) {}
+void emit_timer_reset(void) {}
 #endif
 
 #if !REC_ADPCM_SUPPORT
@@ -297,7 +319,7 @@ void exception_isr(void)
 }
 #endif
 
-#if (!BT_SCO_DUMP_EN && !BT_SCO_EQ_DUMP_EN && !BT_SCO_FAR_DUMP_EN)
+#if (!BT_SCO_DUMP_EN && !BT_SCO_EQ_DUMP_EN && !BT_SCO_FAR_DUMP_EN && !ASR_MIC_DATA_DUMP_EN)
 void sco_dump_init(void) {}
 AT(.com_text.sco_dump)
 void bt_sco_huart_tx_done(void) {}
@@ -312,6 +334,13 @@ AT(.bt_voice.sco_dump)
 void bt_sco_3ch_dump(s16 *near, s16 *far, s16 *out, u32 len) {}
 AT(.bt_voice.sco_dump)
 void bt_sco_dump(u32 index, s16 *ptr, u32 len) {}
+AT(.com_text.sco_dump)
+void sco_dump_buffer_handle(void) {};
+#endif
+
+#if !ASR_MIC_DATA_DUMP_EN
+AT(.com_text.sco_dump)
+void asr_mic_data_huart_tx_done(void) {};
 #endif
 
 #if !BT_SCO_MAV_EN
@@ -401,14 +430,6 @@ u32 system_get_main_stack_size(void)
 }
 #endif // OS_THREAD_MAIN_STACK
 
-#if OS_THREAD_MAIN_PRIOPITY
-AT(.text.startup.init)
-u32 system_get_main_stack_priopity(void)
-{
-    return OS_THREAD_MAIN_PRIOPITY;
-}
-#endif // OS_THREAD_MAIN_PRIOPITY
-
 //MUSIC线程栈大小设置
 #if OS_THREAD_MUSIC_STACK
 AT(.text.startup.init)
@@ -436,6 +457,7 @@ bool bt_hid_disable_for_andriod(void)
 
 //32k-64k擦除
 #if !FLASH_ERASE_32K_64K
+#if !FLASH_USE_OTP
 AT(.com_text.spiflash)
 void spiflash_write_enable(void) {}
 AT(.com_text.spiflash)
@@ -447,6 +469,7 @@ AT(.com_text.spiflash)
 void spiflash_waitbusy(void) {}
 AT(.com_text.spiflash)
 void spiflash_sendaddr(u32 addr) {}
+#endif // FLASH_USE_OTP
 AT(.com_text.spiflash)
 void spiflash_erase_select(u32 addr, u8 cmd) {}
 AT(.com_text.spiflash)
@@ -454,6 +477,77 @@ void os_spiflash_erase_32k(u32 addr) {}
 AT(.com_text.spiflash)
 void os_spiflash_erase_64k(u32 addr) {}
 #endif
+
+#if !FLASH_USE_OTP
+AT(.com_text.spiflash)
+u32 spiflash_id_read(void)
+{
+    return 0;
+}
+AT(.com_text.spiflash)
+uint spiflash_readsrp1(void)
+{
+    return 0;
+}
+AT(.com_text.spiflash)
+void spiflash_writesrp1(u8 num) {}
+AT(.com_text.otp)
+bool os_otp_is_support(u16 flashid)
+{
+    return 0;
+}
+AT(.com_text.spiflash)
+void spiflash_send_otp_addr(u16 flashid, u32 addr, u8 num, bool is_read) {}
+AT(.com_text.spiflash)
+void spiflash_read_sr(u16 flashid, void *buf, u32 addr, uint len, u8 num) {}
+AT(.com_text.spiflash)
+void spiflash_program_sr(u16 flashid, void *buf, u32 addr, uint len, u8 num) {}
+AT(.com_text.spiflash)
+void spiflash_erase_sr(u16 flashid, u32 addr, u8 num) {}
+AT(.com_text.otp)
+void os_otp_write(void *buf, u32 addr, uint len, u8 num) {}
+AT(.com_text.otp)
+void os_otp_read(void *buf, u32 addr, uint len, u8 num) {}
+AT(.com_text.otp)
+void os_otp_lock(u8 num) {}
+AT(.com_text.otp)
+bool os_otp_is_locked(u8 num)
+{
+    return 0;
+}
+#endif // FLASH_USE_OTP
+
+void otp_test(void)
+{
+    static char buf[] = {0x44, 0x89, 0x46, 0x79, 0x56, 0x99, 0x45, 0x91, 0x65, 0x78, 0x85, 0xFF, 0xFF};
+    os_otp_write(buf, 0x200, sizeof(buf), 1);
+    buf[0] = 0x55;
+    os_otp_write(buf, 0x200, sizeof(buf), 2);
+    buf[0] = 0x66;
+    os_otp_write(buf, 0x200, sizeof(buf), 3);
+
+    printf("-------------READ OTP1 OVER-------------\n");
+    memset(buf, 0, sizeof(buf));
+    os_otp_read(buf, 0x200, sizeof(buf), 1);
+    print_r(buf, sizeof(buf));
+    printf("-------------READ OTP2 OVER-------------\n");
+    memset(buf, 0, sizeof(buf));
+    os_otp_read(buf, 0x200, sizeof(buf), 2);
+    print_r(buf, sizeof(buf));
+    printf("-------------READ OTP3 OVER-------------\n");
+    memset(buf, 0, sizeof(buf));
+    os_otp_read(buf, 0x200, sizeof(buf), 3);
+    print_r(buf, sizeof(buf));
+    printf("-------------READ OTP OVER-------------\n");
+
+    printf("otpblock1 = %d\n", os_otp_is_locked(1));
+    printf("otpblock2 = %d\n", os_otp_is_locked(2));
+    printf("otpblock3 = %d\n", os_otp_is_locked(3));
+
+//   os_otp_lock(1);
+//   os_otp_lock(2);
+//   os_otp_lock(3);
+}
 
 #if !FLASH_EXTERNAL_EN
 AT(.com_text.spiflash)
@@ -485,26 +579,30 @@ bool de_line_spiflash_depar_kick_ex(void *raw_buf, int raw_len, void *par_buf, i
 }
 #endif
 
-void emit_timer_reset(void) {}
+//bool bt_turn_on_off_quickly(void){return true;}
+//bool bt_call_status_according_to_ciev(void) {return true;}
+//bool send_clcc_cmd_only_for_call_active(void) {return true;}
 
 #if !BT_PANU_EN
 void btstack_panu_connect(void) {}
 void btstack_panu_disconnect(void) {}
+
 void bnep_network_init(void) {}
 void bnep_network_up(bd_addr_t addr) {}
 void bnep_network_down(void) {}
 void bnep_network_process_packet(const uint8_t *packet, uint16_t size) {}
-AT(.com_text.stack.run_loop)
-void bnep_network_outgoing_process(void) {}
-void bnep_network_packet_sent(uint8_t *buf) {}
 
-u8 bnep_get_psm(void)
+u32 bnep_audio_get_remain_size(void)
 {
     return 0;
 }
-
+u32 bnep_audio_get_data_length(void)
+{
+    return 0;
+}
 void bnep_audio_init(void) {}
 void bnep_audio_exit(void) {}
+void bnep_audio_drop(unsigned int size) {}
 void bnep_audio_write(void *buf, unsigned int size) {}
 void bnep_audio_start(void) {}
 int web_stream_read(void *buf, unsigned int size)
@@ -516,16 +614,22 @@ bool web_stream_seek(unsigned int ofs, int whence)
     return false;
 }
 
-AT(.com_text.stack.thread)
-bool thread_btstack_get_wdt_clr_en(void)
+AT(.com_text.stack.run_loop)
+void bnep_network_outgoing_process(void) {}
+void bnep_network_packet_sent(uint8_t *buf) {}
+u8 bnep_get_psm(void)
 {
-    return false;
+    return 0;
 }
-
 #endif
 
+//iphone要优先让手机发起进sniff,否则手机会反复发起unsniff请求
+//AT(COM_TEXT_BT_ISR)
+//u32 bt_auto_sniff_clock_get(void)
+//{
+//    return 16000 * 6;
+//}
 
-#if 0
 
 static u32 tft_timeout_cnt = 0;
 
@@ -599,4 +703,15 @@ void clr_tft_spi_timeout(void)
 {
     tft_timeout_cnt = 0;
 }
-#endif
+
+//os_gui_draw_w4_done 钩子函数 返回 false 直接退出等待
+AT(.text.gui)
+WEAK bool os_gui_draw_w4_done_hook(void)
+{
+    u32 ticks = tick_get();
+    if (tick_check_expire(ticks, 1000))
+    {
+        return false;
+    }
+    return true;
+}

@@ -363,6 +363,12 @@ void bsp_qdec_init(void)
 
 #define  WHEEL_LOG       0      //特征值打印,可调试半码和全码用,勿删！
 
+#if UTE_DRV_ALL_QDEC_MODE // 全码模式
+#define QDEC_SIGNAL_COUNT   2
+#else
+#define QDEC_SIGNAL_COUNT   1
+#endif
+
 #if WHEEL_LOG
 AT(.com_rodata.dbg)
 char deg_log[]="qdec:0x%x,0x%x\n";
@@ -391,12 +397,15 @@ void bsp_qdec_io_process(void)
 #endif
 
     if((wheel_port_last_state == 0x50 && wheel_z == 0x40)
-       // || (wheel_port_last_state == 0x10 && wheel_z == 0x50)
+#if UTE_DRV_ALL_QDEC_MODE // 全码模式
+       || (wheel_port_last_state == 0x10 && wheel_z == 0x50 && up_cnt!=0)
+       || (wheel_port_last_state == 0x00 && wheel_z == 0x50 && up_cnt!=0)
+#endif
       )
     {
         dn_cnt = 0;
         up_cnt++;
-        if(up_cnt >= 1)     //2
+        if(up_cnt >= QDEC_SIGNAL_COUNT)     //2
         {
             up_cnt = 0;
             qdec_key_msg_enqueue(MSG_QDEC_FORWARD);
@@ -406,12 +415,15 @@ void bsp_qdec_io_process(void)
         }
     }
     else if((wheel_port_last_state == 0x50 && wheel_z == 0x10)
-            //   ||(wheel_port_last_state == 0x40 && wheel_z == 0x50)
+#if UTE_DRV_ALL_QDEC_MODE // 全码模式
+            || (wheel_port_last_state == 0x40 && wheel_z == 0x50 && dn_cnt!=0)
+            || (wheel_port_last_state == 0x00 && wheel_z == 0x50 && dn_cnt!=0)
+#endif
            )
     {
         up_cnt = 0;
         dn_cnt++;
-        if(dn_cnt >= 1)     //2
+        if(dn_cnt >= QDEC_SIGNAL_COUNT)     //2
         {
             dn_cnt = 0;
             qdec_key_msg_enqueue(MSG_QDEC_BACKWARD);
@@ -420,9 +432,15 @@ void bsp_qdec_io_process(void)
 #endif
         }
     }
+#if UTE_DRV_ALL_QDEC_MODE // 全码模式
+    else if(wheel_port_last_state == 0x50 && wheel_z == 0x50)
+    {
+        up_cnt = 0;
+        dn_cnt = 0;
+    }
+#endif
     wheel_port_last_state = wheel_z;
 }
-
 #else
 void bsp_qdec_init(void)
 {

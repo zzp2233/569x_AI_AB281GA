@@ -6,6 +6,8 @@
  * @LastEditors: Tse
  * @Description:
  **********************************************************************************************/
+#include "include.h"
+
 #if (SENSOR_HR_SEL == SENSOR_HR_VC30FX)
 #if UTE_MODULE_HEART_SUPPORT
 /* 驱动头文件 */
@@ -15,14 +17,21 @@
 /* 算法头文件 */
 #include "algo.h"
 #include "spo2Algo_16bit.h"
-
-#include "include.h"
 #include "ute_module_sport.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_message.h"
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_factorytest.h"
-
+#include "ute_module_newFactoryTest.h"
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
+#include "ute_drv_led.h"
+#include "ute_module_compass.h"
+#if UTE_MODULE_BREATHRATE_SUPPORT
+#include "RspRateEst.h"
+#include "ute_module_breathrate.h"
+#endif
 #include "vc30fx_driver.h"
 extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
 
@@ -34,11 +43,11 @@ static vcare_ppg_device_t vc30fx_dev = {"vc30fx_sc", 0};
 /* G-Sensor Data */
 static gsensor_axes vc30fx_gsensor_data = {0};
 
-InitParamTypeDef vc30fx_data = {600, 0};
+// InitParamTypeDef vc30fx_data = {600, 0};
 
 static uint32_t hw_timer_count = 0;
 
-// InitParamTypeDef vc30fx_data = {400, WORK_MODE_HR};
+InitParamTypeDef vc30fx_data = {400, WORK_MODE_HR};
 
 #if DUG_VCXX_HEART_SUPPORT
 extern void vc30fx_send_orginal_data(vcare_ppg_device_t *pdev, gsensor_axes *pgsensor, unsigned char ppgsize);
@@ -70,16 +79,27 @@ void vc30fx_pwr_en(void)        //PF5
         uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
     }
 
-    // if(!vc30fx_dev.dev_work_status)
-    // {
-    //     uteModulePlatformOutputGpioSet(IO_PF5,true);
-    // }
-
+    if (!vc30fx_dev.dev_work_status)
+    {
+        if (1
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
+            && (!uteDrvLedIsOpen())
+#endif
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+            && (!uteModulecompassOnoff())
+#endif
+           )
+        {
+            uteModulePlatformOutputGpioSet(IO_PF5, true);
+        }
+    }
+    delay_5ms(1);
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(false);
 #else
     bsp_i2c_init();
     uteModuleSprotAlgoTimerStop();
+
 #endif
 }
 
@@ -92,7 +112,17 @@ void vc30fx_pwr_dis(void)       //PF5
 
     printf("vc30fx_pwr_dis\n");
     // drv_calibration_clk_clear();
-    // uteModulePlatformOutputGpioSet(IO_PF5,false);
+    if (1
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
+        && (!uteDrvLedIsOpen())
+#endif
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+        && (!uteModulecompassOnoff())
+#endif
+       )
+    {
+        uteModulePlatformOutputGpioSet(IO_PF5, false);
+    }
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);
 #else
@@ -109,67 +139,6 @@ void vc30fx_pwr_dis(void)       //PF5
     // vc30fx_msg_set_look(false);
 
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
-}
-
-AT(.com_text.vc30fx)
-void uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData(void)
-{
-    uint8_t sportType = uteModuleSportMoreSportGetType();
-    if (sportType == SPORT_TYPE_NONE)
-    {
-        sportType = SPORT_TYPE_PERIODIC_MONITORING;
-    }
-#if UTE_MODULE_SPORT_HUNDRED_SUPPORT /*! 运动模式适配心率, xjc 2022-08-31*/
-    if (sportType > SPORT_TYPE_FREE_TRAINING)
-    {
-        if ((sportType == SPORT_TYPE_INDOOR_WALK) ||
-            (sportType == SPORT_TYPE_STEP_TRAINING) ||
-            (sportType == SPORT_TYPE_OUTDOOR_WALK) ||
-            (sportType == SPORT_TYPE_HIKING)) // 室内走路/踏步/户外健走/徒步
-        {
-            sportType = SPORT_TYPE_WALKING;
-        }
-        else if ((sportType == SPORT_TYPE_INDOOR_RUN) ||
-                 (sportType == SPORT_TYPE_PARKOUR) ||
-                 (sportType == SPORT_TYPE_MARATHON)) // 室内跑步/跑酷/马拉松
-        {
-            sportType = SPORT_TYPE_RUNNING;
-        }
-        else
-        {
-            sportType = SPORT_TYPE_FREE_TRAINING;
-        }
-    }
-    if (!uteModuleSportMoreSportIsRuning())
-    {
-        sportType = SPORT_TYPE_INDOOR_WALK; // SPORT_TYPE_NONE;
-    }
-
-#endif
-// get_vc30fx_device();
-#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-    if(uteModuleNewFactoryTestGetMode()!= FACTORY_TEST_MODE_NULL)
-    {
-        // 工厂模式下，必须用1模式的测试血氧
-        UTE_MODULE_LOG(1, "gyj BloodOxygen mode 1",);
-        vc30fx_usr_device_handler(sportType,1);
-    }
-    else
-#endif
-    {
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
-        if (uteModuleBloodoxygenIsBloodOxygenAutoTesting())
-        {
-            //定时测试时候，使用模式2测试血氧，即切换动态测试
-            vc30fx_usr_device_handler(sportType,2);
-        }
-        else
-#endif
-        {
-            //手动测试时候，使用模式1测试血氧，即切换静态测试
-            vc30fx_usr_device_handler(sportType,1);
-        }
-    }
 }
 
 /****************************************************************************
@@ -252,16 +221,16 @@ int vc30fx_write_register(unsigned char regaddr, unsigned char *pbuf, unsigned s
     return 0;
 }
 
-AT(.com_text.vc30fx)
-static void vc30fx_timer_count(void)
-{
-    hw_timer_count++;
-}
+// AT(.com_text.vc30fx)
+// static void vc30fx_timer_count(void)
+// {
+//     hw_timer_count++;
+// }
 
 unsigned int vc30fx_get_cputimer_tick(void)
 {
     /*  return RTC(timer count value) */
-    hw_timer_count = cc_time_count() / 32;
+    hw_timer_count = cc_time_count() / 32 + 1;
     return hw_timer_count;
 }
 
@@ -474,13 +443,48 @@ static int vc30fx_heart_rate_calculate(vcare_ppg_device_t *pdev)
         Algo_Input(&algoInputData_t, 1000 / 25, (AlgoSportMode)pdev->heart_algo_mode, 1, 1);
         VCARE_DBG_LOG("[%d] ppg=%d, x=%d, y=%d, z=%d", i, algoInputData_t.ppgSample,
                       algoInputData_t.axes.x, algoInputData_t.axes.y, algoInputData_t.axes.z);
+#if UTE_MODULE_BREATHRATE_SUPPORT
+        {
+            RespInputData_t respInputData;
+            respInputData.ppgSample = algoInputData.ppgSample;
+            respInputData.envSample = algoInputData.envSample;
+            respInputData.axes.x  =algoInputData.axes.x;
+            respInputData.axes.y  =algoInputData.axes.y;
+            respInputData.axes.z  =algoInputData.axes.z;
+            RespRate_Input(&respInputData);
+        }
+#endif
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+        if(uteDrvHeartVcxxIsPressureTesting())
+        {
+            StressEst_Input(vc30fx_dev.heart_rate,algoOutputData.reliability,vc30fx_gsensor_data.xData[0], algoInputData_t.ppgSample);
+        }
+#endif
     }
     Algo_Output(&algoOutputData);
     heartRate = algoOutputData.hrData;
     reliability = algoOutputData.reliability;
+
+#if UTE_MODULE_BREATHRATE_SUPPORT
+    RespOutputData_t pOutputData;
+    RespRate_Output(&pOutputData);
+    if(pOutputData.resData > 0 && pOutputData.resData < UTE_MODULE_BREATHRATE_MAX_VALUE)
+    {
+        uteModuleBreathrateSetValue(pOutputData.resData);
+    }
+    else
+    {
+        uteModuleBreathrateSetValue(0);
+    }
+    //  UTE_MODULE_LOG(UTE_LOG_BREATHRATE_LVL, "%s,pOutputData.resData = %d,errType=%d", __func__,pOutputData.resData,pOutputData.errType);
+#endif
+
     if (-1 == heartRate)
     {
         Algo_Init();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+        RespRate_Init();
+#endif
         /* call heart algo wear status check,[-1] */
         vc30fx_drv_set_algo_wear_status(pdev, heartRate);
         VCARE_DBG_LOG("ALGO_STA=-1");
@@ -659,6 +663,15 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
 #endif
                     vc30fx_dev.heart_rate = 0;
                     Algo_Init();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+                    RespRate_Init();
+#endif
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                    if(uteDrvHeartVcxxIsPressureTesting())
+                    {
+                        StressEst_Init(-1);
+                    }
+#endif
                 }
                 //disp_data.hr_rate = vc30fx_dev.heart_rate;
                 bsp_sensor_hrs_data_save(vc30fx_dev.heart_rate);
@@ -834,7 +847,7 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     // GPIOBSET = BIT(0);
 }
 
-bool vc30fx_sleep_isr = false;
+// bool vc30fx_sleep_isr = false;
 
 AT(.com_text.vc30fx)
 void vc30fx_isr(void)
@@ -858,7 +871,7 @@ void vc30fx_isr(void)
     // }
     if (vc30fx_clk_calc_status() == 1 && sleep_cb.sys_is_sleep)
     {
-        vc30fx_sleep_isr = true;
+        bsp_sensor_hr_interrupt_flag_set(true);
     }
     // vc30fx_usr_device_handler(0, 1);
 }
@@ -967,6 +980,9 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
     vc30fx_dev.blood_pressure=0;
     Algo_Init();
     spo2AlgoInit_16bit();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+    RespRate_Init();
+#endif
 //  vcSportMotionAlgoInit();
     VCARE_DBG_LOG("work_mode=%d", pinitconfig->work_mode );
     /* 如果使用定时器，必须适配模式的定时器执行时间，否则无法正确解析数据 */

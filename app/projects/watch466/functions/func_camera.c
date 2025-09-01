@@ -318,6 +318,7 @@ void func_camera(void)
     func_camera_exit();
 }
 #else
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 typedef struct f_camera_t_
 {
 
@@ -346,7 +347,9 @@ compo_form_t *func_camera_form_create(void)
 
     return frm;
 }
+#else
 
+#endif
 //相机功能事件处理
 static void func_camera_process(void)
 {

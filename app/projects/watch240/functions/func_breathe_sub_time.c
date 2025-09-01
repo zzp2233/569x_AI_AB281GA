@@ -473,474 +473,1331 @@ static void func_breathe_sub_time_button_click(void)
 
 //    func_breathe_sub_time_button_release_handle();
 }
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-//组件ID
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
 enum
 {
-    //按键
-    COMPO_ID_BTN_OK = 1,
-    COMPO_ID_BTN_SLIDE,
-
-    //数字
-    COMPO_ID_NUM_UU,
-    COMPO_ID_NUM_UP,
-    COMPO_ID_NUM_CENTER,
-    COMPO_ID_NUM_DOWN,
-    COMPO_ID_NUM_DD,
+    COMPO_ID_BTN_SURE=1,
+    COMPO_ID_TXT_1,
+    COMPO_ID_TXT_2,
+    COMPO_ID_TXT_3,
+    COMPO_ID_TXT_4,
+    COMPO_ID_TXT_5,
+    COMPO_ID_BTN_MIN_BG,
 };
-
-typedef struct breathe_set_num_item_t_
-{
-    int num_cnt;
-    u16 num_id;
-    s16 load_id;
-    int val;
-    s16 x;
-    s16 y;
-    bool visible_en;
-    u8 alpha;
-} breathe_set_num_item_t;
-
 typedef struct f_breathe_sub_time_t_
 {
-    breathe_set_num_item_t set_num_item[5];
-    area_t size;
-    u16 num_height;
-    s16 hcnt;
-    s16 mcnt;
+    bool touch_flag;
+    u8 breathe_min[5];
+    s32 move_dy;
+    s32 move_dy_data;
+    u8 min;
+    s8 num_offset;
 } f_breathe_sub_time_t;
 
-#define BREATHE_NUM_PIC_CENTER_X              GUI_SCREEN_CENTER_X           //时间设置子页面位置x
-#define BREATHE_NUM_PIC_CENTER_Y              (GUI_SCREEN_HEIGHT/2-20)           //时间设置子页面位置y
-#define BREATHE_SET_NUM_ITEM_CNT             ((int)(sizeof(tbl_breathe_set_num_item) / sizeof(tbl_breathe_set_num_item[0])))
-#define BREATHE_TXT_ITEM_M_X                  BREATHE_NUM_PIC_CENTER_X
-#define BREATHE_TXT_ITEM_Y                    -20
-#define BREATHE_TXT_ITEM_Y_OFFSET             40
+#define TXT_SPACING    (135-82)
+#define CENTER_TXT_Y   (140/2)
 
-#define BREATHE_CLOCK_SET_NUM_POS_Y_START                 BREATHE_TXT_ITEM_Y
-#define BREATHE_CLOCK_SET_NUM_POS_Y(y_start,space,cnt)    ((y_start)+(space)*(cnt))
-
-#define BREATHE_SUB_TIME_MIN                  1
-#define BREATHE_SUB_TIME_MAX                  5
-
-//搞个数字item，创建时遍历一下
-static const breathe_set_num_item_t tbl_breathe_set_num_item[] =
+const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
 {
-    /*   num_cnt,      num_id,             load_num_id              val,                 x,                    y,                                             visible_en      alpha*/
-    {2,        COMPO_ID_NUM_UU,       COMPO_ID_NUM_UU,          58,         BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y,                                true,           100},
-    {2,        COMPO_ID_NUM_UP,       COMPO_ID_NUM_UP,          59,         BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y+BREATHE_TXT_ITEM_Y_OFFSET,      true,           100},
-    {2,        COMPO_ID_NUM_CENTER,   COMPO_ID_NUM_CENTER,      0,          BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y+BREATHE_TXT_ITEM_Y_OFFSET*2,    true,           255},
-    {2,        COMPO_ID_NUM_DOWN,     COMPO_ID_NUM_DOWN,        1,          BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y+BREATHE_TXT_ITEM_Y_OFFSET*3,    true,           100},
-    {2,        COMPO_ID_NUM_DD,       COMPO_ID_NUM_DD,          2,          BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y+BREATHE_TXT_ITEM_Y_OFFSET*4,    true,           100},
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
 
-};
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % 5; // 转换为0-4索引并应用偏移
+    if (index < 0) index += 5;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
 
-//获取分 上一个和下一个的数字
-static u8 func_breathe_get_time_cal(s8 num, u8 mode)
-{
-//    if (num < 0) {
-//        num += 60;
-//    }
-//
-//    if (mode == 1) {
-//        if (num == 0 || num > 59) {
-//            return 59;
-//        }
-//        return num - 1;
-//    } else if (mode == 2){
-//        if (num >= 59) {
-//            return 0;
-//        }
-//        return num + 1;
-//    } else {
-//        if (num > 59) {
-//            return 59;
-//        }
-//        return num;
-//    }
-    if (num < BREATHE_SUB_TIME_MIN)
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % 5; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < 5; i++)
     {
-        num += BREATHE_SUB_TIME_MAX;
-    }
-
-    if (mode == BREATHE_SUB_TIME_MIN)
-    {
-        if (num == BREATHE_SUB_TIME_MIN || num > BREATHE_SUB_TIME_MAX)
-        {
-            return BREATHE_SUB_TIME_MAX;
-        }
-        return num - 1;
-    }
-    else if (mode == 2)
-    {
-        if (num >= BREATHE_SUB_TIME_MAX)
-        {
-            return BREATHE_SUB_TIME_MIN;
-        }
-        return num + 1;
-    }
-    else
-    {
-        if (num > BREATHE_SUB_TIME_MAX)
-        {
-            return BREATHE_SUB_TIME_MAX;
-        }
-        return num;
+        timer_data[i] = txt_num[(start_index + i) % 5]; // 环形填充
     }
 }
-
 //创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_breathe_sub_time_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
+    char txt_buf[20];
+    u8 txt_data[5];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
 
-    //设置标题栏
+    ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_BEATHER_DURATION]);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
 
-    //创建子页
-    widget_page_t* sub_page = widget_page_create(frm->page_body);
-    widget_set_location(sub_page, BREATHE_NUM_PIC_CENTER_X, BREATHE_NUM_PIC_CENTER_Y, GUI_SCREEN_WIDTH, BREATHE_TXT_ITEM_Y_OFFSET*3);
-
-    //创建数字
-    compo_textbox_t *txt_num;
-    u8 min = ((sys_cb.breathe_duration / 1000) % 3600) / 60;
-
-    char buf[4];
-    for (u8 idx = 0; idx < BREATHE_SET_NUM_ITEM_CNT; idx++)
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
+    //创建一个页面用于限制滚动的时间文本
+    widget_page_t* page = widget_page_create(frm->page_body);
+    widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, GUI_SCREEN_WIDTH,140);
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
     {
-        txt_num = compo_textbox_create_for_page(frm, sub_page, tbl_breathe_set_num_item[idx].num_cnt);
-        compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
-        compo_setid(txt_num, tbl_breathe_set_num_item[idx].num_id);
-        compo_textbox_set_align_center(txt_num, true);
-        compo_textbox_set_pos(txt_num, tbl_breathe_set_num_item[idx].x, tbl_breathe_set_num_item[idx].y);
-        compo_textbox_set_visible(txt_num, tbl_breathe_set_num_item[idx].visible_en);
-        compo_textbox_set_alpha(txt_num, tbl_breathe_set_num_item[idx].alpha);
+        memset(txt_buf,0,sizeof(txt_buf));
+        compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_38_BIN);
+        compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",txt_data[idx-COMPO_ID_TXT_1]);
+        compo_setid(txt,idx);
+        compo_textbox_set(txt,txt_buf);
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+    }
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_location(txt,220,151,100,35);
+    compo_textbox_set(txt,i18n[STR_MIN]);
 
-        memset(buf, 0, sizeof(buf));
-        if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_UU)
+    compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, 80,140);
+    compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I338001_19_BREATHING_TRAINING_COMFIRM_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I338001_19_BREATHING_TRAINING_COMFIRM_BIN).hei/2-20);
+    compo_setid(btn_ok,COMPO_ID_BTN_SURE);
+
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 133, 278, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 192, 278, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
+    {
+        f_breathe_sub_time_t*f_alarm_clock_sub_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+        for(int i=0; i<5; i++)
         {
-            snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(func_breathe_get_time_cal(min, 1), 1));
+            f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
         }
-        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_UP)
-        {
-            snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(min, 1));
-        }
-        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_CENTER)
-        {
-            compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_38_BIN);
-            snprintf(buf, sizeof(buf), "%02d", min);
-        }
-        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_DOWN)
-        {
-            snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(min, 2));
-        }
-        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_DD)
-        {
-            snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(func_breathe_get_time_cal(min, 2), 2));
-        }
-        compo_textbox_set(txt_num, buf);
+        f_alarm_clock_sub_set->min  = txt_data[2];
     }
 
-    //新建按钮
-    compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_RECTANGLE01_BIN);
-    compo_setid(btn, COMPO_ID_BTN_OK);
-    compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 64/2+266);
+    return frm;
+}
+/*函数功能：滑动处理*/
+static void func_breathe_set_time_sub_move(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
 
-    btn = compo_button_create(frm);
-    compo_setid(btn, COMPO_ID_BTN_SLIDE);
-    compo_button_set_location(btn, BREATHE_NUM_PIC_CENTER_X, BREATHE_NUM_PIC_CENTER_Y, GUI_SCREEN_WIDTH/3, BREATHE_TXT_ITEM_Y_OFFSET*3);
+    if(f_disturd_set->touch_flag == true)
+    {
+        s8 txt_buf[20];
+        s32 dx, dy;
+        f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
+        if(f_disturd_set->touch_flag == true)//触摸状态
+        {
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
 
-    //新建图像
-    compo_picturebox_t *pic_bg = compo_picturebox_create(frm, UI_BUF_I332001_BREATHE_BOX_BIN);
-    compo_picturebox_set_pos(pic_bg, GUI_SCREEN_CENTER_X, BREATHE_NUM_PIC_CENTER_Y);
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
+            {
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
 
-    //创建TEXT
-    compo_textbox_t *txt = compo_textbox_create(frm, 10);
+            }
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                memset(txt_buf,0,sizeof(txt_buf));
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
+                snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+                compo_textbox_set(txt,txt_buf);
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+            }
+        }
+        else   //松手状态
+        {
+            f_disturd_set->num_offset = 0;
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+            }
+        }
+    }
+}
+//单击按钮
+static void func_breathe_sub_time_button_click(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
+            func_backing_to();
+            break;
+        default:
+            break;
+    }
+}
+static void func_breathe_sub_time_button_touch_handle(void)
+{
+    f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
+
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+
+enum
+{
+    COMPO_ID_BTN_SURE=1,
+    COMPO_ID_TXT_1,
+    COMPO_ID_TXT_2,
+    COMPO_ID_TXT_3,
+    COMPO_ID_TXT_4,
+    COMPO_ID_TXT_5,
+    COMPO_ID_BTN_MIN_BG,
+};
+typedef struct f_breathe_sub_time_t_
+{
+    bool touch_flag;
+    u8 breathe_min[5];
+    s32 move_dy;
+    s32 move_dy_data;
+    u8 min;
+    s8 num_offset;
+} f_breathe_sub_time_t;
+
+#define TXT_SPACING    (135-82)
+#define CENTER_TXT_Y   (140/2)
+
+#if UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+#define BREATHE_SUB_TIME_MAX 3
+const uint16_t BREATHE_TIME_TXT_Y[3]= {CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING}; ///文本Y轴
+#else
+#define BREATHE_SUB_TIME_MAX 5
+const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+#endif //UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
+{
+#if BREATHE_SUB_TIME_MAX == 5
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
+#else
+    const char txt_num[3] = {1, 2, 3,}; // 固定数组
+#endif //BREATHE_SUB_TIME_MAX == 5
+
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % BREATHE_SUB_TIME_MAX; // 转换为0-4索引并应用偏移
+    if (index < 0) index += BREATHE_SUB_TIME_MAX;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
+
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % BREATHE_SUB_TIME_MAX; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < BREATHE_SUB_TIME_MAX; i++)
+    {
+        timer_data[i] = txt_num[(start_index + i) % BREATHE_SUB_TIME_MAX]; // 环形填充
+    }
+}
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[20];
+    // u8 txt_data[5];
+    u8 txt_data[3];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
+
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
+
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
+    //创建一个页面用于限制滚动的时间文本
+    widget_page_t* page = widget_page_create(frm->page_body);
+    widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, GUI_SCREEN_WIDTH,140);
+#if BREATHE_SUB_TIME_MAX == 5
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+#else
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_3; idx++) ///创建滑动文本
+#endif
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_38_BIN);
+        compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+#if UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+        snprintf(txt_buf,sizeof(txt_buf),"%01d",txt_data[idx-COMPO_ID_TXT_1]);
+#else
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",txt_data[idx-COMPO_ID_TXT_1]);
+#endif //UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+        compo_setid(txt,idx);
+        compo_textbox_set(txt,txt_buf);
+#if BREATHE_SUB_TIME_MAX == 5
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+#else
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_2 ? COLOR_WHITE : COLOR_GRAY);
+#endif //BREATHE_SUB_TIME_MAX == 5
+    }
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_location(txt,220,151,100,35);
+    compo_textbox_set(txt,i18n[STR_MIN]);
+
+    compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, 80,140);
+    compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I332001_PUBLIC_RECTANGLE01_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,64/2+266);
+    compo_setid(btn_ok,COMPO_ID_BTN_SURE);
+
+    txt = compo_textbox_create(frm, 10);
     compo_textbox_set_align_center(txt, true);
     compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 64/2+266, 100, widget_text_get_height());
     compo_textbox_set_visible(txt, true);
     compo_textbox_set_autoroll_mode(txt, 0);
     compo_textbox_set(txt, i18n[STR_OK]);
 
+
+    if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
+    {
+        f_breathe_sub_time_t*f_alarm_clock_sub_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+        for(int i=0; i<BREATHE_SUB_TIME_MAX; i++)
+        {
+            f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
+        }
+#if BREATHE_SUB_TIME_MAX == 5
+        f_alarm_clock_sub_set->min  = txt_data[2];
+#else
+        f_alarm_clock_sub_set->min  = txt_data[1];
+#endif //BREATHE_SUB_TIME_MAX == 5
+    }
+
     return frm;
 }
-
-static void breathe_set_num_pos_cal(s32 dy, bool press)
+/*函数功能：滑动处理*/
+static void func_breathe_set_time_sub_move(void)
 {
-    f_breathe_sub_time_t *f_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
 
-    //area_t size = f_set->size;
-    u16 size_hei = BREATHE_TXT_ITEM_Y_OFFSET*3;
-    u16 num_height = f_set->num_height;
-
-    static s32 last_dy = 0;
-    s8 dir = 0;
-    s32 distance = 0;
-
-    breathe_set_num_item_t *time_item;
-
-    time_item = &f_set->set_num_item[0];
-
-    if (press)
+    if(f_disturd_set->touch_flag == true)
     {
-        distance = dy - last_dy;
-    }
-    else
-    {
-        dy = 0;
-        last_dy = 0;
-        distance = 0;
-    }
-
-    time_item[0].y += distance;
-    time_item[1].y += distance;
-    time_item[2].y += distance;
-    time_item[3].y += distance;
-    time_item[4].y += distance;
-
-    for (int i=0; i<5; i++)
-    {
-        if (time_item[i].load_id == COMPO_ID_NUM_UP)
+        s8 txt_buf[20];
+        s32 dx, dy;
+        f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
+        if(f_disturd_set->touch_flag == true)//触摸状态
         {
-            if ((time_item[i].y /*- (BREATHE_NUM_PIC_CENTER_Y - size.hei/2)*/) <= -num_height)
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
+
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
             {
-                dir = -1;
-                break;
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
+
             }
-            else if (press == false && ((time_item[i].y /*- (BREATHE_NUM_PIC_CENTER_Y - size.hei/2)*/) <= -num_height/2))
+#if BREATHE_SUB_TIME_MAX == 5
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+#else
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_3; idx++) ///创建滑动文本
+#endif //BREATHE_SUB_TIME_MAX == 5
             {
-                dir = -1;
-                break;
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                memset(txt_buf,0,sizeof(txt_buf));
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
+#if UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+                snprintf(txt_buf,sizeof(txt_buf),"%01d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+#else
+                snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+#endif //UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+                compo_textbox_set(txt,txt_buf);
+#if BREATHE_SUB_TIME_MAX == 5
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+#else
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_2 ? COLOR_WHITE : COLOR_GRAY);
+#endif //BREATHE_SUB_TIME_MAX == 5
             }
         }
-        else if (time_item[i].load_id == COMPO_ID_NUM_DOWN)
+        else   //松手状态
         {
-            if (time_item[i].y >= (/*BREATHE_NUM_PIC_CENTER_Y + size.hei/2*/size_hei + num_height))
+            f_disturd_set->num_offset = 0;
+#if BREATHE_SUB_TIME_MAX == 5
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+#else
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_3; idx++) ///创建滑动文本
+#endif //BREATHE_SUB_TIME_MAX == 5
             {
-                dir = 1;
-                break;
-            }
-            else if (press == false && (time_item[i].y >= (/*BREATHE_NUM_PIC_CENTER_Y + size.hei/2*/size_hei + num_height/2)))
-            {
-                dir = 1;
-                break;
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
             }
         }
     }
-
-    if (dir)
-    {
-        for(int i=0; i<5; i++)
-        {
-            time_item[i].load_id += dir;
-            if (time_item[i].load_id < COMPO_ID_NUM_UU)
-            {
-                time_item[i].load_id = COMPO_ID_NUM_DD;
-            }
-            else if (time_item[i].load_id > COMPO_ID_NUM_DD)
-            {
-                time_item[i].load_id = COMPO_ID_NUM_UU;
-            }
-        }
-
-        f_set->mcnt += dir;
-    }
-
-    if (press == false || dir)
-    {
-        for(int i=0; i<5; i++)
-        {
-            if (time_item[i].load_id == COMPO_ID_NUM_UU)
-            {
-                time_item[i].visible_en = true;
-                time_item[i].num_cnt = 2;
-                time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_UU-COMPO_ID_NUM_UU);
-                time_item[i].alpha = 100;
-            }
-            else if (time_item[i].load_id == COMPO_ID_NUM_DD)
-            {
-                time_item[i].visible_en = true;
-                time_item[i].num_cnt = 2;
-                time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_DD-COMPO_ID_NUM_UU);
-                time_item[i].alpha = 100;
-            }
-            else if (time_item[i].load_id == COMPO_ID_NUM_UP)
-            {
-                time_item[i].visible_en = true;
-                time_item[i].num_cnt = 2;
-                time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_UP-COMPO_ID_NUM_UU);
-                time_item[i].alpha = 100;
-            }
-            else if (time_item[i].load_id == COMPO_ID_NUM_CENTER)
-            {
-                time_item[i].visible_en = true;
-                time_item[i].num_cnt = 2;
-                time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_CENTER-COMPO_ID_NUM_UU);
-                time_item[i].alpha = 255;
-            }
-            else if (time_item[i].load_id == COMPO_ID_NUM_DOWN)
-            {
-                time_item[i].visible_en = true;
-                time_item[i].num_cnt = 2;
-                time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_DOWN-COMPO_ID_NUM_UU);
-                time_item[i].alpha = 100;
-            }
-        }
-    }
-
-    for (int i=0; i<5; i++)
-    {
-        compo_textbox_t *txt_num = compo_getobj_byid(time_item[i].num_id);
-
-        if (time_item[i].load_id == COMPO_ID_NUM_CENTER)
-        {
-            compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_38_BIN);
-        }
-        else
-        {
-            compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
-        }
-
-        compo_textbox_set_align_center(txt_num, true);
-        compo_textbox_set_visible(txt_num, time_item[i].visible_en);
-        compo_textbox_set_alpha(txt_num, time_item[i].alpha);
-        compo_textbox_set_pos(txt_num, time_item[i].x, time_item[i].y);
-
-
-    }
-
-    last_dy = dy;
-
-    //printf("===============================\n");
-    //for(int i=0; i<5; i++) {
-    //    printf("[%d] id:[%d], vis:[%d], xy:[%d,%d], ret:[%d], dir[%d], press:[%d], hcnt:[%d], mcnt[%d]\n", time_item[i].num_id, time_item[i].load_id,
-    //            time_item[i].visible_en, time_item[i].x, time_item[i].y, ret, dir, press, f_set->hcnt, f_set->mcnt);
-    //}
-    //printf("===============================\n");
 }
-
-static void func_breathe_move_handle(void)
-{
-    f_breathe_sub_time_t *f_set = (f_breathe_sub_time_t*)func_cb.f_cb;
-    breathe_set_num_item_t *time_item;
-    bool flag_press = 0;
-    s32 dx = 0, dy = 0;     //坐标差量
-    char buf[4];
-    time_item = &f_set->set_num_item[0];
-    u8 min = ((sys_cb.breathe_duration / 1000) % 3600) / 60;
-    s8 min_disp = min;
-
-    for (;;)
-    {
-        flag_press = ctp_get_dxy(&dx, &dy);
-        //printf("x:%d, y:%d\n",dx, dy);
-
-        breathe_set_num_pos_cal(dy, flag_press);
-//        min_disp = (min - f_set->mcnt) % 60;
-        min_disp = (min - f_set->mcnt) % BREATHE_SUB_TIME_MAX;
-
-        for (int idx = 0; idx < 5; idx++)
-        {
-            memset(buf, 0, sizeof(buf));
-            compo_textbox_t *txt_num = compo_getobj_byid(time_item[idx].num_id);
-            if (time_item[idx].load_id == COMPO_ID_NUM_UU)        //上上次的时间
-            {
-                snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(func_breathe_get_time_cal(min_disp, 1), 1));
-            }
-            else if (time_item[idx].load_id == COMPO_ID_NUM_UP)     //上次的时间
-            {
-                snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(min_disp, 1));
-            }
-            else if (time_item[idx].load_id == COMPO_ID_NUM_CENTER)      //当前时间
-            {
-                snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(min_disp, 0));
-            }
-            else if (time_item[idx].load_id == COMPO_ID_NUM_DOWN)     //下次时间
-            {
-                snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(min_disp, 2));
-            }
-            else if (time_item[idx].load_id == COMPO_ID_NUM_DD)       //下下次时间
-            {
-                snprintf(buf, sizeof(buf), "%02d", func_breathe_get_time_cal(func_breathe_get_time_cal(min_disp, 2), 2));
-            }
-            compo_textbox_set(txt_num, buf);
-        }
-
-
-        if (!flag_press)
-        {
-            f_set->mcnt = 0;
-            min = func_breathe_get_time_cal(min_disp, 0);
-            sys_cb.breathe_duration = min * 60 * 1000;
-            TRACE(">>>breathe_duration:%ds\n", sys_cb.breathe_duration / 1000);
-            break;
-        }
-        evt_message(msg_dequeue());
-        func_process();
-    }
-
-}
-
-////触摸按钮效果处理
-static void func_breathe_sub_time_button_touch_handle(void)
-{
-
-    int id = compo_get_button_id();
-
-    switch (id)
-    {
-
-        case COMPO_ID_BTN_SLIDE:
-            func_breathe_move_handle();
-            break;
-
-        default:
-            break;
-    }
-
-}
-
-////释放按钮效果处理
-//static void func_breathe_sub_time_button_release_handle(void)
-//{
-//    compo_picturebox_t *pic_start_click = compo_getobj_byid(COMPO_ID_PIC_OK_CLICK);
-//    compo_picturebox_set_visible(pic_start_click, false);
-//}
-
 //单击按钮
 static void func_breathe_sub_time_button_click(void)
 {
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
     int id = compo_get_button_id();
-
     switch (id)
     {
-        case COMPO_ID_BTN_OK:
-#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
-            if (func_cb.last == FUNC_BREATHE)
-            {
-                func_cb.sta = FUNC_BREATHE;
-                task_stack_pop();
-                break;
-            }
-
-            func_cb.sta = FUNC_BREATHE;
-#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+        case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
+            func_backing_to();
             break;
-
         default:
             break;
     }
+}
+static void func_breathe_sub_time_button_touch_handle(void)
+{
+    f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
 
-//    func_breathe_sub_time_button_release_handle();
+}
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+
+enum
+{
+    COMPO_ID_BTN_SURE=1,
+    COMPO_ID_TXT_1,
+    COMPO_ID_TXT_2,
+    COMPO_ID_TXT_3,
+    COMPO_ID_TXT_4,
+    COMPO_ID_TXT_5,
+    COMPO_ID_BTN_MIN_BG,
+};
+typedef struct f_breathe_sub_time_t_
+{
+    bool touch_flag;
+    u8 breathe_min[5];
+    s32 move_dy;
+    u8 min;
+    s8 num_offset;
+} f_breathe_sub_time_t;
+
+#define TXT_SPACING    (105-62)
+#define CENTER_TXT_Y   (130/2)
+
+const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
+{
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
+
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % 5; // 转换为0-4索引并应用偏移
+    if (index < 0) index += 5;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
+
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % 5; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        timer_data[i] = txt_num[(start_index + i) % 5]; // 环形填充
+    }
+}
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[20];
+    u8 txt_data[5];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
+
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
+
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
+    //创建一个页面用于限制滚动的时间文本
+    widget_page_t* page = widget_page_create(frm->page_body);
+    widget_set_location(page, GUI_SCREEN_CENTER_X, 62+130/2, GUI_SCREEN_WIDTH,130);
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_28_BIN);
+        compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",txt_data[idx-COMPO_ID_TXT_1]);
+        compo_setid(txt,idx);
+        compo_textbox_set(txt,txt_buf);
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+    }
+
+    compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X,58+CENTER_TXT_Y,70,CENTER_TXT_Y*2);
+    compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I335001_19_BREATHING_TRAINING_2_1_SET_TIME_ICON_YES_208X52_X16_Y222_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I335001_19_BREATHING_TRAINING_2_1_SET_TIME_ICON_YES_208X52_X16_Y222_BIN).hei/2-10);
+    compo_setid(btn_ok,COMPO_ID_BTN_SURE);
+
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 105, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 150, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
+    {
+        f_breathe_sub_time_t*f_alarm_clock_sub_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+        for(int i=0; i<5; i++)
+        {
+            f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
+        }
+        f_alarm_clock_sub_set->min  = txt_data[2];
+        f_alarm_clock_sub_set->min  = txt_data[2];
+        printf("[create_time]set->min:%d\n",f_alarm_clock_sub_set->min);
+    }
+
+    return frm;
+}
+/*函数功能：滑动处理*/
+static void func_breathe_set_time_sub_move(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+
+    if(f_disturd_set->touch_flag == true)
+    {
+        s8 txt_buf[20];
+        s32 dx, dy;
+        f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
+        if(f_disturd_set->touch_flag == true)//触摸状态
+        {
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
+
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
+            {
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
+
+            }
+
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                memset(txt_buf,0,sizeof(txt_buf));
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
+                snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+                compo_textbox_set(txt,txt_buf);
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+            }
+        }
+        else   //松手状态
+        {
+            f_disturd_set->num_offset = 0;
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+            }
+        }
+    }
+}
+//单击按钮
+static void func_breathe_sub_time_button_click(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
+            func_backing_to();
+            break;
+        default:
+            break;
+    }
+}
+static void func_breathe_sub_time_button_touch_handle(void)
+{
+    f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
+
+}
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+
+enum
+{
+    COMPO_ID_BTN_SURE=1,
+    COMPO_ID_TXT_1,
+    COMPO_ID_TXT_2,
+    COMPO_ID_TXT_3,
+    COMPO_ID_TXT_4,
+    COMPO_ID_TXT_5,
+    COMPO_ID_BTN_MIN_BG,
+};
+typedef struct f_breathe_sub_time_t_
+{
+    bool touch_flag;
+    u8 breathe_min[5];
+    s32 move_dy;
+    s32 move_dy_data;
+    u8 min;
+    s8 offset;
+    s8 offset_old;
+} f_breathe_sub_time_t;
+
+#define TXT_SPACING    92
+#define CENTER_TXT_Y   (170 - TXT_SPACING + 66/2)
+
+const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
+{
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
+
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % 5; // 转换为0-4索引并应用偏移
+    if (index < 0) index += 5;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
+
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % 5; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        timer_data[i] = txt_num[(start_index + i) % 5]; // 环形填充
+    }
+}
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[20];
+    u8 txt_data[5];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
+
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
+
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
+    //创建一个页面用于限制滚动的时间文本
+    widget_page_t* page = widget_page_create(frm->page_body);
+    widget_set_location(page, GUI_SCREEN_CENTER_X, 84+180/2, GUI_SCREEN_WIDTH,240);
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_54_BIN);
+        compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+        snprintf(txt_buf,sizeof(txt_buf),"%d",txt_data[idx-COMPO_ID_TXT_1]);
+        compo_setid(txt,idx);
+        compo_textbox_set(txt,txt_buf);
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+    }
+
+    compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X,58+CENTER_TXT_Y,100,CENTER_TXT_Y*2);
+    compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I341001_28_SET_CONFIRM_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I341001_28_SET_CONFIRM_BIN).hei/2-20);
+    compo_setid(btn_ok,COMPO_ID_BTN_SURE);
+
+
+    if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
+    {
+        f_breathe_sub_time_t*f_alarm_clock_sub_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+        for(int i=0; i<5; i++)
+        {
+            f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
+        }
+        f_alarm_clock_sub_set->min  = txt_data[2];
+    }
+
+    return frm;
+}
+/*函数功能：滑动处理*/
+static void func_breathe_set_time_sub_move(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+
+    if(f_disturd_set->touch_flag == true)
+    {
+        s8 txt_buf[20];
+        s32 dx, dy;
+        f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
+        if(f_disturd_set->touch_flag == true)//触摸状态
+        {
+            f_disturd_set->move_dy_data = ((int)(dy/TXT_SPACING))*TXT_SPACING;
+            f_disturd_set->move_dy = dy-f_disturd_set->move_dy_data;
+
+            f_disturd_set->offset = f_disturd_set->move_dy_data/TXT_SPACING;
+
+            if(f_disturd_set->offset != f_disturd_set->offset_old)
+            {
+                if(f_disturd_set->offset != 0)
+                {
+                    func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,-f_disturd_set->offset+f_disturd_set->offset_old);///获取时间
+                }
+                f_disturd_set->offset_old = f_disturd_set->offset;
+            }
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                memset(txt_buf,0,sizeof(txt_buf));
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
+                snprintf(txt_buf,sizeof(txt_buf),"%d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+                compo_textbox_set(txt,txt_buf);
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+            }
+        }
+        else   //松手状态
+        {
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+            }
+        }
+    }
+}
+//单击按钮
+static void func_breathe_sub_time_button_click(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
+            func_backing_to();
+            break;
+        default:
+            break;
+    }
+}
+static void func_breathe_sub_time_button_touch_handle(void)
+{
+    f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
+
+}
+
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+enum
+{
+    COMPO_ID_BTN_SURE=1,
+    COMPO_ID_TXT_1,
+    COMPO_ID_TXT_2,
+    COMPO_ID_TXT_3,
+    COMPO_ID_TXT_4,
+    COMPO_ID_TXT_5,
+    COMPO_ID_BTN_MIN_BG,
+};
+typedef struct f_breathe_sub_time_t_
+{
+    bool touch_flag;
+    u8 breathe_min[5];
+    s32 move_dy;
+    s32 move_dy_data;
+    u8 min;
+    s8 offset;
+    s8 offset_old;
+} f_breathe_sub_time_t;
+
+#define TXT_SPACING    (82)
+#define CENTER_TXT_Y   (150 - TXT_SPACING + 56/2)
+
+const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
+{
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
+
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % 5; // 转换为0-4索引并应用偏移
+    if (index < 0) index += 5;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
+
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % 5; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        timer_data[i] = txt_num[(start_index + i) % 5]; // 环形填充
+    }
+}
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[20];
+    u8 txt_data[5];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
+
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
+
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
+    //创建一个页面用于限制滚动的时间文本
+    widget_page_t* page = widget_page_create(frm->page_body);
+    widget_set_location(page, GUI_SCREEN_CENTER_X, 72+214/2, GUI_SCREEN_WIDTH,214); //56+56+102=112+102=214
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_54_BIN);
+        compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+        snprintf(txt_buf,sizeof(txt_buf),"%d",txt_data[idx-COMPO_ID_TXT_1]);
+        compo_setid(txt,idx);
+        compo_textbox_set(txt,txt_buf);
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+    }
+
+    compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X,58+CENTER_TXT_Y,100,CENTER_TXT_Y*2);
+    compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I343001_COMM_OK_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I343001_COMM_OK_BIN).hei/2-20);
+    compo_setid(btn_ok,COMPO_ID_BTN_SURE);
+
+
+    if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
+    {
+        f_breathe_sub_time_t*f_alarm_clock_sub_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+        for(int i=0; i<5; i++)
+        {
+            f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
+        }
+        f_alarm_clock_sub_set->min  = txt_data[2];
+    }
+
+    return frm;
+}
+/*函数功能：滑动处理*/
+static void func_breathe_set_time_sub_move(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+
+    if(f_disturd_set->touch_flag == true)
+    {
+        s8 txt_buf[20];
+        s32 dx, dy;
+        f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
+        if(f_disturd_set->touch_flag == true)//触摸状态
+        {
+            f_disturd_set->move_dy_data = ((int)(dy/TXT_SPACING))*TXT_SPACING;
+            f_disturd_set->move_dy = dy-f_disturd_set->move_dy_data;
+
+            f_disturd_set->offset = f_disturd_set->move_dy_data/TXT_SPACING;
+
+            if(f_disturd_set->offset != f_disturd_set->offset_old)
+            {
+                if(f_disturd_set->offset != 0)
+                {
+                    func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,-f_disturd_set->offset+f_disturd_set->offset_old);///获取时间
+                }
+                f_disturd_set->offset_old = f_disturd_set->offset;
+            }
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                memset(txt_buf,0,sizeof(txt_buf));
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
+                snprintf(txt_buf,sizeof(txt_buf),"%d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+                compo_textbox_set(txt,txt_buf);
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+            }
+        }
+        else   //松手状态
+        {
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+            }
+        }
+    }
+}
+//单击按钮
+static void func_breathe_sub_time_button_click(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
+            func_backing_to();
+            break;
+        default:
+            break;
+    }
+}
+static void func_breathe_sub_time_button_touch_handle(void)
+{
+    f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
+
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+enum
+{
+    COMPO_ID_BTN_SURE=1,
+    COMPO_ID_TXT_1,
+    COMPO_ID_TXT_2,
+    COMPO_ID_TXT_3,
+    COMPO_ID_TXT_4,
+    COMPO_ID_TXT_5,
+    COMPO_ID_BTN_MIN_BG,
+};
+typedef struct f_breathe_sub_time_t_
+{
+    bool touch_flag;
+    u8 breathe_min[5];
+    s32 move_dy;
+    s32 move_dy_data;
+    u8 min;
+    s8 num_offset;
+} f_breathe_sub_time_t;
+
+#define TXT_SPACING    (135-82)
+#define CENTER_TXT_Y   (140/2)
+
+#if UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+#define BREATHE_SUB_TIME_MAX 3
+const uint16_t BREATHE_TIME_TXT_Y[3]= {CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING}; ///文本Y轴
+#else
+#define BREATHE_SUB_TIME_MAX 5
+const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+#endif //UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
+{
+#if BREATHE_SUB_TIME_MAX == 5
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
+#else
+    const char txt_num[3] = {1, 2, 3,}; // 固定数组
+#endif //BREATHE_SUB_TIME_MAX == 5
+
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % BREATHE_SUB_TIME_MAX; // 转换为0-4索引并应用偏移
+    if (index < 0) index += BREATHE_SUB_TIME_MAX;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
+
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % BREATHE_SUB_TIME_MAX; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < BREATHE_SUB_TIME_MAX; i++)
+    {
+        timer_data[i] = txt_num[(start_index + i) % BREATHE_SUB_TIME_MAX]; // 环形填充
+    }
+}
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[20];
+    // u8 txt_data[5];
+    u8 txt_data[3];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
+
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
+
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
+    //创建一个页面用于限制滚动的时间文本
+    widget_page_t* page = widget_page_create(frm->page_body);
+    widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, GUI_SCREEN_WIDTH,140);
+#if BREATHE_SUB_TIME_MAX == 5
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+#else
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_3; idx++) ///创建滑动文本
+#endif
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_38_BIN);
+        compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+#if UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+        snprintf(txt_buf,sizeof(txt_buf),"%01d",txt_data[idx-COMPO_ID_TXT_1]);
+#else
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",txt_data[idx-COMPO_ID_TXT_1]);
+#endif //UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+        compo_setid(txt,idx);
+        compo_textbox_set(txt,txt_buf);
+#if BREATHE_SUB_TIME_MAX == 5
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+#else
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_2 ? COLOR_WHITE : COLOR_GRAY);
+#endif //BREATHE_SUB_TIME_MAX == 5
+    }
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_location(txt,220,151,100,35);
+    compo_textbox_set(txt,i18n[STR_MIN]);
+
+    compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, 80,140);
+    compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I340001_PUBLIC_RECTANGLE01_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,64/2+266);
+    compo_setid(btn_ok,COMPO_ID_BTN_SURE);
+
+    txt = compo_textbox_create(frm, 10);
+    compo_textbox_set_align_center(txt, true);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 64/2+266, 100, widget_text_get_height());
+    compo_textbox_set_visible(txt, true);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_OK]);
+
+
+    if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
+    {
+        f_breathe_sub_time_t*f_alarm_clock_sub_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+        for(int i=0; i<BREATHE_SUB_TIME_MAX; i++)
+        {
+            f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
+        }
+#if BREATHE_SUB_TIME_MAX == 5
+        f_alarm_clock_sub_set->min  = txt_data[2];
+#else
+        f_alarm_clock_sub_set->min  = txt_data[1];
+#endif //BREATHE_SUB_TIME_MAX == 5
+    }
+
+    return frm;
+}
+/*函数功能：滑动处理*/
+static void func_breathe_set_time_sub_move(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+
+    if(f_disturd_set->touch_flag == true)
+    {
+        s8 txt_buf[20];
+        s32 dx, dy;
+        f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
+        if(f_disturd_set->touch_flag == true)//触摸状态
+        {
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
+
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
+            {
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
+
+            }
+#if BREATHE_SUB_TIME_MAX == 5
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+#else
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_3; idx++) ///创建滑动文本
+#endif //BREATHE_SUB_TIME_MAX == 5
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                memset(txt_buf,0,sizeof(txt_buf));
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
+#if UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+                snprintf(txt_buf,sizeof(txt_buf),"%01d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+#else
+                snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+#endif //UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT
+                compo_textbox_set(txt,txt_buf);
+#if BREATHE_SUB_TIME_MAX == 5
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+#else
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_2 ? COLOR_WHITE : COLOR_GRAY);
+#endif //BREATHE_SUB_TIME_MAX == 5
+            }
+        }
+        else   //松手状态
+        {
+            f_disturd_set->num_offset = 0;
+#if BREATHE_SUB_TIME_MAX == 5
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+#else
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_3; idx++) ///创建滑动文本
+#endif //BREATHE_SUB_TIME_MAX == 5
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+            }
+        }
+    }
+}
+//单击按钮
+static void func_breathe_sub_time_button_click(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
+            func_backing_to();
+            break;
+        default:
+            break;
+    }
+}
+static void func_breathe_sub_time_button_touch_handle(void)
+{
+    f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
+
+}
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+enum
+{
+    COMPO_ID_BTN_SURE=1,
+    COMPO_ID_TXT_1,
+    COMPO_ID_TXT_2,
+    COMPO_ID_TXT_3,
+    COMPO_ID_TXT_4,
+    COMPO_ID_TXT_5,
+    COMPO_ID_BTN_MIN_BG,
+};
+typedef struct f_breathe_sub_time_t_
+{
+    bool touch_flag;
+    u8 breathe_min[5];
+    s32 move_dy;
+    s32 move_dy_data;
+    u8 min;
+    s8 num_offset;
+} f_breathe_sub_time_t;
+
+#define TXT_SPACING    (135-92)
+#define CENTER_TXT_Y   (140/2)
+
+const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
+{
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
+
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % 5; // 转换为0-4索引并应用偏移
+    if (index < 0) index += 5;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
+
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % 5; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        timer_data[i] = txt_num[(start_index + i) % 5]; // 环形填充
+    }
+}
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[20];
+    u8 txt_data[5];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
+
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
+
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
+    //创建一个页面用于限制滚动的时间文本
+    widget_page_t* page = widget_page_create(frm->page_body);
+    widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, GUI_SCREEN_WIDTH,140);
+    for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_32_BIN);
+        compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",txt_data[idx-COMPO_ID_TXT_1]);
+        compo_setid(txt,idx);
+        compo_textbox_set(txt,txt_buf);
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+    }
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_location(txt,142,96,100,24);
+    compo_textbox_set(txt,i18n[STR_MIN]);
+
+    compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, 80,140);
+    compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I342001_19_BREATHING_TRAINING_CONFIRM_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I342001_19_BREATHING_TRAINING_CONFIRM_BIN).hei/2-10);
+    compo_setid(btn_ok,COMPO_ID_BTN_SURE);
+
+
+    if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
+    {
+        f_breathe_sub_time_t*f_alarm_clock_sub_set = (f_breathe_sub_time_t*)func_cb.f_cb;
+        for(int i=0; i<5; i++)
+        {
+            f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
+        }
+        f_alarm_clock_sub_set->min  = txt_data[2];
+    }
+
+    return frm;
+}
+/*函数功能：滑动处理*/
+static void func_breathe_set_time_sub_move(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+
+    if(f_disturd_set->touch_flag == true)
+    {
+        s8 txt_buf[20];
+        s32 dx, dy;
+        f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
+        if(f_disturd_set->touch_flag == true)//触摸状态
+        {
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
+
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
+            {
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
+
+            }
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                memset(txt_buf,0,sizeof(txt_buf));
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
+                snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
+                compo_textbox_set(txt,txt_buf);
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
+            }
+        }
+        else   //松手状态
+        {
+            f_disturd_set->num_offset = 0;
+            for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
+            {
+                compo_textbox_t *txt = compo_getobj_byid(idx);
+                compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
+            }
+        }
+    }
+}
+//单击按钮
+static void func_breathe_sub_time_button_click(void)
+{
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
+            func_backing_to();
+            break;
+        default:
+            break;
+    }
+}
+static void func_breathe_sub_time_button_touch_handle(void)
+{
+    f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
+
+}
+
+#else
+typedef struct f_breathe_sub_time_t_
+{
+} f_breathe_sub_time_t;
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+
+
+    return frm;
 }
 #endif // UTE_DRV_TFT_S240X284_NV3030B_HY201068AVC_QSPI_SUPPORT
 
 //设置功能事件处理
 static void func_breathe_sub_time_process(void)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT \
+     || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT)
+    func_breathe_set_time_sub_move();
+#endif
     func_process();
 }
 
@@ -951,23 +1808,19 @@ static void func_breathe_sub_time_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT \
+     || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT \
+     || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT)
             func_breathe_sub_time_button_touch_handle();
+#endif
             break;
 
         case MSG_CTP_CLICK:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT \
+     || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT\
+     || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT)
             func_breathe_sub_time_button_click();
-            break;
-
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_DOWN:
-        case MSG_CTP_SHORT_LEFT:
-        case MSG_CTP_LONG:
-//        func_breathe_sub_time_button_release_handle();
-            break;
-
-        case MSG_CTP_SHORT_RIGHT:
-//        func_breathe_sub_time_button_release_handle();
-            func_message(msg);
+#endif
             break;
 
         case MSG_QDEC_BACKWARD:
@@ -985,13 +1838,14 @@ static void func_breathe_sub_time_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_breathe_sub_time_t));
     func_cb.frm_main = func_breathe_sub_time_form_create();
-
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT)
     f_breathe_sub_time_t *f_set = (f_breathe_sub_time_t*) func_cb.f_cb;
     memcpy(f_set->set_num_item, tbl_breathe_set_num_item, sizeof(tbl_breathe_set_num_item));
     //f_set->size = gui_image_get_size(UI_BUF_ALARM_CLOCK_NUM_BIN);
     f_set->num_height = widget_text_get_height();
 
     func_cb.enter_tick = tick_get();
+#endif
 }
 
 //退出设置功能

@@ -1,0 +1,121 @@
+#include "include.h"
+
+#if (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
+//样品只能支持20M以下
+const u8 tbl_despi_clk1[] =
+{
+    [SYS_88M] = 4,          //20M
+    [SYS_132M] = 6,         //20M
+    [SYS_144M] = 7,         //20M
+    [SYS_176M] = 8,         //20M
+    [SYS_192M] = 15,         //20M
+};
+
+//466x466 30Hz 数据量为13.0295MByte
+const u8 tbl_despi_clk2[] =
+{
+    [SYS_88M] = 4,          //20M
+    [SYS_132M] = 5,         //20M
+    [SYS_144M] = 7,         //20M
+    [SYS_176M] = 8,         //20M
+    [SYS_192M] = 15,         //20M
+};
+#else
+//466x466 60Hz 数据量为26.059MByte
+const u8 tbl_despi_clk1[] =
+{
+    [SYS_88M] = 1,          //44M
+    [SYS_132M] = 1,         //66M
+    [SYS_144M] = 1,         //72M
+    [SYS_176M] = 2,         //58M
+    [SYS_192M] = 2,         //64M
+};
+
+//466x466 30Hz 数据量为13.0295MByte
+const u8 tbl_despi_clk2[] =
+{
+    [SYS_88M] = 2,          //29M
+    [SYS_132M] = 3,         //33M
+    [SYS_144M] = 3,         //36M
+    [SYS_176M] = 4,         //35M
+    [SYS_192M] = 4,         //38M
+};
+#endif
+//设置DESPI CLK接口
+void sys_set_despi_baud_hook(u32 sys_clk)
+{
+    tft_set_baud(tbl_despi_clk1[sys_clk], tbl_despi_clk2[sys_clk]);
+}
+
+const uint8_t *bt_rf_get_inq_param(void)
+{
+    return NULL;
+}
+
+u8 get_chip_package(void)
+{
+    return 0;
+}
+
+const uint8_t *bt_rf_get_param(void)
+{
+    return (const uint8_t *)&xcfg_cb.rf_pa_gain;
+}
+
+//正常启动Main函数
+int main(void)
+{
+    u32 rst_reason, rtccon10;
+
+    rst_reason = LVDCON;
+    rtccon10 = RTCCON10;
+    printf("Hello AB569X: %08x\n", rst_reason);
+    if (rst_reason & BIT(24))
+    {
+        bsp_rtc_recode_set(1);
+        printf("SW reset\n");
+    }
+    else if (rst_reason & BIT(19))
+    {
+        if (rtccon10 & BIT(10))
+        {
+            printf("WKO10S reset\n");
+        }
+        else
+        {
+            printf("RTC_WDT reset\n");
+        }
+    }
+    else if (rst_reason & BIT(18))
+    {
+        bsp_rtc_recode_set(1);
+        printf("WKUP reset\n");
+    }
+    else if (rst_reason & BIT(17) || rtccon10 & BIT(3))
+    {
+        bsp_rtc_recode_set(1);
+        printf("VUSB reset\n");
+    }
+    else if (rst_reason & BIT(16))
+    {
+        bsp_rtc_recode_set(1);
+        printf("WDT reset\n");
+    }
+
+    bsp_sys_init();
+    func_run();
+    return 0;
+}
+
+//升级完成
+void update_complete(int mode)
+{
+    printf("update_complete: %d\n", mode);
+    bsp_update_init();
+    if (mode == 0)
+    {
+        WDT_DIS();
+        while (1);
+    }
+    WDT_RST();
+}

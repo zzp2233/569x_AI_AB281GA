@@ -122,7 +122,7 @@ def main():
     custom_patch = os.path.join(project_config_path, f'ute_project_config_{project_name.lower()}.h')
     print("project_name:", project_name)
     print("custom_patch:", custom_patch)
-    project_version = get_ute_info(custom_patch, r'#define\s+UTE_SW_VERSION\s+"([^"]+)"')
+    project_version = get_ute_info(custom_patch, r'#define\s+UTE_SW_VERSION\s+"(\w+)"')
     if not project_version:
         print("版本号未找到")
         project_version = ''

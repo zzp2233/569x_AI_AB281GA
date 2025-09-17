@@ -127,7 +127,7 @@ void bsp_charge_init(void)
         p->stop_volt = CHARGE_STOP_VOLT;
         p->follow_volt = CHARGE_VOLT_FOLLOW;
 #if UTE_DRV_BATTERY_CUSTOM_CHARGE_CURRENT_SUPPORT
-        p->const_curr = UTE_DRV_BATTERY_CHARGE_CURRENT / 5;
+        p->const_curr = UTE_DRV_BATTERY_CHARGE_CURRENT / 5 - 1;
         if(p->const_curr > 63 || p->const_curr == 0)
         {
             p->const_curr = CHARGE_CONSTANT_CURR;
@@ -135,7 +135,7 @@ void bsp_charge_init(void)
 #else
         p->const_curr = CHARGE_CONSTANT_CURR;
 #endif
-        printf("bsp_charge_init,const_curr:%d ma\n",p->const_curr*5);
+        printf("bsp_charge_init,const_curr:%d ma\n",p->const_curr*5+5);
         p->trick_curr = CHARGE_TRICKLE_CURR;
         p->stop_curr = CHARGE_STOP_CURR;
         p->stop_curr_thd = 80;
@@ -213,11 +213,6 @@ static void charge_timer_callback (co_timer_t *timer, void *param)
         case 1:             //充电中
             //NTC
 #if (CHARGE_USER_NTC_EN && TS_MODE_EN) || UTE_DRV_BATTERY_CE_AUTH_SUPPORT
-            if(ambientTemperature > 100)
-            {
-                ambientTemperature = 25;
-                printf("NTC ERROR:%d\n", ambientTemperature);
-            }
             if((charge_ntc_stop_flag== 0)  && ((ambientTemperature > CHARGE_NTC_ADC_MAX_TEMP) || (ambientTemperature < CHARGE_NTC_ADC_MIN_TEMP)))
             {
                 //温度异常 停止充

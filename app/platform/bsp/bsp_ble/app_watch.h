@@ -6,7 +6,6 @@
 void ble_app_watch_init(void);
 void ble_app_watch_process(void);
 bool ble_app_watch_need_wakeup(void);
-void ble_app_watch_set_wakeup(bool need);
 bool ble_app_watch_send_packet(u8 *buf, u8 len);
 void ble_app_watch_disconnect_callback(void);
 void ble_app_watch_connect_callback(void);

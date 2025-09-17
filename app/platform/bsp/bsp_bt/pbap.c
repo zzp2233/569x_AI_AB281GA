@@ -1,5 +1,4 @@
 #include "include.h"
-#include "ute_module_call.h"
 
 #if BT_PBAP_EN
 //static char qp[] = {"=12=34=56=78=9A=BC=DE=F0=12=34=56=78"};  //for test
@@ -121,10 +120,6 @@ void bt_pbap_event_handle(uint evt, u8 *params)
                 bt_pbap_get_phonebook_size();
             }
             pbap_param.is_pbap_connected = true;
-            if(bt_get_disp_status() == BT_STA_INCALL)
-            {
-                bt_pbap_lookup_number(hfp_get_last_call_number(0));//防止回连后无法获取联系人
-            }
             break;
         case BT_NOTICE_PBAP_DISCONNECT:
             printf("===>>> PBAP: Disconnect\n");
@@ -190,16 +185,11 @@ void bt_pbap_sync_stop(void)
 void bt_pbap_report_card_result(const char *name)
 {
     printf("pbap result Name:   '%s'\n", name);
-    if(strcmp(name, sys_cb.pbap_result_Name)==0)
-    {
-        return;
-    }
     memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
     snprintf(sys_cb.pbap_result_Name, sizeof(sys_cb.pbap_result_Name),"%s",name);///* 获取名字*/
-#if UTE_BT_CALL_THREE_WAY_SUPPORT
-    uteModuleCallSetTempDataName((uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
-#endif
-    uteModuleCallSetContactsNumberAndName(NULL, 0, (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
+
+    uteModuleCallSetContactsNumberAndName((uint8_t*)hfp_get_last_call_number(0), strlen(hfp_get_last_call_number(0)), (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
+
 
 }
 

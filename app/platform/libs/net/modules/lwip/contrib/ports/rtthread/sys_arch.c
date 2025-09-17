@@ -3,7 +3,7 @@
 
 #include "os_api.h"
 
-#define LWIP_PLATFORM_ASSERT(x) do {a_printf("Assertion \"%s\" failed at line %d in %s\n", \
+#define LWIP_PLATFORM_ASSERT(x) do {my_printf("Assertion \"%s\" failed at line %d in %s\n", \
                                      x, __LINE__, __FILE__); lwip_wdt_rst();} while(0)
 #define LWIP_ASSERT(message, assertion) do { if (!(assertion)) { \
   LWIP_PLATFORM_ASSERT(message); }} while(0)
@@ -19,42 +19,43 @@ void  tcpip_init(void *tcpip_init_done, void *arg);
 typedef void (*lwip_thread_fn)(void *arg);
 typedef int8_t err_t;
 /** Definitions for error constants. */
-typedef enum {
-/** No error, everything OK. */
-  ERR_OK         = 0,
-/** Out of memory error.     */
-  ERR_MEM        = -1,
-/** Buffer error.            */
-  ERR_BUF        = -2,
-/** Timeout.                 */
-  ERR_TIMEOUT    = -3,
-/** Routing problem.         */
-  ERR_RTE        = -4,
-/** Operation in progress    */
-  ERR_INPROGRESS = -5,
-/** Illegal value.           */
-  ERR_VAL        = -6,
-/** Operation would block.   */
-  ERR_WOULDBLOCK = -7,
-/** Address in use.          */
-  ERR_USE        = -8,
-/** Already connecting.      */
-  ERR_ALREADY    = -9,
-/** Conn already established.*/
-  ERR_ISCONN     = -10,
-/** Not connected.           */
-  ERR_CONN       = -11,
-/** Low-level netif error    */
-  ERR_IF         = -12,
+typedef enum
+{
+    /** No error, everything OK. */
+    ERR_OK         = 0,
+    /** Out of memory error.     */
+    ERR_MEM        = -1,
+    /** Buffer error.            */
+    ERR_BUF        = -2,
+    /** Timeout.                 */
+    ERR_TIMEOUT    = -3,
+    /** Routing problem.         */
+    ERR_RTE        = -4,
+    /** Operation in progress    */
+    ERR_INPROGRESS = -5,
+    /** Illegal value.           */
+    ERR_VAL        = -6,
+    /** Operation would block.   */
+    ERR_WOULDBLOCK = -7,
+    /** Address in use.          */
+    ERR_USE        = -8,
+    /** Already connecting.      */
+    ERR_ALREADY    = -9,
+    /** Conn already established.*/
+    ERR_ISCONN     = -10,
+    /** Not connected.           */
+    ERR_CONN       = -11,
+    /** Low-level netif error    */
+    ERR_IF         = -12,
 
-/** Connection aborted.      */
-  ERR_ABRT       = -13,
-/** Connection reset.        */
-  ERR_RST        = -14,
-/** Connection closed.       */
-  ERR_CLSD       = -15,
-/** Illegal argument.        */
-  ERR_ARG        = -16
+    /** Connection aborted.      */
+    ERR_ABRT       = -13,
+    /** Connection reset.        */
+    ERR_RST        = -14,
+    /** Connection closed.       */
+    ERR_CLSD       = -15,
+    /** Illegal argument.        */
+    ERR_ARG        = -16
 } err_enum_t;
 #endif
 
@@ -99,7 +100,7 @@ int lwip_system_init(void)
 
     if (init_ok)
     {
-        a_printf("lwip system already init.\n");
+        my_printf("lwip system already init.\n");
         return 0;
     }
     // extern int eth_system_device_init_private(void);
@@ -127,7 +128,7 @@ int lwip_system_init(void)
     }
     os_sem_detach(&done_sem);
 
-    // a_printf("lwIP-%d.%d.%d initialized!\n", LWIP_VERSION_MAJOR, LWIP_VERSION_MINOR, LWIP_VERSION_REVISION);
+    // my_printf("lwIP-%d.%d.%d initialized!\n", LWIP_VERSION_MAJOR, LWIP_VERSION_MINOR, LWIP_VERSION_REVISION);
 
     init_ok = 1;
 
@@ -152,7 +153,9 @@ uint32_t sys_jiffies(void)
 
 sys_prot_t sys_arch_protect(void)
 {
+    int err_bak = errno;
     os_mutex_take(&lwip_mutex, OS_WAITING_FOREVER);
+    errno = err_bak;
     return 1;
 }
 
@@ -172,14 +175,16 @@ static uint8_t mutex_cnt = 0;
 err_t sys_mutex_new(sys_mutex_t *mutex)
 {
     mutex->mut = mem_malloc(sizeof(struct os_mutex));
-    if (mutex->mut == NULL) {
+    if (mutex->mut == NULL)
+    {
         return ERR_MEM;
     }
     char name[4];
     mutex_cnt = (mutex_cnt + 1) % 100;
     snprintf(name, 4, "l%d", mutex_cnt);
     os_err_t ret = os_mutex_init(mutex->mut, name, OS_IPC_FLAG_FIFO);
-    if (ret != OS_EOK) {
+    if (ret != OS_EOK)
+    {
         mem_free(mutex->mut);
         return ERR_ARG;
     }
@@ -209,7 +214,8 @@ static uint8_t sem_cnt = 0;
 err_t sys_sem_new(sys_sem_t *sem, uint8_t initial_count)
 {
     sem->sem = mem_malloc(sizeof(struct os_semaphore));
-    if (sem->sem == NULL) {
+    if (sem->sem == NULL)
+    {
         return ERR_MEM;
     }
     char name[4];
@@ -217,7 +223,8 @@ err_t sys_sem_new(sys_sem_t *sem, uint8_t initial_count)
     snprintf(name, 4, "l%d", sem_cnt);
 
     os_err_t ret = os_sem_init(sem->sem, name, initial_count, OS_IPC_FLAG_FIFO);
-    if (ret != OS_EOK) {
+    if (ret != OS_EOK)
+    {
         mem_free(sem->sem);
         return ERR_ARG;
     }
@@ -235,11 +242,13 @@ uint32_t sys_arch_sem_wait(sys_sem_t *sem, uint32_t timeout_ms)
     LWIP_ASSERT("sem->sem != NULL", sem->sem != NULL);
 
     os_tick_t tick = OS_WAITING_FOREVER;
-    if (timeout_ms) {
+    if (timeout_ms)
+    {
         tick = os_tick_from_ms(timeout_ms);
     }
     os_err_t ret = os_sem_take(sem->sem, tick);
-    if (ret != OS_EOK) {
+    if (ret != OS_EOK)
+    {
         // printf("%s timeout_ms=%d ret=%d\n", __func__, timeout_ms, (int)ret);
         return SYS_ARCH_TIMEOUT;
     }
@@ -274,11 +283,13 @@ err_t sys_mbox_new(sys_mbox_t *mbox, int size)
     snprintf(name, MBOX_MQ_LEN, "l%d", mq_cnt++);
 
     mbox->mbx = mem_malloc(sizeof(struct os_messagequeue));
-    if (mbox->mbx == NULL) {
+    if (mbox->mbx == NULL)
+    {
         return ERR_MEM;
     }
     void *msgpool = mem_malloc(pool_size);
-    if (msgpool == NULL) {
+    if (msgpool == NULL)
+    {
         return ERR_MEM;
     }
 
@@ -293,11 +304,13 @@ void sys_mbox_post(sys_mbox_t *mbox, void *msg)
 
     uint32_t addr = (uint32_t)msg;
     os_err_t ret = os_mq_send(mbox->mbx, &addr, 4);
-    while (ret == -OS_EFULL) {
+    while (ret == -OS_EFULL)
+    {
         os_task_sleep(1);
         ret = os_mq_send(mbox->mbx, &addr, 4);
     }
-    if (ret != OS_EOK) {
+    if (ret != OS_EOK)
+    {
         printf("%s failed\n", __func__);
     }
 }
@@ -310,7 +323,8 @@ err_t sys_mbox_trypost(sys_mbox_t *mbox, void *msg)
 
     uint32_t addr = (uint32_t)msg;
     os_err_t ret = os_mq_send(mbox->mbx, &addr, 4);
-    if (ret != OS_EOK) {
+    if (ret != OS_EOK)
+    {
         printf("%s failed %p %p\n", __func__, mbox->mbx, __builtin_return_address(0));
         return ERR_MEM;
     }
@@ -333,12 +347,14 @@ uint32_t sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, uint32_t timeout_ms)
 
     uint32_t addr = 0;
     os_tick_t tick = OS_WAITING_FOREVER;
-    if (timeout_ms) {
+    if (timeout_ms)
+    {
         tick = os_tick_from_ms(timeout_ms);
     }
     os_err_t ret = os_mq_recv(mbox->mbx, &addr, 4, tick);
     *msg = (void *)addr;
-    if (ret != OS_EOK) {
+    if (ret != OS_EOK)
+    {
         *msg = NULL;
         return SYS_ARCH_TIMEOUT;
     }
@@ -359,7 +375,8 @@ uint32_t sys_arch_mbox_tryfetch(sys_mbox_t *mbox, void **msg)
     uint32_t addr = 0;
     os_err_t ret = os_mq_recv(mbox->mbx, &addr, 4, 0);
     *msg = (void *)addr;
-    if (ret != OS_EOK) {
+    if (ret != OS_EOK)
+    {
         *msg = NULL;
         return SYS_MBOX_EMPTY;
     }
@@ -403,17 +420,20 @@ sys_thread_t sys_thread_new(const char    *name,
     sys_thread_t lwip_thread;
     lwip_thread.thread_handle = NULL;
     void *stack = mem_malloc(stacksize);
-    if (stack == NULL) {
+    if (stack == NULL)
+    {
         return lwip_thread;
     }
     os_thread_t tid = mem_malloc(sizeof(struct os_thread));
-    if (tid == NULL) {
+    if (tid == NULL)
+    {
         mem_free(stack);
         return lwip_thread;
     }
 
     uint8_t real_prio = prio;
-    if (real_prio <= 18) {
+    if (real_prio <= 18)
+    {
         real_prio = 19;
         printf("%s real_prio=19\n", __func__);
     }
@@ -430,8 +450,11 @@ static os_thread_t lwip_core_lock_holder_thread;
 
 void sys_lock_tcpip_core(void)
 {
+    int err_bak = errno;
     sys_mutex_lock(&lock_tcpip_core);
-    if (lwip_core_lock_count == 0) {
+    errno = err_bak;
+    if (lwip_core_lock_count == 0)
+    {
         lwip_core_lock_holder_thread = os_thread_self();
     }
     lwip_core_lock_count++;
@@ -440,7 +463,8 @@ void sys_lock_tcpip_core(void)
 void sys_unlock_tcpip_core(void)
 {
     lwip_core_lock_count--;
-    if (lwip_core_lock_count == 0) {
+    if (lwip_core_lock_count == 0)
+    {
         lwip_core_lock_holder_thread = 0;
     }
     sys_mutex_unlock(&lock_tcpip_core);
@@ -455,11 +479,13 @@ void sys_mark_tcpip_thread(void)
 
 void sys_check_core_locking(const char *file, unsigned int line)
 {
-    if (lwip_tcpip_thread != 0) {
+    if (lwip_tcpip_thread != 0)
+    {
         os_thread_t current_thread = os_thread_self();
 
         if (!((current_thread == lwip_core_lock_holder_thread) &&
-              (lwip_core_lock_count > 0))) {
+              (lwip_core_lock_count > 0)))
+        {
             printf("Function called without core lock(%s): failed at %d in "
                    "%s\n",
                    __func__,

@@ -80,6 +80,7 @@ void uteModuleSmokeInit(void)
     uteModuleSmokeData.current_index =5;
     uteModuleSmokeData.current_power =15;
     uteModuleSmokeData.target_smoking_count = 9999;
+    uteModuleSmokeData.is_out_chaina = false;
     uteModuleSmokeDataReadConfig(); // 恢复数据
     // uteModulePlatformCreateMutex(&uteModuleSmokeMute); // 创建互斥量
 }
@@ -144,6 +145,7 @@ uint32_t get_today_smoking_count()
     {
         total += uteModuleSmokeData.smoking_count_per_hour[i];
     }
+    printf("todaytotal = %d\n",total);
     return total;
 }
 
@@ -155,6 +157,7 @@ uint32_t get_this_week_smoking_count()
     {
         total += uteModuleSmokeData.smoking_count_per_day[i];
     }
+    printf("weektotal = %d\n",total);
     return total;
 }
 

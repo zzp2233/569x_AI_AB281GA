@@ -14,7 +14,7 @@
 #define FOOTBALL_HALF_CIRCUM            ((int)(M_PI * FOOTBALL_RADIUS))     //圆周一半
 #define FOOTBALL_MIN_POLAR              450                                 //足球的最大最小极角
 #define FOOTBALL_MAX_POLAR              1350
-#define FOOTBALL_ITEM_ANGLE             1080
+#define FOOTBALL_ITEM_ANGLE             360
 
 //移动相关控制
 #define ANIMATION_TICK_EXPIRE               18                          //动画单位时间Tick(ms)

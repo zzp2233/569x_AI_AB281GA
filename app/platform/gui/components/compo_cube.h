@@ -78,9 +78,12 @@ typedef struct compo_cube_t_
 //    compo_cube_item_t const *ele;
     s16 radius;
     widget_image3d_t *item_img[CUBE_ITEM_CNT];
+//    widget_image3d_t *item_ele[CUBE_ITEM_ELE_CNT];
+
     compo_cube_ele_t ele[CUBE_ITEM_ELE_CNT];
 
     uint8_t cube_type;                       //立方体组件类型，可选COMPO_CUBE_TYPE_NORMAL(正常的立方体)，COMPO_CUBE_TYPE_POWER(能量球)
+
 } compo_cube_t;
 
 /**

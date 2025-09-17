@@ -3711,14 +3711,14 @@ read_pending_header:
             /* nothing more to add here, close frame
                without content received, so we have no
                reason to keep on reading */
-            nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "Proper connection close frame received id=%d, shutting down", conn->id);
+            nopoll_log (conn->ctx, NOPOLL_LEVEL_CRITICAL, "Proper connection close frame received id=%d, shutting down", conn->id);
             nopoll_msg_unref (msg);
             nopoll_conn_shutdown (conn);
             return NULL;
         } /* end if */
 
         /* received close frame with content, try to read the content */
-        nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "Proper connection close frame received id=%d with content bytes=%d, reading reason..",
+        nopoll_log (conn->ctx, NOPOLL_LEVEL_CRITICAL, "Proper connection close frame received id=%d with content bytes=%d, reading reason..",
                     conn->id, msg->payload_size);
     } /* end if */
 
@@ -4628,8 +4628,8 @@ int nopoll_conn_flush_writes (noPollConn * conn, long timeout, int previous_resu
         if (wait_implemented >= timeout)
             break;
 
-        nopoll_sleep (100000 * multiplier);
-        wait_implemented += (100000 * multiplier);
+        nopoll_sleep (10000 * multiplier);
+        wait_implemented += (10000 * multiplier);
 
         /* write content pending */
         bytes_written = nopoll_conn_complete_pending_write (conn);
@@ -4949,9 +4949,10 @@ int nopoll_conn_send_frame (noPollConn * conn, nopoll_bool fin, nopoll_bool mask
     /* check pending bytes for the next operation */
     if (conn->pending_write_bytes > 0)
     {
+        // my_printf("pw:%d\n", conn->pending_write_bytes);
         conn->pending_write = send_buffer;
         conn->pending_write_desp = desp;
-        nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "Stored %d bytes starting from %d out of %d bytes (header size: %d)",
+        nopoll_log (conn->ctx, NOPOLL_LEVEL_CRITICAL, "Stored %d bytes starting from %d out of %d bytes (header size: %d)",
                     conn->pending_write_bytes, desp, length + header_size, header_size);
     }
     else

@@ -41,23 +41,23 @@ enum
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK,                   //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
-    FUNC_MENU_STYLE_FOOTBALL_LIST,      //球型菜单更多显示
+
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK_SUB_SET,           //闹钟--设置
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
     FUNC_ALARM_CLOCK_SUB_POP,           //闹钟--弹出
-    FUNC_BLOOD_OXYGEN,                  //血氧
-#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-    FUNC_PRESSURE,                      //压力
-#endif // UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-#if UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT
-    FUNC_PRESSURE_EXPLAIN,              //压力说明
+
 #endif
+    FUNC_SMOKE_TARGET_SUB_POP,           //抽烟目标达成
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    FUNC_BLOOD_OXYGEN,                  //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    FUNC_PRESSURE,                      //压力
+    FUNC_PRESSURE_EXPLAIN,              //压力说明
     FUNC_LONG_PRESS,                    //关机 重启 SOS
     FUNC_BLOODSUGAR,                    //血糖
-#if UTE_MODULE_SCREENS_BLOOD_PRESSURE_SUPPORT
     FUNC_BLOOD_PRESSURE,                //血压
-#endif // UTE_MODULE_SCREENS_BLOOD_PRESSURE_SUPPORT
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     FUNC_BREATHE,                       //呼吸
     FUNC_BREATHE_SUB_MODE,              //呼吸--模式设置
@@ -100,9 +100,6 @@ enum
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     FUNC_ALTITUDE,                      //海拔
     FUNC_MAP,                           //地图
-#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
-    FUNC_WOMEN_HEALTH,                  //女性健康
-#endif
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_MESSAGE,                       //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
@@ -113,11 +110,13 @@ enum
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     FUNC_VOICE,                         //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+//    FUNC_COMPASS,                       //指南针
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 #endif
     FUNC_ADDRESS_BOOK,                  //电话簿
+
     FUNC_CALL_SUB_LINKMAN = FUNC_ADDRESS_BOOK,
-#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+// UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     FUNC_SPORT,                         //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
@@ -126,9 +125,6 @@ enum
     FUNC_SPORT_SWITCH,                  //运动开启
     FUNC_SPORT_SORT,                    //运动边菜单
     FUNC_SPORT_FINISH,                  //运动结束
-#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
-    FUNC_SPORT_SUB_PAUSE,                 //运动--暂停
-#endif
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     FUNC_CALL,                          //电话
 #endif // UTE_MODULE_SCREENS_CALL_SUPPORT
@@ -137,12 +133,8 @@ enum
     FUNC_CALL_SORT,                     //通话-一级界面
 #if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
     FUNC_FINDPHONE,                     //寻找手机
-#if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
-    FUNC_MOTOR_GRADE,                   //震动强度
 #endif
-#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
-    FUNC_CLOCK_DROPDOWN_MENU,//下拉菜单
-#endif
+
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     FUNC_CALENDAER,                     //日历
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -178,7 +170,8 @@ enum
     FUNC_PASSWORD_SUB_DISP,             //新密码锁设置
     FUNC_PASSWORD_SUB_SELECT,           //确认密码锁
     FUNC_SET_SUB_ABOUT,                 //设置--关于
-    FUNC_SUB_SOS,                       //SOS
+    FUNC_CHATBOT_REMIND,                 //机器人说明
+    FUNC_SET_SUB_SOS,                   //SOS
 #if UTE_MODULE_SCREENS_RESTART_SUPPORT
     FUNC_SET_SUB_RESTART,               //设置--重启
     FUNC_RESTART = FUNC_SET_SUB_RESTART,//重启
@@ -189,22 +182,6 @@ enum
 #endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
     FUNC_SET_SUB_OFF,                   //设置--关机
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
-    FUNC_HEART_WARNING,
-    FUNC_DIAL_AND_THEME, //表盘&主题界面
-    FUNC_HEAR_ABOUT,
-#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
-    FUNC_MOOD,
-#endif // UTE_MODULE_SCREENS_EMOTION_SUPPORT
-#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
-    FUNC_KEY_SET_FUNCTION,
-#endif
-#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
-    FUNC_MOOD_ABOUT,
-#endif // UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
-#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
-    FUNC_OXYGEN_ABOUT,
-#endif
-    FUNC_BREATHE_RUN,                           //呼吸训练运行
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,
@@ -234,19 +211,16 @@ enum
     FUNC_MESSAGE_REPLY,                  //消息发送
     FUNC_MIC_TEST,
     FUNC_OTA_UI_MODE,
-#if UTE_MODULE_SCREENS_BIRD_SUPPORT
+
     FUNC_BIRD,
-#endif
     FUNC_TETRIS,
     FUNC_TETRIS_START,
     FUNC_OTA_MODE,         //OTA升级
     FUNC_OTA_ERROR,        //OTA升级失败界面
     FUNC_OTA_SUCC,          //OTA升级成功界面
     FUNC_POWER_ON,         //开机
-    FUNC_POWER_OFF,        //关机logo界面
 
     FUNC_BLE_CALL,
-    FUNC_TEST_MODE_LIST,      ///*出厂测试模式选择*/
     FUNC_TEST_MODE,      ///*出厂测试模式选择*/
     FUNC_FACTORY_TESTING,///*工厂测试*/
     FUNC_AGEING,         ///*老化测试*/
@@ -255,14 +229,6 @@ enum
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
     FUNC_UP_WATCH_DIAL,
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
-    FUNC_SYSTEM,    //系统设置列表界面
-#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
-    FUNC_BRIGHT_SET,    //亮度设置列表
-#endif
-#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
-    FUNC_TOOLBOX,   //工具箱
-#endif
-    FUNC_COMPASS,                       //指南针
 
     //电子烟功能
     FUNC_ECIG_SET_POWER,                //功率设置页面
@@ -272,7 +238,7 @@ enum
     FUNC_CALENDAER_SUB,
 #endif
     FUNC_ECIG_VPAE_SUB,
-
+    FUNC_ECIG_SETPOWER,
     FUNC_MAX_NUM,           //用于计数
 };
 
@@ -291,14 +257,11 @@ typedef struct
     u8 sta_break;                                   //被中断的任务
     u8 sort_cnt;                                    //快捷任务个数
     u8 tbl_sort[MAX_FUNC_SORT_CNT];                 //快捷任务表
-    u16 left_sta;                                   //CLOCK左边界面
-    u16 pullup_sta;                                 //CLOCK上拉界面
-    u16 down_sta;                                   //CLOCK下拉界面
+    u16 left_sta;                                   //CLOCK左边菜单
     u8 msgbox_enter_sta;                            //弹窗进入之前的界面任务
     u8  flag_sort       : 1,                        //已进入快捷任务
-    flag_animation  : 1;                            //入场动画
+    flag_animation  : 1;                        //入场动画
 
-    bool flag_sort_jump;                            //记录处于快捷任务界面时跳转
 
 
     void (*mp3_res_play)(u32 addr, u32 len);        //各任务的语音播报函数接口

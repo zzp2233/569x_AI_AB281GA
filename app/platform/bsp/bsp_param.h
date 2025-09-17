@@ -39,6 +39,8 @@
 #define PARAM_RTC_CAL_ADDR          0xb5        //16BYTE
 #endif
 
+#define PARAM_ALI_FILE_VALID        0xcb        //1byte
+
 #define PARAM_VDDHR_TRIM_VAL        0xcc        //1byte
 
 #define PARAM_FOT_TYPE              0xec        //1byte

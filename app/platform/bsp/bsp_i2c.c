@@ -187,25 +187,12 @@ static u32 bsp_hw_i2c_config(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u32 dat)
     u32 ticks = tick_get();
     while ( (!(HW_IIC->sfr->IICxCON0 & BIT(31))))
     {
-        // WDT_CLR();
-        if (tick_check_expire(ticks, 50))
+        WDT_CLR();
+        if (tick_check_expire(ticks, 1000))
         {
             func_process();
             ticks = tick_get();
-            printf("!!!%s IIC ERROR dev_addr:0x%X reg_addr:0x%x\n", sys_cb.gsensor_iic_en ? "Gsensor" : "Heart", dev_addr, reg_addr);
-
-            HW_IIC->sfr->IICxCON0 &= ~BIT(31); // 清除 DONE 标志
-            HW_IIC->sfr->IICxCON0 &= ~BIT(26); // 清除 ERR_PND 标志
-            HW_IIC->sfr->IICxCON1 &= ~BIT(26); // 清除 ERR_PND 标志
-
-            if (sys_cb.gsensor_iic_en)
-            {
-                i2c_gsensor_init();
-            }
-            else
-            {
-                bsp_i2c_init();
-            }
+            printf("!!!IIC ERROR dev_addr:0x%X reg_addr:0x%x\n", dev_addr,reg_addr);
             return false;
         }
     }
@@ -295,7 +282,7 @@ static void i2cx_init(void)
     uteModulePlatformOutputGpioSet(IO_PE2,false);
 #endif
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
-    CLKCON1 &= ~BIT(7);      //x26m_clkdiv8
+    CLKCON1 |= BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 
@@ -353,6 +340,7 @@ static void i2cx_init(void)
 AT(.text.bsp.i2c)
 void i2c_gsensor_init(void)
 {
+    sys_cb.gsensor_iic_en = true;
 #if (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
     uteModulePlatformOutputGpioSet(IO_PE1,false);
     uteModulePlatformOutputGpioSet(IO_PE2,false);
@@ -361,7 +349,7 @@ void i2c_gsensor_init(void)
     uteModulePlatformOutputGpioSet(IO_PF2,false);
 #endif
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
-    CLKCON1  &= ~BIT(7);      //rc2m
+    CLKCON1 |= BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 
@@ -401,7 +389,6 @@ void i2c_gsensor_init(void)
 
     //  delay_5ms(1);
     sys_irq_init(IRQ_I2C_VECTOR, 0, bsp_i2c_isr);
-    sys_cb.gsensor_iic_en = true;
 }
 
 #endif
@@ -440,6 +427,7 @@ void i2c_gsensor_init(void)
 AT(.text.bsp.i2c)
 void bsp_i2c_init(void)
 {
+    sys_cb.gsensor_iic_en = false;
 #if I2C_SW_EN
     I2C_SDA_SCL_OUT();
     I2C_SDA_H();
@@ -449,6 +437,5 @@ void bsp_i2c_init(void)
 #if I2C_HW_EN
     i2cx_init();
     sys_irq_init(IRQ_I2C_VECTOR, 0, bsp_i2c_isr);
-    sys_cb.gsensor_iic_en = false;
 #endif
 }

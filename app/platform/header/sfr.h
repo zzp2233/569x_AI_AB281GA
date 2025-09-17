@@ -297,7 +297,6 @@
 #define SENSCPND        LPSFR_WO (SFR7_BASE + 0x27*4)
 #define SENSCNT         LPSFR_RW (SFR7_BASE + 0x28*4)
 #define SENSCON1        LPSFR_RW (SFR7_BASE + 0x29*4)
-#define BTCON2          LPSFR_RW (SFR7_BASE + 0x2a*4)
 #define PORTINTEDG1     LPSFR_RW (SFR7_BASE + 0x2b*4)
 #define PORTINTEN1      LPSFR_RW (SFR7_BASE + 0x2c*4)
 
@@ -420,10 +419,6 @@
 #define DESPIDMAADR     SFR_RW (SFR10_BASE + 0x25*4)
 #define DESPIRGBWCON    SFR_RW (SFR10_BASE + 0x26*4)
 #define DESPITXPCNT     SFR_RW (SFR10_BASE + 0x27*4)
-
-#define BTDMSFR_BASE    0x00008000
-#define SFR_DMBASE      0x00000000
-#define DMENBPRESET     SFR_RW (BTDMSFR_BASE + SFR_DMBASE  + (0x0f<<2))  //DM_ENBPRESET
 
 #ifndef __ASSEMBLER__
 enum funo_select_tbl
@@ -687,8 +682,5 @@ enum funi_io_tbl
 #define CH1_FUNI_SEL(ch1_funi_sel) FUNCINCON  = (ch1_funi_sel << 8)
 #define CH2_FUNI_SEL(ch2_funi_sel) FUNCINCON  = (ch2_funi_sel <<16)
 #define CH3_FUNI_SEL(ch3_funi_sel) FUNCINCON  = (ch3_funi_sel <<24)
-
-#define DI_XOSC_DRV(bit)                     XOSCCON = (XOSCCON & ~(31<<0)) | ((bit)<<0)
-#define DI_XOSC_SHAPE(bit)                   XOSCCON = (XOSCCON & ~(3<<28)) | ((bit)<<28)
 
 #endif

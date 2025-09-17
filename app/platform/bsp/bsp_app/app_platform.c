@@ -56,23 +56,19 @@ static bool ute_alarm_check(tm_t *now_time)
         {
             alarm_p->durationTimeSec = UTE_LOCAL_ALARM_DEFAULT_RING_TIMES;
         }
-#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+
         if ((alarm_p->repeatRemindHour == 0) || (alarm_p->repeatRemindMin == 0))
         {
             alarm_p->repeatRemindHour = alarm_p->hour;
             alarm_p->repeatRemindMin = alarm_p->min;
         }
-#endif
+
         TRACE("i[%d] num[%d] cycle[0x%02x] mask[0x%02x] alarm[%02d:%02d] now[%02d:%02d] repeat[%02d,%02d,%d] \n", \
               i, uteModuleSystemtimeGetAlarmMaxCnt(), cycle, week_mask, alarm_p->hour, alarm_p->min, now_time->hour, now_time->min,
               alarm_p->repeatRemindHour, alarm_p->repeatRemindMin, alarm_p->isRepeatRemindOpen);
         if ((cycle & week_mask) > 0 || (cycle >> 7))  //当天或者只提醒一次
         {
-            // if (alarm_p->isRepeatRemindOpen)        //贪睡时钟
-            if(0)
-            {}
-#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
-            else if (alarm_p->isRepeatRemindOpen && alarm_p->repeatRemindTimes > 0) //贪睡时钟 ，闹钟贪睡功能打开，但是提醒次数为0时不响铃
+            if (alarm_p->isRepeatRemindOpen)        //贪睡时钟
             {
                 if ((alarm_p->repeatRemindHour == now_time->hour) && (alarm_p->repeatRemindMin == now_time->min))  //到时间
                 {
@@ -83,7 +79,6 @@ static bool ute_alarm_check(tm_t *now_time)
                     goto __exit;
                 }
             }
-#endif
             else if (alarm_p->isOpen)     //用户闹钟
             {
                 if ((alarm_p->hour == now_time->hour) && (alarm_p->min == now_time->min))  //到时间

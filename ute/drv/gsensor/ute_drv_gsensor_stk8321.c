@@ -1,7 +1,7 @@
 /**
 *@file
-*@brief        gsensorå…¬å…±å±‚é©±åŠ¨æ–‡ä»¶
-*@details       åŒ…æ‹¬åŠ é€Ÿåº¦ã€é™€èºã€åœ°ç£çš„é©±åŠ¨å…¬å…±å±‚
+*@brief        gsensor¹«¹²²ãÇı¶¯ÎÄ¼ş
+*@details       °üÀ¨¼ÓËÙ¶È¡¢ÍÓÂİ¡¢µØ´ÅµÄÇı¶¯¹«¹²²ã
 *@author       zn.zeng
 *@date       2021-07-23
 *@version      v1.0
@@ -13,41 +13,31 @@
 #include "ute_module_platform.h"
 #include "ute_drv_gsensor_stk8321.h"
 #include "ute_module_platform.h"
-#include "bsp_i2c.h"
 
 #if UTE_DRV_STK8321_SUPPORT
-/*! skt8321å¯„å­˜å™¨å€¼zn.zeng, 2021-07-26  */
+/*! skt8321¼Ä´æÆ÷Öµzn.zeng, 2021-07-26  */
 static uint8_t regValueStk8321[10][2];
-/*! skt8321å¯„å­˜å™¨å†™å…¥è®¡æ•°zn.zeng, 2021-07-26  */
+/*! skt8321¼Ä´æÆ÷Ğ´Èë¼ÆÊızn.zeng, 2021-07-26  */
 static uint8_t writeStk8321RegCnt = 0;
-/*! skt8321è¯»å–fifoå¼‚å¸¸è®¡æ•°zn.zeng, 2021-07-26  */
+/*! skt8321¶ÁÈ¡fifoÒì³£¼ÆÊızn.zeng, 2021-07-26  */
 static uint8_t readFifoErrorCnt = 0;
 /**
-*@brief        stk8321å†™å¯„å­˜å™¨
+*@brief        stk8321Ğ´¼Ä´æÆ÷
 *@details
-*@param[in] uint8_t reg  å¯„å­˜å™¨
-*@param[in] uint8_t data  å¯„å­˜å™¨å€¼
-*@return  è¿”å›trueä¸ºæˆåŠŸ
+*@param[in] uint8_t reg  ¼Ä´æÆ÷
+*@param[in] uint8_t data  ¼Ä´æÆ÷Öµ
+*@return  ·µ»ØtrueÎª³É¹¦
 *@author       zn.zeng
 *@date       2021-07-26
 */
 bool uteDrvGsensorStk8321WriteReg(uint8_t reg,uint8_t data)
 {
     uint8_t i;
-    bool ret = true;
-    // uint8_t value[2];
-    // value[0] = reg;
-    // value[1] = data;
-
-    if(!sys_cb.gsensor_iic_en)
-    {
-        i2c_gsensor_init();
-    }
-
-    // ret = uteModulePlatformTwiWrite(UTE_DRV_GSENSOR_SPI_TWI_ID,UTE_DRV_STK8321_SALVEADDR,&value[0],2);
-    uint32_t i2c_cfg = START_FLAG0 | DEV_ADDR0 | REG_ADDR_0 | WDATA | STOP_FLAG;
-    bsp_hw_i2c_tx_byte(i2c_cfg, GSENSOR_WRITE_ADDR(UTE_DRV_STK8321_SALVEADDR), reg, data);
-
+    bool ret = false;
+    uint8_t value[2];
+    value[0] = reg;
+    value[1] = data;
+    ret = uteModulePlatformTwiWrite(UTE_DRV_GSENSOR_SPI_TWI_ID,UTE_DRV_STK8321_SALVEADDR,&value[0],2);
     for(i=0; i<10; i++)
     {
         if(regValueStk8321[i][0]==reg)
@@ -65,34 +55,25 @@ bool uteDrvGsensorStk8321WriteReg(uint8_t reg,uint8_t data)
     return ret;
 }
 /**
-*@brief        stk8321è¯»å¯„å­˜å™¨
+*@brief        stk8321¶Á¼Ä´æÆ÷
 *@details
-*@param[in] uint8_t reg  å¯„å­˜å™¨
-*@param[in] uint8_t *data  å¯„å­˜å™¨å€¼
-*@param[in] uint8_t size è¯»å–é•¿åº¦
-*@return  è¿”å›trueä¸ºæˆåŠŸ
+*@param[in] uint8_t reg  ¼Ä´æÆ÷
+*@param[in] uint8_t *data  ¼Ä´æÆ÷Öµ
+*@param[in] uint8_t size ¶ÁÈ¡³¤¶È
+*@return  ·µ»ØtrueÎª³É¹¦
 *@author       zn.zeng
 *@date       2021-07-26
 */
 uint8_t uteDrvGsensorStk8321ReadReg(uint8_t reg,uint8_t *data,uint8_t size)
 {
-    if(!sys_cb.gsensor_iic_en)
-    {
-        i2c_gsensor_init();
-    }
-
-    // return uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,UTE_DRV_STK8321_SALVEADDR,&reg,1,data,size);
-
-    uint32_t i2c_cfg = START_FLAG0 | DEV_ADDR0 | REG_ADDR_0 | START_FLAG1 | DEV_ADDR1;
-    bsp_hw_i2c_rx_buf(i2c_cfg, GSENSOR_READ_ADDR(UTE_DRV_STK8321_SALVEADDR), reg, data, size);
-    return true;
+    return uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,UTE_DRV_STK8321_SALVEADDR,&reg,1,data,size);;
 }
 /**
-*@brief        stk8321 acc åˆå§‹åŒ–
+*@brief        stk8321 acc ³õÊ¼»¯
 *@details
-*@param[in] ute_drv_gsensor_acc_rate_t accRate accé‡‡æ ·ç‡
-*@param[in] uint8_t accRange é‡‡æ ·èŒƒå›´
-*@return  è¿”å›trueä¸ºæˆåŠŸ
+*@param[in] ute_drv_gsensor_acc_rate_t accRate acc²ÉÑùÂÊ
+*@param[in] uint8_t accRange ²ÉÑù·¶Î§
+*@return  ·µ»ØtrueÎª³É¹¦
 *@author       zn.zeng
 *@date       2021-07-26
 */
@@ -116,7 +97,7 @@ bool uteDrvGsensorStk8321AccInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accR
     }
     uteDrvGsensorStk8321WriteReg(0x14,0xB6);
     uteModulePlatformDelayUs(50000);
-    //é˜²å¹²æ‰°å¤„ç† //ellison  mark Jul 17, 2019
+    //·À¸ÉÈÅ´¦Àí //ellison  mark Jul 17, 2019
 #if DRV_GSENSOR_SPI_SUPPORT
     uint8_t regValue = 0;
     uteDrvGsensorStk8321ReadReg(0x70,&regValue,1); // read IC version
@@ -145,8 +126,8 @@ bool uteDrvGsensorStk8321AccInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accR
 #endif
 }
 /**
-*@brief        stk8321 è¿›å…¥æ·±ç¡æ¨¡å¼
-*@details      ä¸åšä»»ä½•é‡‡æ ·
+*@brief        stk8321 ½øÈëÉîË¯Ä£Ê½
+*@details      ²»×öÈÎºÎ²ÉÑù
 *@author       zn.zeng
 *@date       2021-07-26
 */
@@ -162,7 +143,7 @@ void uteDrvGsensorStk8321DeepSleep(void)
 #endif
 }
 /**
-*@brief        stk8321 è¯»å–acc x y z è½´çš„å®æ—¶æ•°æ®
+*@brief        stk8321 ¶ÁÈ¡acc x y z ÖáµÄÊµÊ±Êı¾İ
 *@details
 *@param[in]   (int16_t *x, int16_t *y, int16_t *z)
 *@author       zn.zeng
@@ -178,29 +159,16 @@ void uteDrvGsensorStk8321ReadAccXyz(int16_t *x, int16_t *y, int16_t *z)
     uint8_t buff[6] = {0};
     int16_t temp = 0;
     uteDrvGsensorStk8321ReadReg(0x02,&buff[0],6);
-
-    if(UTE_DRV_GSENSOR_ID_STK8327 == uteDrvGsensorCommonGetId())
-    {
-        temp = (int16_t)((buff[1] << 8) | buff[0]);
-        *x = temp;
-        temp = (int16_t)((buff[3] << 8) | buff[2]);
-        *y = temp;
-        temp = (int16_t)((buff[5] << 8) | buff[4]);
-        *z = temp;
-    }
-    else
-    {
-        temp = (int16_t)((buff[1] << 8) | buff[0]);
-        *x = temp>>4;
-        temp = (int16_t)((buff[3] << 8) | buff[2]);
-        *y = temp>>4;
-        temp = (int16_t)((buff[5] << 8) | buff[4]);
-        *z = temp>>4;
-    }
+    temp = (int16_t)((buff[1] << 8) | buff[0]);
+    *x = temp>>4;
+    temp = (int16_t)((buff[3] << 8) | buff[2]);
+    *y = temp>>4;
+    temp = (int16_t)((buff[5] << 8) | buff[4]);
+    *z = temp>>4;
 #endif
 }
 /**
-*@brief        stk8321 æ¸…é™¤fifoæ•°æ®
+*@brief        stk8321 Çå³ıfifoÊı¾İ
 *@details
 *@author       zn.zeng
 *@date       2021-07-26
@@ -216,9 +184,9 @@ void uteDrvGsensorStk8321ClearFifo(void)
 #endif
 }
 /**
-*@brief        stk8321 è¯»å–fifoæ•°æ®
+*@brief        stk8321 ¶ÁÈ¡fifoÊı¾İ
 *@details
-*@param  ute_drv_gsensor_common_axis_data_t *axisData  æ•°æ®æŒ‡é’ˆ
+*@param  ute_drv_gsensor_common_axis_data_t *axisData  Êı¾İÖ¸Õë
 *@author       zn.zeng
 *@date       2021-07-26
 */
@@ -257,31 +225,15 @@ void uteDrvGsensorStk8321ReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
             frame_cnt = 0;
             goto READ_FINISH;
         }
-        if(UTE_DRV_GSENSOR_ID_STK8327 == uteDrvGsensorCommonGetId())
+        for(j=0; j<5; j++)
         {
-            for(j=0; j<5; j++)
-            {
-                temp = (int16_t)((buff[6*j+1] << 8) | buff[6*j+0]);
-                axisData->accXaxis[num]= temp;
-                temp = (int16_t)((buff[6*j+3] << 8) | buff[6*j+2]);
-                axisData->accYaxis[num] = temp;
-                temp = (int16_t)((buff[6*j+5] << 8) | buff[6*j+4]);
-                axisData->accZaxis[num] = temp;
-                num++;
-            }
-        }
-        else
-        {
-            for(j=0; j<5; j++)
-            {
-                temp = (int16_t)((buff[6*j+1] << 8) | buff[6*j+0]);
-                axisData->accXaxis[num]= temp>>4;
-                temp = (int16_t)((buff[6*j+3] << 8) | buff[6*j+2]);
-                axisData->accYaxis[num] = temp>>4;
-                temp = (int16_t)((buff[6*j+5] << 8) | buff[6*j+4]);
-                axisData->accZaxis[num] = temp>>4;
-                num++;
-            }
+            temp = (int16_t)((buff[6*j+1] << 8) | buff[6*j+0]);
+            axisData->accXaxis[num]= temp>>4;
+            temp = (int16_t)((buff[6*j+3] << 8) | buff[6*j+2]);
+            axisData->accYaxis[num] = temp>>4;
+            temp = (int16_t)((buff[6*j+5] << 8) | buff[6*j+4]);
+            axisData->accZaxis[num] = temp>>4;
+            num++;
         }
     }
     if(lastCnt>0)
@@ -292,31 +244,15 @@ void uteDrvGsensorStk8321ReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
             frame_cnt = 0;
             goto READ_FINISH;
         }
-        if(UTE_DRV_GSENSOR_ID_STK8327 == uteDrvGsensorCommonGetId())
+        for(i=0; i<lastCnt; i++)
         {
-            for(i=0; i<lastCnt; i++)
-            {
-                temp = (int16_t)((buff[6*i+1] << 8) | buff[6*i+0]);
-                axisData->accXaxis[num]= temp;
-                temp = (int16_t)((buff[6*i+3] << 8) | buff[6*i+2]);
-                axisData->accYaxis[num] = temp;
-                temp = (int16_t)((buff[6*i+5] << 8) | buff[6*i+4]);
-                axisData->accZaxis[num] = temp;
-                num++;
-            }
-        }
-        else
-        {
-            for(i=0; i<lastCnt; i++)
-            {
-                temp = (int16_t)((buff[6*i+1] << 8) | buff[6*i+0]);
-                axisData->accXaxis[num]= temp>>4;
-                temp = (int16_t)((buff[6*i+3] << 8) | buff[6*i+2]);
-                axisData->accYaxis[num] = temp>>4;
-                temp = (int16_t)((buff[6*i+5] << 8) | buff[6*i+4]);
-                axisData->accZaxis[num] = temp>>4;
-                num++;
-            }
+            temp = (int16_t)((buff[6*i+1] << 8) | buff[6*i+0]);
+            axisData->accXaxis[num]= temp>>4;
+            temp = (int16_t)((buff[6*i+3] << 8) | buff[6*i+2]);
+            axisData->accYaxis[num] = temp>>4;
+            temp = (int16_t)((buff[6*i+5] << 8) | buff[6*i+4]);
+            axisData->accZaxis[num] = temp>>4;
+            num++;
         }
     }
 READ_FINISH:
@@ -367,20 +303,6 @@ const ute_drv_gsensor_common_config_t drvGsensorStk8325Function=
     .slaveAddress = UTE_DRV_STK8321_SALVEADDR,
     .idReg = 0x00,
     .name = "STK8325",
-    .accInit = uteDrvGsensorStk8321AccInit,
-    .getAccData = uteDrvGsensorStk8321ReadAccXyz,
-    .getFifo = uteDrvGsensorStk8321ReadFifo,
-    .deepSleep = uteDrvGsensorStk8321DeepSleep,
-    .clearFifo = uteDrvGsensorStk8321ClearFifo,
-    .dataBit = 12,
-};
-
-const ute_drv_gsensor_common_config_t drvGsensorStk8327Function=
-{
-    .id = UTE_DRV_GSENSOR_ID_STK8327,
-    .slaveAddress = UTE_DRV_STK8321_SALVEADDR,
-    .idReg = 0x00,
-    .name = "STK8327",
     .accInit = uteDrvGsensorStk8321AccInit,
     .getAccData = uteDrvGsensorStk8321ReadAccXyz,
     .getFifo = uteDrvGsensorStk8321ReadFifo,

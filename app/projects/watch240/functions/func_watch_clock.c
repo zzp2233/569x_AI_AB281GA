@@ -41,7 +41,7 @@ void func_sliding_unlcok_value_change_callback(int32_t change_value)
     }
     if(change_value <= 70 && !slider_unlock)
     {
-        printf("1999999999999999999999999999999\r\n");
+        // printf("1999999999999999999999999999999\r\n");
         //func_directly_back_to();
         slider_unlock = true;
     }

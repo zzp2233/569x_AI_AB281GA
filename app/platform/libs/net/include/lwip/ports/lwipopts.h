@@ -76,12 +76,12 @@
 #define LWIP_NETIF_STATUS_CALLBACK      1
 #define LWIP_NETIF_EXT_STATUS_CALLBACK  1
 
-// #define LWIP_DEBUG
+#define LWIP_DEBUG
 #ifdef LWIP_DEBUG
 
 #define LWIP_DBG_MIN_LEVEL         0
 #define PPP_DEBUG                  LWIP_DBG_OFF
-#define MEM_DEBUG                  LWIP_DBG_OFF
+#define MEM_DEBUG                  LWIP_DBG_ON
 #define MEMP_DEBUG                 LWIP_DBG_ON
 #define PBUF_DEBUG                 LWIP_DBG_OFF
 #define API_LIB_DEBUG              LWIP_DBG_OFF
@@ -162,7 +162,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define MEMP_NUM_TCP_PCB_LISTEN 2
 /* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP
    segments. */
-#define MEMP_NUM_TCP_SEG        TCP_SND_QUEUELEN
+#define MEMP_NUM_TCP_SEG        (TCP_SND_QUEUELEN + 8)
 /* MEMP_NUM_SYS_TIMEOUT: the number of simulateously active
    timeouts. */
 #define MEMP_NUM_SYS_TIMEOUT    (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 2)

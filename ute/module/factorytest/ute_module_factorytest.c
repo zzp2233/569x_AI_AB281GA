@@ -201,7 +201,7 @@ void uteModuleFactoryTestFillSupportFuntion1(uint8_t *funtion)
     funtion[1] |= 0x08;
 //gsensor
     funtion[1] |= 0x10;
-#if (UTE_MODULE_TEMPERATURE_SUPPORT || UTE_DRV_BATTERY_CE_AUTH_SUPPORT)
+#if UTE_MODULE_TEMPERATURE_SUPPORT
     funtion[1] |= 0x20;
 #endif
 //charge status & adc
@@ -243,6 +243,7 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
     {
         uteModuleFactoryTestData.u.aging.runningTimeSecond = 0;
         uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStartSingleTesting(TYPE_HEART);
 #endif
     }
@@ -522,28 +523,6 @@ void uteModuleFactoryTestProtocol(uint8_t*receive,uint8_t length)
             uteModuleTemperatureStopTesting();
             uteModuleProfileBleSendToPhone(&response[0],4);
         }
-#elif UTE_DRV_BATTERY_CE_AUTH_SUPPORT
-        if (receive[3] == 0x01)
-        {
-            if (uteDrvTemperatureCommonIsInitSuccessful())
-            {
-                int16_t ambientTemperature = (int16_t)uteDrvTemperatureCommonGetAmbientValue();
-                int16_t skinTemperature = ambientTemperature;
-                response[0] = CMD_FACTORY_TEST_MODE;
-                response[1] = 0x00;
-                response[2] = 0x15;
-                response[3] = 0x01;
-                response[4] = (ambientTemperature * 100.0f) / 100;
-                response[5] = (uint16_t)(ambientTemperature * 100.0f) % 100;
-                response[6] = (skinTemperature * 100.0f) / 100;
-                response[7] = (uint16_t)(skinTemperature * 100.0f) % 100;
-                uteModuleProfileBleSendToPhone(&response[0], 8);
-            }
-        }
-        else
-        {
-            uteModuleProfileBleSendToPhone(&response[0], 4);
-        }
 #endif
     }
     else if(option==0x0016)
@@ -553,7 +532,7 @@ void uteModuleFactoryTestProtocol(uint8_t*receive,uint8_t length)
         ute_drv_battery_charger_status_t  status;
         currBatteryVoltage = uteDrvBatteryCommonGetVoltage();
         currBatteryLvl = uteDrvBatteryCommonGetLvl();
-        status = (sys_cb.chg_on == 0) ? 0 : uteDrvBatteryCommonGetChargerStatus();
+        status = uteDrvBatteryCommonGetChargerStatus();
         response[3] = currBatteryVoltage>>0x08;
         response[4] = currBatteryVoltage&0xFF;
         response[5] = currBatteryLvl;
@@ -739,6 +718,7 @@ void uteModuleFactoryTestStop(void)
         {
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
+#endif
     }
 }
 
@@ -767,7 +747,7 @@ uint8_t uteModuleFactoryTestGetCheckLightMode(void)
 *@author     casen
 *@date       2022-02-25
 */
-void uteModuleFactoryTestGetVkData(uint16_t *preV,uint16_t *curV, uint16_t *psV,bool *isPass)
+void uteModuleFactoryTestGetVkData(int *preV,int *curV, int *psV,bool *isPass)
 {
     (*preV) = uteModuleFactoryTestData.u.vcxx.pre;
     (*curV) = uteModuleFactoryTestData.u.vcxx.current;
@@ -775,7 +755,7 @@ void uteModuleFactoryTestGetVkData(uint16_t *preV,uint16_t *curV, uint16_t *psV,
     (*isPass) = uteModuleFactoryTestData.u.vcxx.isPass;
 }
 
-void uteModuleFactoryTestSetVkData(uint16_t  preV,uint16_t  curV, uint16_t  psV)
+void uteModuleFactoryTestSetVkData(int preV,int curV, int psV)
 {
     uteModuleFactoryTestData.u.vcxx.pre = preV;
     uteModuleFactoryTestData.u.vcxx.current = curV;

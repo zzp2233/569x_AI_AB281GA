@@ -31,13 +31,7 @@
 #include "ute_module_watchonline.h"
 #include "ute_module_factorytest.h"
 #include "ute_module_music.h"
-#include "ute_module_menstrualcycle.h"
-#include "ute_module_appbinding.h"
-#include "ute_module_emotionPressure.h"
 #include "func_cover.h"
-#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
-#include "ute_module_timezonesetting.h"
-#endif
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -69,7 +63,6 @@ void uteModuleProtocolSetParamHourKmFormat(uint8_t*receive,uint8_t length)
         UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,error length=%d", __func__,length);
     }
 }
-
 /**
 *@brief        绑定提醒
 *@details
@@ -80,19 +73,18 @@ void uteModuleProtocolSetParamHourKmFormat(uint8_t*receive,uint8_t length)
 */
 void uteAppCmdVerificationBindingNotify()
 {
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,uteModuleAppBindingGetOurAppConnection = %d,uteModuleAppBindingGetBindingNotify=%d", __func__, uteModuleAppBindingGetOurAppConnection(), uteModuleAppBindingGetBindingNotify());
-    uteModuleAppBindingSetOurAppConnection(true);
-    uteModuleAppBindingSetHasBindingBefore(HAS_BEEN_CONNECTED);
-    if (!uteModuleAppBindingGetBindingNotify())
-    {
-        uteModuleAppBindingSetBindingNotify(true);
-#if !UTR_APP_BINDING_NOT_NOTIFY_SUPPORT
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
-        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_NOTIFY_ID);
-#endif
-    }
+    // UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,uteModuleAppBindingGetOurAppConnection = %d,uteModuleAppBindingGetBindingNotify=%d", __func__,uteModuleAppBindingGetOurAppConnection(),uteModuleAppBindingGetBindingNotify());
+//     uteModuleAppBindingSetOurAppConnection(true);
+//     uteModuleAppBindingSetHasBindingBefore(HAS_BEEN_CONNECTED);
+//     if(!uteModuleAppBindingGetBindingNotify())
+//     {
+//         uteModuleAppBindingSetBindingNotify(true);
+// #if !UTR_APP_BINDING_NOT_NOTIFY_SUPPORT
+//         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+//         uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_NOTIFY_ID);
+// #endif
+//     }
 }
-
 /**
 *@brief        获取软件版本号
 *@details
@@ -197,17 +189,17 @@ void uteModuleProtocolSetDateTime(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetBleName(uint8_t*receive,uint8_t length)
 {
-    if (length > 1)
+    if (length>1)
     {
         uint16_t snDataLen = sizeof(ute_application_sn_data_t);
         ute_application_sn_data_t *snData = uteModulePlatformMemoryAlloc(snDataLen);
         memset(snData, 0, snDataLen);
-        uteModulePlatformFlashNorRead((uint8_t *)snData, UTE_USER_PARAM_ADDRESS, snDataLen);
-        uint8_t nameLen = length - 1 < sizeof(snData->bleDevName) ? length - 1 : sizeof(snData->bleDevName);
+        uteModulePlatformFlashNorRead(snData, UTE_USER_PARAM_ADDRESS, snDataLen);
+        uint8_t nameLen = length - 1 < sizeof(snData->bleDevName) ? length - 1 : snData->bleDevName;
         memcpy(snData->bleDevName, &receive[1], nameLen);
         snData->bleDevNameLen = nameLen;
         uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
-        uteModulePlatformFlashNorWrite((uint8_t *)snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
+        uteModulePlatformFlashNorWrite(snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
         uteModulePlatformMemoryFree(snData);
         uteModuleProfileBleSendToPhone(&receive[0], 1);
     }
@@ -1479,7 +1471,6 @@ void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
     {
         param.isRejectCall = false;
     }
-    uteModuleNotDisturbSetOneKeyRejectCall(param.isRejectCall);
 #if (!UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT)
     if(receive[1]&0x04)
     {
@@ -1972,9 +1963,7 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
             // uteModuleProfileBleSendToPhone(&response[0],4);
             return;
         }
-        uteTaskGuiStartScreen(FUNC_SPORT_SWITCH, 0, __func__);
         uteModuleSportStartMoreSports(receive[2],receive[3],true);
-        sys_cb.sport_idx = receive[2];//解决app发起运动，不显示运动类型问题
     }
     else if(receive[1]==0x00)//close sport
     {
@@ -2001,9 +1990,6 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
     {
         if(isAppStart)
         {
-#if UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR //APP开启运动->app暂停运动马达震动
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-#endif
             uteModuleSportMoreSportSetStatus(ALL_SPORT_STATUS_PAUSE);
             uteModuleSportSyncAppMoreSportData(receive);
             uteModuleProfileBleSendToPhone(&receive[0],13);
@@ -2185,11 +2171,8 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
     }
     else if(receive[1]==0x02) // 开始同步表盘数据
     {
-#if UTE_MODULE_WATCH_PHOTO_SUPPORT
-        uteModuleWatchOnlineSetStartReceivePhoto(false);
-#endif
         uteModuleWatchOnlineReadyStart();
-        // uteModuleProfileBleSendToPhone(&response[0],2);
+        uteModuleProfileBleSendToPhone(&response[0],2);
     }
     else if(receive[1]==0x03) // 结束同步表盘数据
     {
@@ -2214,41 +2197,6 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
         uteModuleWatchOnlineSetWillUpdateDataIndex(receive[2]);
         uteModuleProfileBleSendToPhone(&response[0], 3);
     }
-#if (UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT > 1)
-    else if (receive[1] == 0x08)
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = receive[2];
-        uteModuleWatchOnlineDeleteDataIndex(receive[2], &response[3]);
-        uteModuleProfileBleSendToPhone(&response[0], 9);
-    }
-    else if (receive[1] == 0x09)
-    {
-        uteModuleWatchOnlineGetAllInfoStart();
-    }
-    else if (receive[1] == 0x0c && length > 3)
-    {
-        uteModuleWatchOnlineDeleteDataMultipleIndex(receive[2],&receive[3]);
-    }
-    else if (receive[1] == 0x0d)
-    {
-        uint32_t watchId = receive[3] << 24 | receive[4] << 16 | receive[5] << 8 | receive[6];
-        uteModuleWatchOnlineSwitchWatchMain(receive[2], watchId);
-    }
-#endif
-#if UTE_MODULE_WATCH_PHOTO_SUPPORT
-    else if (receive[1] == 0x0A)
-    {
-        memcpy(&response[0], receive, 2);
-        uteModuleWatchOnlineGetInfoWithPhoto(&response[0]);
-        uteModuleProfileBleSendToPhone(&response[0], 18);
-    }
-    else if (receive[1] == 0x0B)
-    {
-        uteModuleWatchOnlineStartSyncPhoto(&receive[0]);
-    }
-#endif
 }
 
 void uteModuleProtocolWatchOnlineData(uint8_t*receive,uint8_t length)
@@ -2459,43 +2407,6 @@ void uteModuleProtocolSyncAddressBook(uint8_t*receive,uint8_t length)
 }
 
 /**
-*@brief     女性生理周期控制指令
-*@details
-*@param[in] uint8_t*receive
-*@param[in] uint8_t length
-*@author     dengli.lu
-*@date       2021-11-24
-*/
-#if UTE_MODULE_MENSTRUAL_CYCLE_SUPPORT
-void uteModuleProtocolWomenMenstrualCycle(uint8_t*receive,uint8_t length)
-{
-    ute_menstrual_cycle_param_t param;
-    memset(&param,0,sizeof(param));
-    switch(receive[1])
-    {
-        case 0x01: //open
-        {
-            param.reminderSwitch = true;
-            memcpy(&param.lastTimestamp[0],&receive[2],4);
-            param.keepDays = receive[6];
-            param.cycleDays = receive[7];
-        }
-        break;
-        case 0x00: //close
-        {
-            param.reminderSwitch = false;
-        }
-        break;
-        default :
-            break;
-    }
-    uteModuleMenstrualCycleSetParam(param);
-    uteModuleProfileBleSendToPhone(&receive[0],2);
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,receive = %d", __func__,receive[1]);
-}
-#endif
-
-/**
 *@brief       工厂测试模式
 *@details
 *@param[in] uint8_t*receive
@@ -2568,403 +2479,6 @@ void uteModuleProtocolDebugData(uint8_t*receive,uint8_t length)
 #endif
 }
 
-/**
-*@brief       多运动之前可设置目标
-*@details
-*@param[in] uint8_t*receive
-*@param[in] uint8_t length
-*@author       dengli.lu
-*@date       2022-03-18
-*/
-void uteModuleProtocolSportsTargetSelect(uint8_t*receive,uint8_t length)
-{
-#if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
-    uint32_t sportDistanceTargetCnt = 0;
-    uint32_t sportTimeTargetSec = 0;
-    uint16_t sportKcalTarget = 0;
-    uint8_t response[3];
-    memset(response,0,3);
-    ute_module_sports_target_data_t sportsTargetData;
-    uteModuleSportGetMoreSportsTargetData(&sportsTargetData);
-    if(receive[1] == 0x01)//多运动心率预警设置
-    {
-#if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT
-        uteModuleHeartSetSportHeartWaringInfo(receive[2],receive[3],receive[4],receive[5]);
-        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,maxHeart = %d,isMaxHeartOpen = %d,minHeart = %d,isMinHeartOpen = %d",__func__,receive[2],receive[3],receive[4],receive[5]);
-#endif
-    }
-    if(receive[1] == 0x02)//多运动目标距离
-    {
-        sportDistanceTargetCnt = receive[2]<<24|receive[3]<<16|receive[4]<<8|receive[5];
-        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,sportDistanceTargetCnt = %d",__func__,sportDistanceTargetCnt);
-        if(sportDistanceTargetCnt > 0)
-        {
-            sportsTargetData.sportDistanceTargeCnt = sportDistanceTargetCnt;
-            sportsTargetData.isNoTarget = false;
-        }
-    }
-    else if(receive[1] == 0x03)//多运动目标时长
-    {
-        sportTimeTargetSec = receive[2]<<24|receive[3]<<16|receive[4]<<8|receive[5];
-        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,sportTimeTargetSec = %d",__func__,sportTimeTargetSec);
-        if(sportTimeTargetSec > 0)
-        {
-            sportsTargetData.sportTimeTargetSec = sportTimeTargetSec;
-            sportsTargetData.isNoTarget = false;
-        }
-    }
-    else if(receive[1] == 0x04)//多运动目标kcal
-    {
-        sportKcalTarget = receive[2]<<8|receive[3];
-        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,sportKcalTarget = %d",__func__,sportKcalTarget);
-        if(sportKcalTarget > 0)
-        {
-            sportsTargetData.sportKcalTarget = sportKcalTarget;
-            sportsTargetData.isNoTarget = false;
-        }
-    }
-    response[0] = receive[0];
-    response[1] = receive[1];
-    response[2] = 0xFD;
-    uteModuleProfileBleSendToPhone((uint8_t *)&response[0],3);
-    uteModuleSportSetMoreSportsTargetData(sportsTargetData);
-#endif
-}
-
-/**
-*@brief       绑定数据同步
-*@details
-*@param[in] uint8_t*receive
-*@param[in] uint8_t length
-*@author
-*@date       2022-02-15
-*/
-void uteModuleProtocolAppBindingCtrl(uint8_t *receive, uint8_t length)
-{
-#if UTE_USER_ID_FOR_BINDING_SUPPORT
-    ute_application_sn_data_t snData;
-    uint32_t size = sizeof(ute_application_sn_data_t);
-    uint32_t newBindingUserId = 0xffffffff;
-    uint8_t response[20];
-    memset(response, 0, sizeof(response));
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,receive = %d", __func__, receive[1]);
-    if (receive[1] == 0x01)
-    {
-        uteModuleAppBindingSetOurAppConnection(true);
-        response[0] = receive[0];
-        response[1] = 0x04;
-        response[2] = 0x01;
-        uteModuleProfileBleSendToPhone(&response[0], 3);
-    }
-    else if (receive[1] == 0x02)
-    {
-        newBindingUserId = receive[2] << 24 | receive[3] << 16 | receive[4] << 8 | receive[5];
-        uteModuleAppBindingSetNewUserId(newBindingUserId);
-        uteModulePlatformFlashNorRead((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
-        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,newBindingUserId=%d,userId=0x%08x", __func__, newBindingUserId, snData.userId);
-#if UTE_QRCODE_BINDING_NO_CONFIRM_SUPPORT // 扫码绑定不需要确认
-        if ((newBindingUserId == snData.userId) || (newBindingUserId == uteModuleAppBindingGetQRcodeRandom()))
-#else
-        if (newBindingUserId == snData.userId)
-#endif
-        {
-#if UTE_QRCODE_BINDING_NO_CONFIRM_SUPPORT
-            if (newBindingUserId == uteModuleAppBindingGetQRcodeRandom())
-            {
-                uteModulePlatformFlashNorRead((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
-                uteModulePlatformFlashNorErase(UTE_BLE_SN1_ADDRESS);
-                snData.userId = newBindingUserId;
-                uteModulePlatformFlashNorWrite((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
-            }
-#endif
-            uteModuleAppBindingSetOurAppConnection(true);
-            response[0] = receive[0];
-            response[1] = 0x04;
-            response[2] = 0x01;
-            uteModuleProfileBleSendToPhone(&response[0], 3);
-        }
-        else
-        {
-            response[0] = receive[0];
-            response[1] = 0x04;
-            if (snData.userId != 0xffffffff)
-            {
-                response[2] = 0x03;
-            }
-            else
-            {
-                response[2] = 0x04;
-            }
-            uteModuleProfileBleSendToPhone(&response[0], 3);
-            uteModuleAppBindingSetBindingStart(true);
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
-#if UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WHETHER_BINDING_ID);
-#endif
-        }
-    }
-    else if (receive[1] == 0x03)
-    {
-        uteModulePlatformFlashNorRead((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
-        response[0] = receive[0];
-        response[1] = 0x03;
-        response[2] = snData.userId >> 24 & 0xff;
-        response[3] = snData.userId >> 16 & 0xff;
-        response[4] = snData.userId >> 8 & 0xff;
-        response[5] = snData.userId & 0xff;
-        uteModuleProfileBleSendToPhone(&response[0], 6);
-    }
-#endif
-}
-
-/**
-*@brief       情绪压力控制和数据同步
-*@details
-*@param[in] uint8_t*receive
-*@param[in] uint8_t length
-*@author       xjc
-*@date       2022-02-15
-*/
-void uteModuleProtocolEmotionPressureCtrl(uint8_t*receive,uint8_t length)
-{
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-    uint8_t response[20];
-    memset(response, 0, sizeof(response));
-    if(receive[1]==0x11)//start test
-    {
-        bool isNeedStart = true;
-        response[0]=CMD_EMOTION_PRESSURE_TEST;
-        response[1]=0x00;
-        response[2]=0xFF;
-        response[3]=0xFF;
-        response[4]=0xFF;
-        response[5]=EP_STOP_REASION_SUCCESS;
-        // if(!uteModuleEmotionPressureIsWear())
-        // {
-        // response[5]=EP_STOP_REASION_UNWEAR;
-        // isNeedStart = false;
-        // }
-        // else
-        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
-        {
-            response[5]=EP_STOP_REASION_TIMEOUT;
-            isNeedStart = false;
-        }
-        else if(uteModuleSportMoreSportIsRuning())
-        {
-            response[5]=EP_STOP_REASION_TRAINING;
-            isNeedStart = false;
-        }
-        else if(uteModuleEmotionPressureIsTesting())
-        {
-            response[5]=EP_STOP_REASION_TESTING;
-            isNeedStart = false;
-        }
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT     //add by pcm 2023-07-28 维客情绪压力
-        else if(!uteModuleEmotionPressureGetAlgoActiveStatus())
-        {
-            response[5]=EP_STOP_REASION_TIMEOUT;
-            isNeedStart = false;
-        }
-
-#endif
-        if(isNeedStart)
-        {
-            uteModuleEmotionPressureStartSingleTesting(true);
-            switch (receive[2])
-            {
-#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
-                case 0: // 情绪
-                    uteTaskGuiStartScreen(FUNC_MOOD, 0, __func__);
-                    break;
-#endif
-#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-                case 1: // 压力
-                    uteTaskGuiStartScreen(FUNC_PRESSURE, 0, __func__);
-                    break;
-#endif
-#if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
-                case 2: // 疲劳度
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FATIGUE_ID, 0, __func__);
-                    break;
-#endif
-                default:
-#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-                    uteTaskGuiStartScreen(FUNC_PRESSURE, 0, __func__);
-#endif
-                    break;
-            }
-        }
-        else
-        {
-            uteModuleProfileBleSendToPhone((uint8_t *)&response[0],6);
-        }
-    }
-    else if(receive[1]==0x00)
-    {
-        uint8_t emotionValue = receive[2];
-        uint8_t pressureValue = receive[3];
-        uint8_t fatigueValue = receive[4];
-        uint8_t stopReasion = receive[5];
-        uteModuleEmotionPressureSetEmotionPressureValue(emotionValue,pressureValue,fatigueValue);
-        uteModuleEmotionPressureStopSingleTesting(stopReasion);
-    }
-    else if(receive[1]==0x03)/*! 自动测试开关+采样间隔 xjc, 2022-02-15  */
-    {
-        bool isAutoTesting = receive[2];
-        uint16_t intervalMin = receive[3]<<8|receive[4];
-        uteModuleEmotionPressureSaveAutoIntervalParam(isAutoTesting,intervalMin);
-        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],5);
-    }
-    else if(receive[1]==0x04)/*!设置自动测试时间段 xjc, 2022-02-15  */
-    {
-        bool isAutoTimeBucketTesting = receive[2];
-        uint16_t startTimeHourMin = receive[3]<<8|receive[4];
-        uint16_t endTimeHourMin = receive[5]<<8|receive[6];
-        uteModuleEmotionPressureSaveAutoTimeBucketParam(isAutoTimeBucketTesting,startTimeHourMin,endTimeHourMin);
-        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],7);
-    }
-    else if(receive[1]==0xaa)/*! 查询测试状态  xjc, 2022-02-15  */
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        if(uteModuleEmotionPressureIsTesting())
-        {
-            response[2] = 0x11;
-        }
-        else
-        {
-            response[2] = 0xff;
-        }
-        uteModuleProfileBleSendToPhone((uint8_t *)&response[0],3);
-    }
-    else if(receive[1]==0x0c)/*! 删除历史数据  xjc, 2022-02-15  */
-    {
-        uteModuleEmotionPressureDelHistoryData();
-        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
-    }
-    else if (receive[1] == 0x0d) /*! 查询情绪压力算法是否已激活 xjc, 2022-02-15  */
-    {
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT     //add by pcm 2023-07-28 维???压力算??
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = 0x11;      //默认已激活，不需要重新申请激活码
-#else
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = (uteModuleEmotionPressureGetAlgoActiveStatus()) ? 0x11 : 0xFF;
-#endif
-        uteModuleProfileBleSendToPhone(&response[0], 3);
-    }
-    else if (receive[1] == 0x0e) /*! APP请求获取申请激活码所使用的申请码 xjc, 2022-02-15  */
-    {
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT     //add by pcm 2023-07-28 维客情绪压力算法
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = receive[2];
-        response[3] =  0x11;
-        response[4] = 0xFD;
-        uteModuleProfileBleSendToPhone(&response[0], 5);
-#else
-        if (receive[2] == 0x11) //获取申请激活码所使用的申请码
-        {
-            uteModuleEmotionPressureSendDeviceInfomationToService();
-        }
-        else if (receive[2] == EMOTION_PRESSURE_KEY_CODE_LEN) //返回授权激活码
-        {
-            uteModuleEmotionPressureSetKeyCode(&receive[3]);
-            uteModuleEmotionPressureActiveAlgo(true);
-            response[0] = receive[0];
-            response[1] = receive[1];
-            response[2] = receive[2];
-            response[3] = (uteModuleEmotionPressureGetAlgoActiveStatus()) ? 0x11 : 0xFF;
-            response[4] = 0xFD;
-            uteModuleProfileBleSendToPhone(&response[0], 5);
-        }
-#endif
-    }
-    else if(receive[1]==0x0f)/*! 查询手环端支持显示的界面+Sensor xjc, 2022-03-31  */
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = UTE_MODULE_SCREENS_EMOTION_SUPPORT;
-        response[3] = UTE_MODULE_SCREENS_PRESSURE_SUPPORT;
-        response[4] = UTE_MODULE_SCREENS_FATIGUE_SUPPORT;
-        /*! 传感器型号(VC32/VC52/VP60) */
-#if UTE_DRV_HEART_VC32S_SUPPORT
-        response[5] = 4;
-        memcpy(&response[6],"VC32",4);
-#elif UTE_DRV_HEART_VC52S_SUPPORT
-        response[5] = 4;
-        memcpy(&response[6],"VC52",4);
-#elif UTE_DRV_HEART_VC9201C_VP60A1_SUPPORT||UTE_DRV_HEART_VC9201C_VP60A2_SUPPORT||UTE_DRV_HEART_VC30S_SUPPORT||UTE_DRV_HEART_VC9202_VP60A2_SUPPORT
-        response[5] = 4;
-        memcpy(&response[6],"VP60",4);
-#else
-        response[5] = 4;
-        memcpy(&response[6],"VP60",4);
-#endif
-        uteModuleProfileBleSendToPhone(&response[0], (6+response[5]));
-    }
-    else if(receive[1]==0xfa)/*! 同步历史数据 xjc, 2022-02-15  */
-    {
-        ute_module_systemtime_time_t time;
-        memset(&time,0,sizeof(ute_module_systemtime_time_t));
-        if(length>2)
-        {
-            time.year = receive[2]<<8|receive[3];
-            time.month = receive[4];
-            time.day = receive[5];
-            time.hour = receive[6];
-            time.min = receive[7];
-            time.sec = receive[8];
-        }
-        /*! 情绪压力测试过程中，不发送历史数据,xjc 2022-02-18*/
-        if(uteModuleEmotionPressureIsTesting())
-        {
-            response[0] = receive[0];
-            response[1] = receive[1];
-            response[2] = 0xFD;
-            response[3] = 0x00;
-            uteModuleProfileBleSendToPhone(&response[0], 4);
-        }
-        else
-        {
-            uteModuleEmotionPressureStartSendAutoTestHistoryData(time);
-        }
-    }
-#else
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,undefine ", __func__);
-#endif
-}
-
-/**
-*@brief   app读取客户自定义版本号
-*@details
-*@author  dengli.lu
-*@date    2022-08-30
-*/
-void uteModuleProtocolCustomF6CmdHandle(uint8_t*receive,uint8_t length)
-{
-#if UTE_APP_READ_CUSTOM_SOFTWARE_VERSON_SUPPORT
-    uteApplicationCommonReadCustomSoftwareVersion(receive,length);
-#endif
-}
-
-/**
-*@brief       时区数据同步
-*@details
-*@param[in] uint8_t*receive
-*@param[in] uint8_t length
-*@author       huanghe
-*@date       2022-08-24
-*/
-void uteModuleProtocolTimeZoneCtrl(uint8_t*receive,uint8_t length)
-{
-#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
-    uteModuleTimeZoneSettingCmd(receive,length);
-#endif
-}
 
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
@@ -3005,9 +2519,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_SLEEP_ON_BAND,.publicCmd=PUBLIC_CMD_SLEEP_ON_BAND,.function=uteModuleProtocolSleepReadHistoryData},
     {.privateCmd = CMD_SEND_SLEEP_ON_BAND_DATAS,.publicCmd=PUBLIC_CMD_SEND_SLEEP_ON_BAND_DATAS,.function=uteModuleProtocolSleepReadHistoryData},
     {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
-#if UTE_MODULE_MENSTRUAL_CYCLE_SUPPORT
-    {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
-#endif
+    // {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
     {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
     {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},
     {.privateCmd = CMD_WATCH_ONLINE,.publicCmd=PUBLIC_CMD_WATCH_ONLINE,.function=uteModuleProtocolWatchOnlineCtrl},
@@ -3017,8 +2529,8 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 #endif
     {.privateCmd = CMD_SYNC_CONTACTS,.publicCmd=CMD_SYNC_CONTACTS,.function=uteModuleProtocolSyncAddressBook},
     {.privateCmd = CMD_SOCIAL_APP_SELECT,.publicCmd=CMD_SOCIAL_APP_SELECT,.function=uteModuleProtocolSocialAppSelectParam},
-    {.privateCmd = CMD_EMOTION_PRESSURE_TEST,.publicCmd=CMD_EMOTION_PRESSURE_TEST,.function=uteModuleProtocolEmotionPressureCtrl},
-    {.privateCmd = CMD_USER_ID_FOR_BINDING,.publicCmd=PUBLIC_CMD_USER_ID_FOR_BINDING,.function=uteModuleProtocolAppBindingCtrl},
+    // {.privateCmd = CMD_EMOTION_PRESSURE_TEST,.publicCmd=CMD_EMOTION_PRESSURE_TEST,.function=uteModuleProtocolEmotionPressureCtrl},
+    // {.privateCmd = CMD_USER_ID_FOR_BINDING,.publicCmd=PUBLIC_CMD_USER_ID_FOR_BINDING,.function=uteModuleProtocolAppBindingCtrl},
 #if UTE_MODULE_UNIT_TEST_FUNCTION_DATAS_SUPPORT
     {.privateCmd = CMD_DEBUG_TEST_DATA,.publicCmd=CMD_DEBUG_TEST_DATA,.function=uteModuleUnitTestDatasReceiveHandler},
 #else
@@ -3030,10 +2542,9 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     // {.privateCmd = CMD_SET_DRINK_WATER_PARAM,.publicCmd=CMD_SET_DRINK_WATER_PARAM,.function=uteModuleProtocolSetDrinkWater},
     {.privateCmd = CMD_TODAY_TARGET_CTRL,.publicCmd=CMD_TODAY_TARGET_CTRL,.function=uteModuleProtocolTodayTargetCtrl},
     // {.privateCmd = CMD_SYNC_CYWEE_SWIM_DATA,.publicCmd=CMD_SYNC_CYWEE_SWIM_DATA,.function=uteModuleProtocolSyncCyweeSwimData},
-    {.privateCmd = CMD_SPORTS_TARGET_SELECT,.publicCmd=CMD_SPORTS_TARGET_SELECT,.function=uteModuleProtocolSportsTargetSelect},
-    {.privateCmd = CMD_CUST_DEFINE_CMD,.publicCmd=CMD_CUST_DEFINE_CMD,.function=uteModuleProtocolCustomF6CmdHandle},
+    // {.privateCmd = CMD_SPORTS_TARGET_SELECT,.publicCmd=CMD_SPORTS_TARGET_SELECT,.function=uteModuleProtocolSportsTargetSelect},
+    // {.privateCmd = CMD_CUST_DEFINE_CMD,.publicCmd=CMD_CUST_DEFINE_CMD,.function=uteModuleProtocolCustomF6CmdHandle},
     // {.privateCmd = CMD_GOTO_SCREEN,.publicCmd=CMD_GOTO_SCREEN,.function=uteModuleProtocolGotoScreenCmdHandle},
-    {.privateCmd = CMD_SET_TIME_ZONE,.publicCmd=CMD_SET_TIME_ZONE,.function=uteModuleProtocolTimeZoneCtrl},
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
     {.privateCmd = CMD_BT30_CTRL,.publicCmd=CMD_BT30_CTRL,.function=uteModuleProtocolCtrlBT},
 #endif
@@ -3098,28 +2609,28 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
     // uteModulePlaformUpdateConnectParam(12,36,10*1000);
     /*Casen 22-04-09*/
 
-#if UTE_USER_ID_FOR_BINDING_SUPPORT
-    if (uteModuleAppBindingGetOurAppConnection())
-    {
-        // binding ok ,isOurAppApkConnection receive cmd
-    }
-    else
-    {
-        if((receive[0] == CMD_USER_ID_FOR_BINDING)||(receive[0] == PUBLIC_CMD_USER_ID_FOR_BINDING))
-        {
-            // binding
-            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data binding",__func__);
-        }
-        else
-        {
-#if UTE_LOG_CONNECTION_PROTOCOL_LVL&&UTE_LOG_SYSTEM_LVL
-            uteModuleAppBindingSetOurAppConnection(true);
-#endif
-            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data return",__func__);
-            return;
-        }
-    }
-#endif
+//#if UTE_USER_ID_FOR_BINDING_SUPPORT
+//    if (uteModuleAppBindingGetOurAppConnection())
+//    {
+//        // binding ok ,isOurAppApkConnection receive cmd
+//    }
+//    else
+//    {
+//        if((receive[0] == CMD_USER_ID_FOR_BINDING)||(receive[0] == PUBLIC_CMD_USER_ID_FOR_BINDING))
+//        {
+//            // binding
+//            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data binding",__func__);
+//        }
+//        else
+//        {
+//#if UTE_LOG_CONNECTION_PROTOCOL_LVL&&UTE_LOG_SYSTEM_LVL
+    // uteModuleAppBindingSetOurAppConnection(true);
+//#endif
+//            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data return",__func__);
+//            return;
+//        }
+//    }
+//#endif
 
     if(isPublic)
     {
@@ -3199,14 +2710,12 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #if UTE_MODULE_LOCAL_ALARM_SUPPORT
     data[4]|= 0x01;
 #endif
-#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
-    data[4]|= 0x10;
-#endif
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-    data[4]|= 0x20;
-#endif
 #if UTE_MODULE_MUTE_PHONE_INCOM_SUPPORT
     data[4]|= 0x40;
+#endif
+
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+    data[4]|= 0x20;
 #endif
 #if UTE_MODULE_WEATHER_CITY_NAME_NEW_SUPPORT
     data[4]|= 0x80;

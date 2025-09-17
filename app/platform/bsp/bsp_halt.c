@@ -1,5 +1,4 @@
 ﻿#include "include.h"
-#include "ute_application_common.h"
 
 #define TRACE_EN                1
 
@@ -30,14 +29,6 @@ bool halt_do(u32 halt_no)
     {
         if (halt_no == res_halt_no_res[i])
         {
-            if (func_cb.sta == FUNC_CLOCK && sys_cb.dialplate_index >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
-            {
-                f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
-                if (f_clk->sta == FUNC_CLOCK_MAIN)
-                {
-                    // return false; // 在线表盘异常
-                }
-            }
             sys_cb.flag_halt = true;
             printf(str_res_halt, halt_no);
             msg_enqueue(EVT_HALT);
@@ -62,24 +53,12 @@ void halt(u32 halt_no)
     }
 
     halt_err_set(halt_no);
-#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
-    gui_sleep();
-#else
     gui_halt(halt_no);
-#endif
     if (!halt_do(halt_no))
     {
-#if 0//UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
-        char log_str[64];
-        snprintf(log_str, sizeof(log_str), "Halt: %x func_cb.sta: %d\n", halt_no, func_cb.sta);
-        uteModuleHardfaultCustInfoSave(log_str,strlen(log_str));
-#endif
+        int reset_cnt = 15000000;
         TRACE(str_halt, halt_no);
         PICCON = 0;
-#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
-        WDT_RST();
-#else
-        int reset_cnt = 15000000;
         while (1)
         {
             WDT_CLR();
@@ -88,6 +67,5 @@ void halt(u32 halt_no)
                 WDT_RST_DELAY();
             }
         }
-#endif
     }
 }

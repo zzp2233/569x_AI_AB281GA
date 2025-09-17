@@ -1,5 +1,4 @@
 #include "include.h"
-#include "ute_module_newFactoryTest.h"
 
 #define TRACE_EN                1
 
@@ -10,7 +9,7 @@
 #endif
 
 //CTP升级相关
-#define CST8X_UPDATE_EN          0                 //打开TP升级功能
+#define CST8X_UPDATE_EN          0                  //打开TP升级功能
 
 #define PER_LEN                  512
 #define TANS_LIMT                (8L)               //To be divisible by 512  eg:4 8 16 32 64 ....
@@ -48,14 +47,9 @@ bool cst8x_enter_bootmode(void)
         ctp_iic_update_read(TP_IIC_UPDATE_ADDR, &res, 1, 0xA003, cmd, 1);
 
         // if (cmd[0] != 0x55) { // CST716, CST816S, CST826, CST830, CST836U
-
         if (res != 0xC1)   // CST816D, CST816T
         {
-            delay_5ms(2);
-            PORT_CTP_RST_L();
-            delay_5ms(2);
-            PORT_CTP_RST_H();
-            delay_5ms(2);
+            delay_ms(2);
             continue;
         }
         else
@@ -261,9 +255,6 @@ bool ctp_cst8x_init(void)
     {
         return false;
     }
-#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-    uteModuleNewFactoryTestSetTpVersion(info[2]);
-#endif
     return true;
 }
 

@@ -13,14 +13,6 @@
 #include "ute_module_platform.h"
 #include "include.h"
 
-enum
-{
-    FACTORY_TEST_RECORD_IDLE,
-    FACTORY_TEST_RECORD_RECORDING,   //录音中
-    FACTORY_TEST_RECORD_RECORDED,    //录音完成
-    FACTORY_TEST_RECORD_PLAYING,
-};
-
 typedef enum
 {
     FACTORY_TEST_RECORD_IDLE,
@@ -38,11 +30,10 @@ void mic_test_outp(void);
 void uteModuleMicRecordFactoryEnter(void);
 void uteModuleMicRecordFactoryExit(void);
 void uteModuleMicRecordFactoryStart(void);
-void uteModuleMicRecordFactoryPlay(void);
 void uteModuleMicRecordFactoryPlayStart(void);
+void uteModulePlayTimerCallback(void *pxTimer);
+void func_record_analysis(void);
 uint8_t uteModuleMicRecordFactoryGetRecordState(void);
-void uteModuleMicRecordFactoryWriteDataToFlash(void);
 void uteModuleMicRecordFactorySetrecordState(uint8_t state);
-
 #endif //_UTE_MODULE_CRC_H_
 

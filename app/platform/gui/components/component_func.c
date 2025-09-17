@@ -75,30 +75,6 @@ void compo_update(void)
     compo_set_update(compo_cb.tm, compo_cb.mtime);
 }
 
-//获取数字位数
-int count_digits(int number)
-{
-    if (number == 0)
-    {
-        return 1; // 处理0的情况
-    }
-
-    int count = 0;
-    // 如果是负数，先转为正数
-    if (number < 0)
-    {
-        number = -number;
-    }
-
-    while (number != 0)
-    {
-        number /= 10;
-        ++count;
-    }
-
-    return count;
-}
-
 /**
  * @brief 设置绑定数据
  * @param[in] compo : 组件
@@ -157,7 +133,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
     ute_module_weather_data_t weatherData;
     uteModuleWeatherGetData(&weatherData);
-    sys_cb.weather_idx = (uint8_t)(weatherData.DayWeather[0] >> 8);
+    sys_cb.weather_idx = (uint8_t)weatherData.DayWeather[0];
     sys_cb.temperature[0] = weatherData.dayTemperatureMin[0];
     sys_cb.temperature[1] = weatherData.dayTemperatureMax[0];
 
@@ -405,6 +381,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         case COMPO_BOND_BLOOD_OXYGEN:
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
             value = uteModuleBloodoxygenGetValue();
+#else
+            value = 0;
 #endif
             sprintf(value_str, "%d", value);
             break;
@@ -417,7 +395,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         case COMPO_BOND_WEATHER:
             value = sys_cb.weather_idx;
             const u16 weather_lang_id[] = {STR_UNKNOWN, STR_SUNNY, STR_CLOUDY, STR_OVERCAST, STR_MODERATE_RAIN, STR_RAINY_SHOWERS, STR_SLEET, STR_DRIZZLE, STR_HEAVY_RAIN, STR_SNOWY, STR_SAND_AND_DUST, STR_HAZE, STR_WINDY};
-            sprintf(value_str, "%s", i18n[weather_lang_id[value]]);
+            sprintf(value_str, "%s", i18n[weather_lang_id[weatherData.DayWeather[0]]]);
             break;
 
         case COMPO_BOND_ATMOMS:
@@ -471,7 +449,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_TIME_AMPM: //图片 am pm
-            value = tm.hour >= 12 ? 1 : 0; // 0:AM 1:PM
+            value = tm.hour > 12 ? 1 : 0; // 0:AM 1:PM
             break;
 
         case COMPO_BOND_TIME_MONTH: //图片 月份
@@ -485,25 +463,20 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
     if (flag_update)
     {
-        bool is_visible = true;
+//        printf("bond_data:%d, type:%d, value:%d\n", compo->bond_data, compo->type, value);
         if (compo->type == COMPO_TYPE_NUMBER)
         {
             compo_number_t *num = (compo_number_t *)compo;
             if (num->num_part)
             {
-                int max_bit = count_digits(value);
                 if (num->num_part > 1)
                 {
                     value /= soft_pow(10, num->num_part - 1);
                 }
                 value %= 10;
-                if(!num->flag_zfill && num->num_part > max_bit && value == 0)
-                {
-                    is_visible = false;
-                }
             }
             compo_number_set(num, value);
-            compo_number_set_visible(num, is_visible);
+            compo_number_set_visible(num, true);
         }
         else if (compo->type == COMPO_TYPE_TEXTBOX)
         {
@@ -814,10 +787,6 @@ void compo_set_update(tm_t tm, u16 mtime)
                 for (i=0; i<LISTBOX_ITEM_CNT; i++)
                 {
                     compo_set_roll(&listbox->roll_cb[i], listbox->item_text[i], false);     //滚动
-                    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
-                    {
-                        compo_set_roll(&listbox->roll_cb2[i], listbox->item_text2[i], false);     //滚动
-                    }
                 }
 
                 s16 angle = 0;
@@ -1035,42 +1004,22 @@ void compo_set_update(tm_t tm, u16 mtime)
 /**
  * @brief 获取按键ID
  **/
-// int compo_get_button_id(void)
-// {
-//     point_t pt = ctp_get_sxy();
-//     component_t *compo = (component_t *)compo_pool_get_top();
-//     while (compo != NULL)
-//     {
-//         if (compo->type == COMPO_TYPE_BUTTON)
-//         {
-//             compo_button_t *btn = (compo_button_t *)compo;
-//             rect_t rect = widget_get_absolute(btn->widget);
-//             if ((widget_get_visble(btn->widget)) && (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei))
-//             {
-//                 return btn->id;
-//             }
-//         }
-//         compo = compo_get_next(compo);          //遍历组件
-//     }
-//     return ID_NULL;
-// }
 int compo_get_button_id(void)
 {
-    int id = ID_NULL;
     point_t pt = ctp_get_sxy();
-    component_t *compo = (component_t *)compo_pool_get_bottom();
+    component_t *compo = (component_t *)compo_pool_get_top();
     while (compo != NULL)
     {
         if (compo->type == COMPO_TYPE_BUTTON)
         {
             compo_button_t *btn = (compo_button_t *)compo;
             rect_t rect = widget_get_absolute(btn->widget);
-            if ((widget_get_visble(btn->widget)) && abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+            if ((widget_get_visble(btn->widget)) && (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei))
             {
-                id = btn->id;
+                return btn->id;
             }
         }
         compo = compo_get_next(compo);          //遍历组件
     }
-    return id;
+    return ID_NULL;
 }

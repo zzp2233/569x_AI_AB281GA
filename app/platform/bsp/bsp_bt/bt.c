@@ -127,8 +127,7 @@ u32 bt_get_class_of_device(void)
 //    return 0x002540;    //Keyboard          - 键盘图标，Android带显示电量，IOS不带电量显示。全部IOS均可连接HID拍照。
 //    return 0x240418;    //HeadPhone         - 耳机图标，Android和IOS均带电量显示。
 //    return 0x240404;    //WearableHeadset   - 耳机图标，Android和IOS均带电量显示。（默认使用）
-    return 0x240704;    //WristWatch        - 手表图标
-
+    return 0x240404;    //WearablePager     - 手表图标
 #endif
 }
 

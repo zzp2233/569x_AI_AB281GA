@@ -90,6 +90,18 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define EVT_WATCH_TIMER_DONE    0xc4
 #define EVT_CLOCK_SUB_SIDE_EXIT 0xc5
 
+#define EVT_VAPE_POWERUP        0xd9
+#define EVT_VAPE_POWERDOWN       0xd8
+#define EVT_ECIG_SMOKE_REMINDER 0xd7
+
+#define MSG_SYS_BOX_INTER           0xd5
+#define MSG_SYS_BOX_CHARGE          0xd4
+#define MSG_SYS_BOX_500MS           0xd3
+#define EVT_EARPHONE_MUSIC_UPDATE   0xd2
+#define EVT_BOX_BAT_UPDATE          0xd1
+#define EVT_MSG_INOUT_BOX           0xd0
+
+
 
 //普通按键定义，可以支持短按，长按，双击等。范围：0 ~ 0xf
 #define NO_KEY                  0x00

@@ -10,12 +10,7 @@
 
 #define MAX_WORD_CNT                    32                          //标题最多32个字符
 
-#if GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-#define GUI_PAGE_HEAD_HEIGHT            TITLE_BAR_HIGH//(GUI_SCREEN_HEIGHT / 5)
-#else
 #define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
-#endif
-
 #define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
 #define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
 
@@ -77,32 +72,12 @@ compo_form_t *compo_form_create(bool flag_top)
     compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
     compo_textbox_set_visible(title, true);
     frm->title = title;
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
     frm->page_body = page_body;
     compo_textbox_set_font(title, UI_BUF_FONT_FORM_TIME);
-    compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, 30, 120, widget_text_get_max_height());
+    compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, FORM_TITLE_HEIGHT-widget_text_get_max_height(), 120, 34);
     compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
-    frm->title = title;
-#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-    compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
-    frm->page_body = page_body;
-    compo_textbox_set_font(title, UI_BUF_FONT_FORM_TIME);
-    compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, 20, 120, widget_text_get_max_height());
-//    compo_textbox_set_location(title, FORM_TITLE_LEFT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, 120, FORM_TITLE_HEIGHT);
-    compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
-    frm->title = title;
-#else
-    compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
-    frm->page_body = page_body;
-    compo_textbox_set_font(title, UI_BUF_FONT_FORM_TIME);
-    compo_textbox_set_align_center(title, false);
-    compo_textbox_set_location(title, FORM_TITLE_LEFT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TITLE_WIDTH, FORM_TITLE_HEIGHT);
-    compo_textbox_set_multiline(title, false);
-    compo_textbox_set_autosize(title, false);
-    compo_textbox_set_align_center(title, false);
-    compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
-    compo_textbox_set_visible(title, true);
     frm->title = title;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

@@ -2,8 +2,6 @@
 #define __CHSC6X_PLATFORM_H__
 //#include "printf.h"
 
-#include "include.h"
-
 #define CHSC6X_INFO_EN    //是否打开驱动自带的打印
 
 #if 0
@@ -29,7 +27,7 @@
 #define CHSC6X_RES_MAX_Y                (370)
 
 /*MACRO SWITCH for driver update TP FW */
-#define CHSC6X_AUTO_UPGRADE             (UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT)
+#define CHSC6X_AUTO_UPGRADE             (1)
 
 /*MACRO SWITCH for multi TP_VENDOR Compatible update TP FW */
 #define CHSC6X_MUL_VENDOR_UPGRADE       (0)

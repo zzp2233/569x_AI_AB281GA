@@ -41,16 +41,16 @@ extern "C" {
 #define RT_TRUE true
 #define RT_FALSE false
 
-#define LOG_D(...) //a_printf(__VA_ARGS__);a_printf("\n")
-#define LOG_I(...) //a_printf(__VA_ARGS__);a_printf("\n")
-#define LOG_E(...) //a_printf(__VA_ARGS__);a_printf("\n")
+#define LOG_D(...) //my_printf(__VA_ARGS__);my_printf("\n")
+#define LOG_I(...) //my_printf(__VA_ARGS__);my_printf("\n")
+#define LOG_E(...) //my_printf(__VA_ARGS__);my_printf("\n")
 
-#define rt_kprintf(...) //a_printf(__VA_ARGS__)
+#define rt_kprintf(...) //my_printf(__VA_ARGS__)
 
 #define RT_ASSERT(n)                                                         \
     do {                                                                       \
         if (!(n)) {                                                            \
-            printf("Assert at File(%s), Line(%d)!", __FILE__, __LINE__);       \
+            my_printf("Assert at File(%s), Line(%d)!", __FILE__, __LINE__);       \
             while (1)                                                          \
                 ;                                                              \
         }                                                                      \

@@ -3,8 +3,6 @@
 #include "ute_module_message.h"
 #include "ute_project_config.h"
 #include "ute_module_sport.h"
-#include "ute_module_bedside_mode.h"
-#include "ute_drv_screen_common.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
@@ -20,7 +18,7 @@ void lowpwr_tout_ticks(void)
     //当屏幕初始化SPI等待不到pending，就重新断电再初始化一次屏幕
 #if 0
     u8 get_tft_spi_timeout(void);
-    if (uteDrvScreenCommonIsInit() && get_tft_spi_timeout())
+    if (get_tft_spi_timeout())
     {
         printf(tft_restore_printf);
         reset_sleep_delay_all();
@@ -170,11 +168,11 @@ uint32_t sleep_timer(void)
         while(!bsp_saradc_process(0));
         sys_cb.vbat = bsp_vbat_get_voltage(1);
         RTCCON8 = rtccon8;
-        // if (sys_cb.vbat < LPWR_WARNING_VBAT)
-        // {
-        //低电需要唤醒sniff mode
-        // ret = 2;
-        // }
+        if (sys_cb.vbat < LPWR_WARNING_VBAT)
+        {
+            //低电需要唤醒sniff mode
+            ret = 2;
+        }
         saradc_exit();
 #endif
     }
@@ -266,13 +264,13 @@ static void sfunc_sleep(void)
         interval = ble_get_conn_interval();
         latency = ble_get_conn_latency();
         tout = ble_get_conn_timeout();
-        if (bt_is_ios_device())
+        if(bt_is_ios_device())
         {
             ble_update_conn_param(96, 2, 500);
         }
         else
         {
-            ble_update_conn_param(400, 0, 500); // interval: 400*1.25ms = 500ms
+            ble_update_conn_param(400, 0, 500);     //interval: 400*1.25ms = 500ms
         }
     }
 #endif
@@ -292,14 +290,7 @@ static void sfunc_sleep(void)
 #else
     if (!bt_is_connected())                     //蓝牙未连接
     {
-        if (bt_get_scan())
-        {
-            bt_update_bt_scan_param(4096, 12, 2048, 12);
-        }
-        else
-        {
-            bt_update_bt_scan_param(4096, 0, 4096, 0);
-        }
+        bt_update_bt_scan_param(4096, 12, 2048, 12);
     }
 #endif
 
@@ -354,7 +345,6 @@ static void sfunc_sleep(void)
     adda_clk_source_sel(1);                     //adda_clk48_a select xosc52m
     PLL0CON &= ~(BIT(18) | BIT(6));             //pll0 sdm & analog disable
     rtc_sleep_enter();
-    // BTCON2 |= BIT(10) | BIT(8);                 //osc_en_wken 解决新btstack.lib休眠后蓝牙断连
 
     //io analog input
     pa_de = GPIOADE;
@@ -373,41 +363,10 @@ static void sfunc_sleep(void)
     GPIOEDE = 0;
     GPIOFDE = pf_keep;
 
-//    u32 pf_keep = 0;
-//     if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL)) {
-//        printf("bsp_sensor_init_sta_get\n");
-//        GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
-//        pf_keep |= BIT(2);                      //SENSOR PG
-//     } else {
-//         GPIOEDE = 0;
-//     }
-
-#if DRV_ENCODER_KEYS_SUPPORT
-    GPIOBDE |= BIT(0) | BIT(1);
-
-    GPIOBFEN &= ~BIT(0);
-    GPIOBDIR &= ~BIT(0);
-    GPIOBCLR = BIT(0);
-
-    GPIOBFEN &= ~BIT(1);
-    GPIOBDIR &= ~BIT(1);
-    GPIOBCLR = BIT(1);
-#endif
-
-#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
-    GPIOFDE = 0 | BIT(2) | BIT(1);          //GSENSOR I2C
-    GPIOEDE = 0 | BIT(2) | BIT(1);          //HR I2C
-    GPIOFDE = 0 | BIT(5);                   //HR POWER
-#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-    GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
-    GPIOEDE |= BIT(4) | BIT(5);             //HR I2C
-    GPIOFDE = 0 | BIT(5);                   //HR POWER
-#endif
-
-//#if MODEM_CAT1_EN
-//    pf_keep |= BIT(1) | BIT(2) | BIT(3);
-//#endif
-//    GPIOFDE = pf_keep;
+    // port_gpio_set_out(IO_PH5,0);
+    // port_gpio_set_out(IO_PB1,0);
+    // port_gpio_set_in(IO_PB0,GPIOxPU200K);
+    // port_gpio_set_in(IO_PA5,GPIOxPU200K);
 
     wkie = WKUPCON & BIT(16);
     WKUPCON &= ~BIT(16);                        //休眠时关掉WKIE
@@ -428,7 +387,8 @@ static void sfunc_sleep(void)
 
         if(status == 1)
         {
-            if(bsp_sensor_hr_interrupt_flag_get())
+#if UTE_MODULE_HEART_SUPPORT
+            if(vc30fx_sleep_isr)
             {
                 sleep_set_sysclk(SYS_192M);
             }
@@ -448,17 +408,17 @@ static void sfunc_sleep(void)
 
         port_int_sleep_process(&wkpnd);
         // bsp_sensor_step_lowpwr_pro();
-
-        if(bsp_sensor_hr_interrupt_flag_get())
+#if UTE_MODULE_HEART_SUPPORT
+        if(vc30fx_sleep_isr)
         {
             // GPIOBSET = BIT(0);
             // sleep_set_sysclk(SYS_176M);
             // printf("sleep hr enter\n");
             // vc30fx_usr_device_handler(0, 1);
-            bsp_sensor_hr_algo_input_data_handle();
+            uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData();
             // GPIOBCLR = BIT(0);
             // printf("sleep hr exit\n");
-            bsp_sensor_hr_interrupt_flag_set(false);
+            vc30fx_sleep_isr = false;
             sleep_set_sysclk(SYS_24M);
         }
 #endif
@@ -516,8 +476,8 @@ static void sfunc_sleep(void)
         if (ble_app_need_wakeup())
         {
             printf("ble_app_need_wakeup\n");
-            gui_need_wkp = false;
-            ble_app_watch_set_wakeup(false);
+            gui_need_wkp = true;
+            //   func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
             break;
         }
 #endif
@@ -680,15 +640,9 @@ static void sfunc_sleep(void)
     bsp_charge_ex_init();
 #endif
     bt_exit_sleep();
-    ble_app_watch_set_wakeup(false);
     sleep_cb.sys_is_sleep = false;
-    cc_time_init();
-
-#if DRV_ENCODER_KEYS_SUPPORT
-    extern void bsp_qdec_init(void);
-    bsp_qdec_init();                            //旋转编码器初始化
-#endif
-
+    // printf("11tick %d \n",tick_get()-tick);
+    // func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
     printf("sleep_exit\n");
 }
 
@@ -748,16 +702,7 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_pwroff_delay();
             return false;
         }
-        if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
-        {
-            if(sys_cb.sleep_delay > 0) //休眠时间未到时仅熄屏
-            {
-                printf("sleep_delay:%d,only off screen\n", sys_cb.sleep_delay);
-                gui_sleep();
-                return false;
-            }
-        }
-        if (sys_cb.sleep_delay == 0 && !sleep_cb.sys_is_sleep)
+        if (sys_cb.sleep_delay == 0)
         {
             if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */
             {
@@ -975,7 +920,6 @@ void func_pwroff(int pwroff_tone_en)
 #endif // WARNING_POWER_OFF
 
 //    gui_off();
-    gui_sleep();
 
     if (SOFT_POWER_ON_OFF)
     {

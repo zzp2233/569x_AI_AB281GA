@@ -3,26 +3,12 @@
 #include "chsc6x_ramcode.h"
 #include "chsc6x_platform.h"
 // #include "chsc6x_flash_boot.h"
-
-#if UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT
-#if UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
-#include "YCY_AB281B_1805A_304_21_V241_V2.h" //801 new
-#elif UTE_DRV_TFT_S240X284_NV3030B_ZD183G1196_QSPI_SUPPORT
+#if PROJECT_AB281B_SUPPORT
 #include "YCY_AB281_801_chsc6x_upd_[304_17]_V241_V3.h" //801
-#elif (UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT || UTE_DRV_TFT_S240X284_I183_JD9853_SXT180G1911_QSPI_SUPPORT)
-#include "YCY_W26Y_W12Y_304_23_V242_V2.h"
-#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
-#include "YCY_AB281L_G22Z_G21Y_304_24_V239_V3.h"
-#elif UTE_DRV_TFT_S240X240_NV3002C_HY138026A_QSPI_SUPPORT
-#include "YCY_AB281L_G22Z_304_26_V239_V3.h"
-#elif UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
-#include "YCY_AB281L_G28Z_304_25_V239_V3.h"
 #else
 // #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
 #include "YCY_JLE012_MB_304_19__V243_V3.h"
 #endif
-#endif
-
 #include "chsc6x_main.h"
 
 #define TXRX_ADDR       (0x9000)
@@ -52,9 +38,7 @@ uint8_t g_i2c_addr = CHSC6X_I2C_ID ;
 uint32_t BOOTCRC = 0;
 
 #define LEN_CMD_CHK_TX_SCAP  10
-#ifndef ABS
 #define ABS(a)   (((a)>0)?((a)):(-(a)))
-#endif
 
 
 struct chsc6x_updfile_header
@@ -616,7 +600,7 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
 
     u32tmp = ptcfg[1];
     u32tmp = (u32tmp << 16) | ptcfg[0];
-#if 0//DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
+#if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
     if (((g_chsc6x_cfg_ver & 0x3ffffff) != (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
         chsc6x_info("chsc6x: prj info not match,now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
@@ -627,21 +611,14 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
     vnow = (g_chsc6x_cfg_ver >> 26) & 0x3f;
     vbuild = (u32tmp >> 26) & 0x3f;
     chsc6x_info("chsc6x: cfg_vnow: 0x%x,cfg_vbuild: 0x%x \r\n", vnow, vbuild);
-
 #if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
-    chsc6x_info("chsc6x: now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
-    if (((g_chsc6x_cfg_ver & 0x3ffffff) == (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
+    if (0 == g_upgrade_flag && vbuild <= vnow)
     {
-        if (0 == g_upgrade_flag && vbuild <= vnow)
-        {
-            chsc6x_info("chsc6x: vbuild=%d,vnow=%d\r\n",vbuild,vnow);
-            return 0; //driver init upgrade, must vbuild > vnow
-        }
-        if(1 == g_upgrade_flag && vbuild == vnow)
-        {
-            chsc6x_info("chsc6x: vbuild=%d,vnow=%d\r\n",vbuild,vnow);
-            return 0; //OTA upgrade just vbuild != vnow
-        }
+        return 0; //driver init upgrade, must vbuild > vnow
+    }
+    if(1 == g_upgrade_flag && vbuild == vnow)
+    {
+        return 0; //OTA upgrade just vbuild != vnow
     }
 #endif
 
@@ -773,7 +750,6 @@ static int chsc6x_find_ver(void)
 }
 #endif
 
-#if CHSC6X_AUTO_UPGRADE
 static int chsc6x_cfg_update(uint16_t *parray, uint32_t cfg_num)
 {
     uint32_t  k;
@@ -962,7 +938,6 @@ static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
 
     return ret;
 }
-#endif
 
 static void chsc6x_tp_mccode(void)
 {

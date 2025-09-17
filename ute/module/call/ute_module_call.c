@@ -60,7 +60,6 @@ bool isHfpAndA2dpProfileBothConnected(void)
         result = bt_a2dp_profile_completely_connected();
     }
 #endif
-    extern bool hfp_is_connected(void);
     result = hfp_is_connected();
     return result;
 }
@@ -155,8 +154,6 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
     if(reason == UTE_BT_POWER_OFF_APP_UNBIND)
     {
         bt_nor_delete_link_info();
-        memset(uteModuleCallData.address,0x00,6);
-        uteModuleCallBtSaveCtrlAppData();
     }
 
     if(UTE_BT_POWER_OFF_AUTO != reason)
@@ -281,10 +278,6 @@ void uteModuleCallEverySecond(void)
     }
 #endif
 
-#if UTE_CONNECT_PC_AUDIO_TEST
-    reset_sleep_delay_all();
-#endif
-
     if(uteModuleCallData.isPowerOn)
     {
         // 防止状态错误
@@ -293,7 +286,6 @@ void uteModuleCallEverySecond(void)
             bsp_bt_trun_on();
         }
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
-        extern bool bt_hfp_is_connected(void);
         if(!uteModuleCallIsEntertranmentVoiceOn() && bt_a2dp_profile_completely_connected())
         {
             bt_a2dp_profile_dis();
@@ -318,30 +310,17 @@ void uteModuleCallEverySecond(void)
             if (uteModuleCallData.isBleLinkBackFlag) // 回连ble时回连BT
             {
                 uteModuleCallData.isBleLinkBackFlag = false;
-                if(!bt_is_connected() && bt_get_curr_scan() == BT_STA_SCANNING && uteModuleCallIsHasConnection())
+                if(!bt_is_connected() && bt_get_curr_scan() == BT_STA_SCANNING)
                 {
                     printf("%s,ble link back,bt connect\r\n", __func__);
                     bt_connect();
                 }
             }
-#if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
-            if (uteModuleCallData.onePairTimeoutSec > 0)
-            {
-                uteModuleCallData.onePairTimeoutSec--;
-            }
-            else
-            {
-                if (uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR)
-                {
-                    uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR);
-                }
-            }
-#endif
             UTE_MODULE_LOG(UTE_LOG_BT_AUDIO_LVL, "%s,.powerOnTimeSecond = %d", __func__, uteModuleCallData.powerOnTimeSecond);
         }
 
-#if (UTE_BT30_AUTO_POWRER_OFF_SUPPORT && !UTE_CONNECT_PC_AUDIO_TEST)
-        if (uteModuleCallData.powerOnTimeSecond > (UTE_BT30_AUTO_POWRER_OFF_TIME_SECOND + 10)&&(!isHfpAndA2dpProfileBothConnected()))
+#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
+        if (uteModuleCallData.powerOnTimeSecond > (UTE_BT30_AUTO_POWRER_OFF_TIME_SECOND + 10)&&(!bt_is_connected()))
         {
             uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO);
             uteModuleCallData.isBtAutoClose = true;
@@ -454,9 +433,7 @@ void uteModuleProtocolGetBtInfo(uint8_t *response,uint8_t *length)
 {
     //回应0x3801 + BT3.0Name(20byte)+BT3.0MAC(6byte)+BT开关状态（1byte）+BT配对状态（1byte）
     uint8_t totalByte = 0;
-    // uteModuleCallGetBtDevName(&response[totalByte],GAP_DEVICE_NAME_LEN);
-    uint8_t nameLen = 19;
-    uteModulePlatformGetDevCompleteName(&response[totalByte], &nameLen);
+    uteModuleCallGetBtDevName(&response[totalByte],GAP_DEVICE_NAME_LEN);
     totalByte += 20;
     bt_get_local_bd_addr(&response[totalByte]);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,BT Mac:",__func__);
@@ -556,15 +533,17 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
                 {
                     uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
                 }
-                // bt_abort_reconnect(); //终止回连
+                bt_abort_reconnect(); //终止回连
 #endif
-                if (uteModuleCallAppCtrlData.phoneOS == 0x01)
+                if(uteModuleCallAppCtrlData.phoneOS == 0x01)
                 {
-                    // 一键双连
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR, 0);
+                    printf("======================>ble_bt_connect\n");
+                    //一键双连
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR,0);
+                    // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                    // bsp_change_bt_mac();
+                    // ble_bt_connect();
                 }
-                uteModuleCallData.onePairTimeoutSec = UTE_MODULE_BT_ONCE_PAIR_TIMEOUT_SECOND;
-                uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR);
             }
         }
         uteModuleCallBtSaveCtrlAppData();
@@ -584,8 +563,6 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
             else
             {
                 bt_nor_delete_link_info();
-                memset(uteModuleCallData.address,0x00,6);
-                uteModuleCallBtSaveCtrlAppData();
             }
         }
         else
@@ -599,7 +576,7 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
             if(uteModuleCallBtIsPowerOn() ==false)
             {
                 uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
-                // bt_abort_reconnect(); //终止回连
+                bt_abort_reconnect(); //终止回连
             }
 #endif
         }
@@ -746,11 +723,7 @@ void uteModuleCallReadBtPowerOnOffStatus(void)
         uteModuleFilesystemReadData(file,&readbuff[0],1);
         uteModuleFilesystemCloseFile(file);
     }
-#if UTE_CONNECT_PC_AUDIO_TEST
-    uteModuleCallData.isPowerOn = true;
-#else
     uteModuleCallData.isPowerOn = readbuff[0];
-#endif
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,uteModuleCallData.isPowerOn=%d", __func__,uteModuleCallData.isPowerOn);
 }
 #endif
@@ -850,11 +823,7 @@ void uteModuleCallEntertranmentVoiceSwitchReadConfig(void)
         uteModuleFilesystemReadData(file,&readbuff[0],1);
         uteModuleFilesystemCloseFile(file);
     }
-#if UTE_CONNECT_PC_AUDIO_TEST
-    uteModuleCallData.isEntertranmentVoiceOn = true;
-#else
     uteModuleCallData.isEntertranmentVoiceOn = readbuff[0];
-#endif
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,.isEntertranmentVoiceOn=%d", __func__,uteModuleCallData.isEntertranmentVoiceOn);
 }
 
@@ -1170,8 +1139,8 @@ void uteModuleCallGetAllAddressBookContactContent(uint16_t totalLen,ute_module_c
 */
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen)
 {
-    uint8_t path[40];
-    memset(&path[0],0,40);
+    uint8_t path[25];
+    memset(&path[0],0,25);
     bool isMatch = false;
     uint8_t tempBuff[UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH];
     sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_ADDRESS_BOOK_DIR);
@@ -1186,7 +1155,7 @@ bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,u
             uteModuleFilesystemSeek(file,2+i*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH,FS_SEEK_SET);
             uteModuleFilesystemReadData(file,&tempBuff[0],UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
             uteModuleCallParseAddressBookContactNameAndNumber(tempBuff,&tempData.nameUnicode[0],&tempData.nameUnicodeLen,&tempData.numberAscii[0],&tempData.numberAsciiLen);
-            UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,i=%d;nameUnicodeLen=%d,numberAsciiLen=%d,isBtPbapNameUpdate=%d", __func__,i,tempData.nameUnicodeLen,tempData.numberAsciiLen,isBtPbapNameUpdate);
+            UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,i=%d;nameUnicodeLen=%d,numberAsciiLen=%d", __func__,i,tempData.nameUnicodeLen,tempData.numberAsciiLen);
             if(isBtPbapNameUpdate == true) break;
             if(memcmp(number,tempData.numberAscii,numberSize) == 0 && numberSize!=0 && numberSize == tempData.numberAsciiLen)
             {
@@ -1292,7 +1261,7 @@ void uteModuleCallUpdateRecordsData(void)
         tempData.nameUnicodeLen = uteModuleCallData.callData.nameSize;
         UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,nameSize=%d", __func__,uteModuleCallData.callData.nameSize);
     }
-    if((uteModuleCallData.callData.numberSize==0 && uteModuleCallData.callData.nameSize == 0) || !strcmp(uteModuleCallData.callData.number, "10000000")) //连接BT拨打微信电话APP会下发"10000000"号码 原因不明 先暂时过滤处理
+    if(uteModuleCallData.callData.numberSize==0 && uteModuleCallData.callData.nameSize == 0)
     {
         goto CALL_UPDATE_END;
     }
@@ -1344,7 +1313,6 @@ CALL_UPDATE_END:
     uteModuleCallData.callData.callingTimeSecond = 0;
     uteModuleCallData.callData.numberSize = 0;
     uteModuleCallData.callData.nameSize = 0;
-    isBtPbapNameUpdate = false;
     uteModulePlatformMemoryFree(readBuff);
 }
 
@@ -1506,234 +1474,3 @@ void uteModuleCallGetSosContact(ute_module_call_addressbook_t *pData)
     }
 }
 #endif //end UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
-
-#if UTE_BT_CALL_THREE_WAY_SUPPORT
-/**
- * @brief 设置临时呼叫数据
- *
- * 该函数用于更新模块呼叫的临时数据，包括呼叫状态、号码等信息，并维护当前活跃呼叫的索引。
- *
- * @param idx     呼叫索引（从1开始），用于标识不同的呼叫条目
- * @param dir     呼叫方向（未使用，保留参数）
- * @param status  呼叫状态，用于判断是否为活跃呼叫
- * @param mode    呼叫模式（未使用，保留参数）
- * @param mpty    多方通话标志（未使用，保留参数）
- * @param number  呼叫号码字符串
- * @param type    号码类型（未使用，保留参数）
- */
-void uteModuleCallSetClccTempData(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type)
-{
-    /* 更新最大呼叫索引值，确保不超过系统支持的最大多方通话数量 */
-    if(idx > uteModuleCallData.callTempCount)
-    {
-        uteModuleCallData.callTempCount = idx;
-        if(uteModuleCallData.callTempCount >= UTE_CALL_MULTIPARTY_MAX)
-        {
-            uteModuleCallData.callTempCount = UTE_CALL_MULTIPARTY_MAX;
-        }
-    }
-
-    /* 设置指定索引的呼叫数据：状态、号码长度和号码内容、呼叫类型*/
-    if(dir == 0) //呼出
-    {
-        uteModuleCallData.tempData[idx-1].callType = CALL_TYPE_DIALED;
-    }
-    else //呼入
-    {
-        if(status == CALL_STATUS_WAITING || status == CALL_STATUS_INCOMING) //来电未接
-        {
-            uteModuleCallData.tempData[idx-1].callType = CALL_TYPE_MISSED;
-        }
-        else  //来电接通
-        {
-            uteModuleCallData.tempData[idx-1].callType = CALL_TYPE_RECEIVED;
-        }
-    }
-    uteModuleCallData.tempData[idx-1].status = status;
-    uteModuleCallData.tempData[idx-1].numberAsciiLen = strlen(number);
-    memcpy(&uteModuleCallData.tempData[idx-1].numberAscii[0],number,strlen(number));
-
-    if(uteModuleCallData.tempData[idx-1].recordTime.hour == 0 && uteModuleCallData.tempData[idx-1].recordTime.min == 0
-       && uteModuleCallData.tempData[idx-1].recordTime.sec == 0 && uteModuleCallData.tempData[idx-1].recordTime.year == 0)
-    {
-        ute_module_systemtime_time_t time;
-        uteModuleSystemtimeGetTime(&time);
-        memcpy(&uteModuleCallData.tempData[idx-1].recordTime,&time,sizeof(ute_module_systemtime_time_t));
-    }
-
-    /* 根据呼叫状态更新当前活跃呼叫索引 */
-    if(uteModuleCallData.callTempCount == 1)
-    {
-        uteModuleCallData.callActiveIndex = uteModuleCallData.callTempCount;
-    }
-    else if(uteModuleCallData.callTempCount > 1)
-    {
-        if(status == CALL_STATUS_ACTIVE)
-        {
-            uteModuleCallData.callActiveIndex = idx;
-        }
-    }
-}
-/**
- * @brief 设置临时数据中的联系人名称
- *
- * 该函数遍历所有临时数据项，当某个数据项满足以下条件时设置其联系人名称：
- * 1. 已存在电话号码(ASCII格式)
- * 2. 不存在联系人名称(Unicode格式)
- *
- * @param name 要设置的名称数据指针(Unicode格式)
- * @param nameSize 名称数据的长度(字节数)
- * @return 无返回值
- */
-void uteModuleCallSetTempDataName(uint8_t *name,uint8_t nameSize)
-{
-    // 遍历所有可能的临时数据项(最多UTE_CALL_MULTIPARTY_MAX个)
-    for(int i = 0; i < UTE_CALL_MULTIPARTY_MAX; i++)
-    {
-        // 检查当前数据项是否有电话号码但无联系人名称
-        if(uteModuleCallData.tempData[i].numberAscii != NULL && uteModuleCallData.tempData[i].numberAsciiLen != 0)
-        {
-            if(uteModuleCallData.tempData[i].nameUnicode == NULL || uteModuleCallData.tempData[i].nameUnicodeLen == 0)
-            {
-                // 设置联系人名称信息
-                uteModuleCallData.tempData[i].nameUnicodeLen = nameSize;
-                memcpy(&uteModuleCallData.tempData[i].nameUnicode[0],name,nameSize);
-            }
-        }
-    }
-}
-/**
- * @brief 获取当前通话的号码和名称
- *
- * 该函数从全局数据结构uteModuleCallData中获取当前活跃通话的号码和名称，
- *
- * @param number [out] 输出参数，用于存储获取的电话号码（ASCII格式）
- * @param name [out] 输出参数，用于存储获取的来电名称（Unicode格式）
- *
- */
-void uteModuleCallGetCurrentNumbereAndName(uint8_t *number,uint8_t *name)
-{
-    /* 从全局数据结构中复制当前活跃通话的号码到输出缓冲区 */
-    memcpy(number,&uteModuleCallData.tempData[uteModuleCallData.callActiveIndex-1].numberAscii[0],uteModuleCallData.tempData[uteModuleCallData.callActiveIndex-1].numberAsciiLen);
-
-    /* 从全局数据结构中复制当前活跃通话的名称到输出缓冲区 */
-    memcpy(name,&uteModuleCallData.tempData[uteModuleCallData.callActiveIndex-1].nameUnicode[0],uteModuleCallData.tempData[uteModuleCallData.callActiveIndex-1].nameUnicodeLen);
-}
-
-/**
- * @brief 清理模块调用的临时数据
- *
- * 该函数用于重置模块调用相关的临时数据，包括：
- * 1. 将当前活动调用索引重置为0
- * 2. 将临时数据计数器重置为0
- * 3. 清空临时数据存储区
- *
- * @note 该函数不接收参数，也不返回任何值
- */
-void uteModuleCallCleanTempData(void)
-{
-    /* 重置调用索引和临时数据计数 */
-    uteModuleCallData.callActiveIndex = 0;
-    uteModuleCallData.callTempCount = 0;
-
-    /* 清空临时数据存储区 */
-    memset(&uteModuleCallData.tempData,0,sizeof(uteModuleCallData.tempData));
-}
-/**
- * @brief 更新临时通话记录数据
- *
- * 该函数用于处理并更新临时存储的通话记录数据，主要功能包括：
- * 1. 从临时存储区读取通话记录数据
- * 2. 将有效记录写入文件系统
- * 3. 处理记录满时的循环覆盖逻辑
- * 4. 清理临时数据
- *
- * 注意：该函数仅在UTE_BT30_CALL_SUPPORT宏定义时有效
- */
-void uteModuleCallUpdateTempRecordsData(void)
-{
-    UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s", __func__);
-    uint16_t callRerordsSize = sizeof(ute_module_call_records_t);
-    uint8_t *readBuff;
-    uint16_t buffSize = UTE_MODULE_CALL_RECORDS_MAX_COUNT*callRerordsSize+1;
-    uint8_t recordCnt = 0;
-    readBuff = uteModulePlatformMemoryAlloc(buffSize);
-    memset(readBuff,0x00,buffSize);
-    for(int i = 0; i < UTE_CALL_MULTIPARTY_MAX; i++)
-    {
-        ute_module_call_records_t tempData ;
-        memset(&tempData,0x00,callRerordsSize);
-#if UTE_BT30_CALL_SUPPORT
-        tempData.callType = uteModuleCallData.tempData[i].callType;
-        if(uteModuleCallData.tempData[i].numberAsciiLen != 0)
-        {
-            memcpy(&tempData.numberAscii[0],&uteModuleCallData.tempData[i].numberAscii[0],uteModuleCallData.tempData[i].numberAsciiLen);
-            tempData.numberAsciiLen = uteModuleCallData.tempData[i].numberAsciiLen;
-        }
-        if(uteModuleCallData.tempData[i].nameUnicodeLen!=0)
-        {
-            memcpy(&tempData.nameUnicode[0],&uteModuleCallData.tempData[i].nameUnicode[0],uteModuleCallData.tempData[i].nameUnicodeLen);
-            tempData.nameUnicodeLen = uteModuleCallData.tempData[i].nameUnicodeLen;
-            UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,nameSize=%d", __func__,uteModuleCallData.tempData[i].nameUnicodeLen);
-        }
-        if(uteModuleCallData.tempData[i].numberAsciiLen==0 && uteModuleCallData.tempData[i].nameUnicodeLen == 0)
-        {
-            goto CALL_TEMP_UPDATE_END;
-        }
-        //save time
-        if(uteModuleCallData.tempData[i].recordTime.year != 0)
-        {
-            //保存来电时间
-            memcpy(&tempData.callTime,&uteModuleCallData.tempData[i].recordTime,sizeof(ute_module_systemtime_time_t));
-        }
-        uint8_t path[25];
-        memset(&path[0],0,25);
-        sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_RECORDS_DIR);
-        void *file;
-        if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY))
-        {
-            uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
-            uteModuleFilesystemReadData(file,&readBuff[0],buffSize);
-            uteModuleFilesystemCloseFile(file);
-            if(recordCnt<=UTE_MODULE_CALL_RECORDS_MAX_COUNT)
-            {
-                recordCnt = readBuff[buffSize-1];
-            }
-        }
-        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,start recordCnt=%d", __func__,recordCnt);
-        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,callType=%d", __func__,tempData.callType);
-        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,%04d-%02d-%02d %02d:%02d", __func__,tempData.callTime.year,tempData.callTime.month,tempData.callTime.day, tempData.callTime.hour,tempData.callTime.min);
-        if(recordCnt<UTE_MODULE_CALL_RECORDS_MAX_COUNT)
-        {
-            memcpy(&readBuff[recordCnt*callRerordsSize],&tempData,callRerordsSize);
-            recordCnt++;
-        }
-        else
-        {
-            for(uint8_t i =1 ; i<UTE_MODULE_CALL_RECORDS_MAX_COUNT; i++)
-            {
-                memcpy(&readBuff[(i-1)*callRerordsSize],&readBuff[i*callRerordsSize],callRerordsSize);
-            }
-            memcpy(&readBuff[(UTE_MODULE_CALL_RECORDS_MAX_COUNT-1)*callRerordsSize],&tempData,callRerordsSize);
-        }
-        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,end recordCnt=%d", __func__,recordCnt);
-        readBuff[buffSize-1] = recordCnt;
-        if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_WRONLY|FS_O_CREAT))
-        {
-            uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
-            uteModuleFilesystemWriteData(file,&readBuff[0],buffSize);
-            uteModuleFilesystemCloseFile(file);
-        }
-#endif
-    }
-
-CALL_TEMP_UPDATE_END:
-    uteModuleCallData.callData.callingTimeSecond = 0;
-    uteModuleCallData.callData.numberSize = 0;
-    uteModuleCallData.callData.nameSize = 0;
-    isBtPbapNameUpdate = false;
-    uteModuleCallCleanTempData();
-    uteModulePlatformMemoryFree(readBuff);
-}
-#endif
-

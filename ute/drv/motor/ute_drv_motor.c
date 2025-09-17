@@ -13,8 +13,7 @@
 #include "ute_application_common.h"
 #include "ute_module_platform.h"
 #include "ute_module_notdisturb.h"
-#include "ute_module_gui_common.h"
-#include "ute_module_newFactoryTest.h"
+
 
 /*! 马达运行数据zn.zeng, 2021-10-12  */
 ute_drv_motor_t uteDrvMotorData;
@@ -106,7 +105,7 @@ void uteDrvMotorEnable(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
         else if(uteModuleNewFactoryTestGetMode()!= FACTORY_TEST_MODE_NULL)
         {
-            motorDuty = UTE_DRV_MOTOR_PWM_VIBRATION_HIGH;//(uint8_t)((UTE_DRV_MOTOR_FACTORY_MODE_VOLTAGE_SUPPORT/curVoltage)*100);
+            motorDuty = (uint8_t)((UTE_DRV_MOTOR_FACTORY_MODE_VOLTAGE_SUPPORT/curVoltage)*100);
         }
 #endif
         else
@@ -134,9 +133,8 @@ void uteDrvMotorDisable(void)
 #if UTE_DRV_MOTOR_PWM_MODE_SUPPORT
     uteModulePlatformPwmDisable(UTE_DRV_MOTOR_PWM_ID,UTE_DRV_MOTOR_GPIO_PIN);
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR);
-#else
-    uteModulePlatformOutputGpioSet(UTE_DRV_MOTOR_GPIO_PIN,false);
 #endif
+    uteModulePlatformOutputGpioSet(UTE_DRV_MOTOR_GPIO_PIN,false);
 }
 
 /**
@@ -164,29 +162,19 @@ void uteDrvMotorTimerCallback(void *pxTimer)
 */
 void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_t cnt)
 {
-    if ((uteDrvMotorData.motorVibrationLevel == 0 && uteDrvMotorData.motorTempVibrationLevel == 0) || cnt == 0)
+    if(uteDrvMotorData.motorVibrationLevel == 0 && uteDrvMotorData.motorTempVibrationLevel == 0)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,motorVibrationLevel=%d, motorTempVibrationLevel=%d, cnt=%d", __func__, uteDrvMotorData.motorVibrationLevel, uteDrvMotorData.motorTempVibrationLevel, cnt);
         return;
     }
-#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-    if(uteModuleNewFactoryTestGetMode() != FACTORY_TEST_MODE_NULL)
-    {
-        uteDrvMotorData.durationTimeMsec = durationTimeMsec;
-        uteDrvMotorData.intervalTimeMsec = intervalTimeMsec;
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START,cnt);
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,FactoryTest motorVibrationLevel=%d, motorTempVibrationLevel=%d, cnt=%d", __func__, uteDrvMotorData.motorVibrationLevel, uteDrvMotorData.motorTempVibrationLevel, cnt);
-        return;
-    }
-#endif
     if((uteDrvBatteryCommonGetChargerStatus()==BAT_STATUS_NO_CHARGE)&&(uteDrvBatteryCommonGetLvl()<10))
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,lvl=%d is too low", __func__,uteDrvBatteryCommonGetLvl());
         return;
     }
-#if UTE_BT30_CALL_SUPPORT
-    uint disp_status = bsp_bt_disp_status();
-    if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_BT_CALL || disp_status > BT_STA_INCOMING)//=BT_STA_INCOMING时，BT来电没有震动
+#if 0//UTE_BT30_CALL_SUPPORT
+    ute_bt_call_data_t callData;
+    uteModuleCallGetData(&callData);
+    if ((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_ING_ID) || (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_QUICK_REPLY_LIST_ID) || (callData.state == BT_CALL_ING))
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,BT calling not allow motor!", __func__);
         return;

@@ -25,7 +25,4 @@ u8 sd0_get_rw_sta(void);
 void ude_sd_remove(void);
 void sd_other_param_set(u32 param);   //dev_init后调用, 补充设置一些sd参数
 void sd0_set_invalid_state(void);
-void sd0_erase(u32 start, u32 end);
-bool fat32_mkfs(u8 erase_en);
-bool exfat_mkfs(u8 erase_en);
 #endif // _API_SD_H

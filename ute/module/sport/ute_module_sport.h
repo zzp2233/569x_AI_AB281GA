@@ -187,14 +187,6 @@ typedef struct
     uint8_t sportOnOff; //运动开关
     uint8_t sportOrder; //运动序号
 } ute_sports_list_param_t;
-
-typedef struct
-{
-    sport_mode_type sportMode; //运动类型
-    uint16_t languageId; //词条ID
-    uint32_t iconAddr; //图标地址
-} ute_sports_list_display_param_t;
-
 typedef struct
 {
     ute_sports_list_param_t sportListData[UTE_MODULE_SPORT_MAX_SPORT_NUM];
@@ -204,7 +196,6 @@ typedef struct
     uint16_t minSportNum; //最少显示运动数量
     uint16_t maxSportNum; //最大显示运动数量
     bool appUpdateTrainingListFlag; //APP修改运动列表
-    ute_sports_list_display_param_t *sportListDisplayData; // 运动列表显示数据，方便多界面复用图标
 } ute_sports_hundred_sort_data_t;
 #endif
 
@@ -328,7 +319,6 @@ typedef struct
 #if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
     uint8_t switchSysclkCountdown; //切换系统时钟倒计时
 #endif
-    uint8_t deviceOrientation; //设备方向
 } ute_module_sport_data_t;
 
 #if UTE_MODULE_SPORTS_HISTORY_HEART_ZONE_SUPPORT
@@ -363,7 +353,6 @@ bool uteModuleSportIsTakePicture(void);
 void uteModuleSportSaveSedentaryParam(ute_module_sport_sedentary_param_t *param);
 void uteModuleSportReadSedentaryParam(ute_module_sport_sedentary_param_t *param);
 void uteModuleSportSaveHandScreenOnStepsTargetCnt(bool isHandOpen,uint32_t targetCnt);
-bool uteModuleSportSedentaryOpenCtrl(bool isSet,bool isOpen);
 void uteModuleSportReadConfig(void);
 void uteModuleSportGetCurrDayStepCnt(uint32_t *total,uint32_t *walk,uint32_t *run);
 uint32_t uteModuleSportGetStepsTargetCnt(void);
@@ -411,11 +400,8 @@ void uteModuleSprotCountdownTimerStart(uint16_t ms);
 void uteModuleSprotCountdownTimerStop(void);
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
 void uteModuleSportHundredSportCmd(uint8_t*receive,uint8_t length);
-void uteModuleSportHundredSportGetInfo(sport_mode_type mode, uint16_t *languageId, uint32_t *iconAddr);
-void uteModuleSportRegisterDisplayData(ute_sports_list_display_param_t *displayData, uint16_t dataSize);
-sport_mode_type uteModuleSportFindHundredSportIndex(uint8_t sportOrder);
+int uteModuleSportFindHundredSportIndex(uint8_t sportOrder);
 uint8_t uteModuleSportGetRealIndex(uint8_t sportMode, const uint8_t *sportList);
-uint8_t uteModuleSportGetSportOrder(uint8_t sportMode);
 int uteModuleSportGetHundredSportValidNumber(void);
 bool uteModuleSportGetAppUpdateTrainingListFlag(void);
 void uteModuleSportSetAppUpdateTrainingListFlag(bool isUpdate);
@@ -451,14 +437,12 @@ void uteModuleSportSaveTodayEveryHourAllSportKcalData(void);
 uint32_t uteModuleSportGetCurrDayEveryHourSportTime(void);
 uint16_t uteModuleSportGetCurrDayEveryHourKcal(void);
 uint16_t uteModuleSportGetCurrDayEveryHourStandTime(void);
-uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep);
-bool uteModuleSportLoadTodayEveryHourKcalHistoryData(uint16_t *everyHourKcal);
-bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(uint16_t *everyHourSportTime);
-#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
-uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(uint16_t *everyHourStandTime);
-#endif
+uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(UT_GraphsParam *everyHourStepHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
+bool uteModuleSportLoadTodayEveryHourKcalHistoryData(UT_GraphsParam *everyHourKcalHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
+bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(UT_GraphsParam *everyHourSportTimeHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
+uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(UT_GraphsParam *everyHourStandTimeHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
 void uteModuleSportReadWeekDayStep(void);
-uint32_t uteModuleSportLoadWeekDayStepHistoryData(uint32_t *weekDayStep, uint32_t *totalStep);
+uint32_t uteModuleSportLoadWeekDayStepHistoryData(UT_GraphsParam *weekDayStepHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange,uint32_t *totalStep);
 #endif
 
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
@@ -505,7 +489,6 @@ bool uteModuleSportAlgoTimerIsRunning(void);
 #endif
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void);
 
-uint8_t uteModuleSportGetDeviceOrientation(void);
-
+#endif
 #endif //_UTE_MODULE_SPORT_H_
 

@@ -15,17 +15,19 @@
 
 #define UTE_MODULE_FILESYSTEM_SMOKE_DATA_DIR "smoke"
 #define UTE_MODULE_FILESYSTEM_SMOKE_LEVEL_FILE "smoke/data"
-
+#define BAR_COUNT 19         // 柱形总数
 typedef struct
 {
     uint32_t total_smoking_count; // 抽吸口数
     uint32_t target_smoking_count; // 抽吸目标口数
     uint32_t smoking_count_per_hour[24];  // 存储每小时的口数
     uint32_t smoking_count_per_day[7];
+    uint8_t power_seq[BAR_COUNT]; //
     int current_power;                     // 当前功率（单/双发）
     u16 current_index; // 当前进度条索引
     u8  resistance_type;
     u8 smoke_position_swich;// （单/双发）
+    bool is_out_chaina;
 } ute_module_smoke_data_t;
 extern ute_module_smoke_data_t uteModuleSmokeData;
 

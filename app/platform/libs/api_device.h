@@ -17,9 +17,9 @@ enum
     DEV_HDMI,
     DEV_DP_GND,
     DEV_DPDM_SC,
-    DEV_SPIFLASH = 0x30,
-
     DEV_TOTAL_NUM,
+
+    DEV_SPIFLASH = 0x30,   //读ID检测,不参与该头文件中的device检测机制
 };
 
 extern uint32_t cfg_dev_feat;

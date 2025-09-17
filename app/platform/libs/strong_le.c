@@ -30,7 +30,6 @@ void btstack_ble_init(void) {}
 void btstack_gatt_init(void) {}
 void btstack_ble_update_conn_param(void) {}
 void btstack_ble_set_adv_interval(void) {}
-void btstack_ble_set_addr(void) {}
 
 typedef uint8_t (*bb_msg_func_t)(uint16_t index, void const *param);
 typedef uint8_t (*bb_cmd_func_t)(uint16_t cmd, void const *param);

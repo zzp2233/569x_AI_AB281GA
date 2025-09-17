@@ -76,47 +76,6 @@ static void func_compo_select_click(void)
         func_switch_to(FUNC_COMPO_SELECT_SUB, FUNC_SWITCH_DIRECT);
     }
 }
-#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
-//创建组件选择窗体
-compo_form_t *func_compo_select_form_create(void)
-{
-    //新建窗体
-    compo_form_t *frm = compo_form_create(true);
-
-    //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_COMPO_SELECT]);
-
-    //创建按键
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I340001_FIRSTORDER_00_BIN);
-    compo_setid(btn, COMPO_ID_BG_BTN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-
-    return frm;
-}
-
-//单击按钮
-static void func_compo_select_click(void)
-{
-    u16 btn_id = compo_get_button_id();
-    if (COMPO_ID_BG_BTN == btn_id)
-    {
-        func_cb.flag_sort = false;
-        func_switch_to(FUNC_COMPO_SELECT_SUB, FUNC_SWITCH_DIRECT);
-    }
-}
-
-#else
-compo_form_t *func_compo_select_form_create(void)
-{
-    //新建窗体
-    compo_form_t *frm = compo_form_create(true);
-    return frm;
-}
-static void func_compo_select_click(void)
-{
-
-}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //组件选择功能事件处理

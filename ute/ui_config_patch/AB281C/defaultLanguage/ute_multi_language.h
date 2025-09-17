@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-06-30 10:44:08
+*@date   2025-02-18 14:22:35
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -34,7 +34,7 @@ enum
     STR_SPORT_CRICKET, // 板球
     STR_SPORT_RUGBY, // 橄榄球
     STR_SPORT_HOCKEY, // 曲棍球
-    STR_SPORT_DANCE, // 跳舞
+    STR_SPORT_DANCE, // 舞蹈
     STR_SPORT_SPINNING, // 动感单车
     STR_SPORT_YOGA, // 瑜伽
     STR_SPORT_SIT_UP, // 仰卧起坐
@@ -259,41 +259,21 @@ enum
     STR_SYNC_SUC, // 同步成功
     STR_SYNC_FAIL, // 同步失败
     STR_MUTE, // 静音
-    STR_TURKEY, // Türkçe
-    STR_PORTUGUESE, // Português
-    STR_SPANISH, // Español
-    STR_THAI, // ภาษาไทย
-    STR_START_MEASURING, // 开始测量
-    STR_MEASURING, // 测量中...
-    STR_WOMEN_HEALTH, // 女性健康
-    STR_PLEASE_APP_DATA, // 请前往APP同步数据
-    STR_MENSTRUAL_CYCLE, // 月经期
-    STR_PREGNANCY, // 易孕期
-    STR_SAFE_PERIOD, // 安全期
-    STR_ALL_STEP, // 总步数
-    STR_AVERAGE, // 平均心率
-    STR_ALL_TIMER, // 总时长
-    STR_CALORIES, // 总热量
-    STR_TOTAL_DISTANCE, // 总距离
-    STR_COUNT_NUM, // 次数
-    STR_HEART_HIGHT, // 心率过高
-    STR_HEART_LOW, // 心率过低
-    STR_FUTRUE_WEATHER, // 未来天气
-    STR_DEV_MODEL, // 设备型号
-    STR_BLE_SUCCESSFUL, // 蓝牙连接成功
-    STR_BLE_OFF, // 手机蓝牙已断开
 };
 
 extern const char * const *i18n;
 extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
+extern const char * const i18n_ar_ril[];
 extern const char * const i18n_ru_rru[];
 extern const char * const i18n_tr_rtr[];
+extern const char * const i18n_ja_rjp[];
 extern const char * const i18n_de_rde[];
 extern const char * const i18n_es_res[];
 extern const char * const i18n_fr_rfr[];
 extern const char * const i18n_it_rit[];
 extern const char * const i18n_pt_rpt[];
 extern const char * const i18n_th_rth[];
+extern const char * const i18n_zh_rtw[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

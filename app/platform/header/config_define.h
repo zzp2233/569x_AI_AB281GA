@@ -70,7 +70,6 @@
 #define CTP_CHSC6X                      2
 #define CTP_AXS5106                     3
 #define CTP_AXS152x                     4
-#define CTP_SPT5113C                    5
 
 
 

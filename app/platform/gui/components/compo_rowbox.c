@@ -48,35 +48,21 @@ compo_rowbox_t *compo_rowbox_create(compo_form_t *frm)
 //根据表盘的基地址获取对应的预览图
 static u32 compo_rowbox_preview_style(u32 base_addr)
 {
-#if UTE_MODULE_WATCH_PHOTO_SUPPORT
-    watchConfig_t watchConfig;
-    uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, base_addr, sizeof(watchConfig_t));
-    if(uteModuleWatchOnlineIsHasPhoto() && watchConfig.snNo == UTE_MODULE_WATCH_PHOTO_DEFAULT_ID)
-    {
-        uint32_t preview = 0;
-        uint32_t photo = 0;
-        uteModuleWatchOnlineGetCurrPhotoAddress(&preview,&photo);
-        return preview;
-    }
-    else
-#endif
-    {
-        uitool_header_t uitool_header;
-        u32 user_addr = base_addr;
+    uitool_header_t uitool_header;
+    u32 user_addr = base_addr;
 #if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
-        user_addr += sizeof(watchConfig_t);
+    user_addr += sizeof(watchConfig_t);
 #endif
-        os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
-        for(u16 i=0; i<uitool_header.num; i++)
+    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
+    for(u16 i=0; i<uitool_header.num; i++)
+    {
+        uitool_res_t uitool_res = {0};
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        u32 res_addr = user_addr + uitool_res.res_addr;
+        //预览图
+        if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW)
         {
-            uitool_res_t uitool_res = {0};
-            os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-            u32 res_addr = user_addr + uitool_res.res_addr;
-            //预览图
-            if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW)
-            {
-                return res_addr;
-            }
+            return res_addr;
         }
     }
     return 0;
@@ -270,31 +256,20 @@ void compo_rowbox_update(compo_rowbox_t *rowbox)
             widget_image_set(rowbox->img[i], compo_rowbox_preview_style(rowbox->res_tbl[rowbox->img_idx[i]]));
         }
 
-        // 获取原始图片的宽度和高度
-        int original_width = rowbox->img_area.wid;
-        int original_height = rowbox->img_area.hei;
-
-#if UTE_MODULE_WATCH_PREVIEW_ENLARGE_IMAGE_SUPPORT
-        // 先对图片进行放大处理
-        float scale_factor = UTE_MODULE_WATCH_PREVIEW_ENLARGE_IMAGE_MULTIPLE;
-        if (rowbox->style == COMPO_ROWBOX_STYLE_PREVIEW)
-        {
-            original_width *= scale_factor;
-            original_height *= scale_factor;
-        }
-#endif
         int lnx = rowbox->row_center_x + idx * rowbox->row_width_total;
         int lny = GUI_SCREEN_CENTER_Y;
 
         int dx = lnx - rowbox->ofs_x;                  //离中心距离
         int udx = abs_s(dx);
+        int img_wid = rowbox->img_area.wid;
+        int img_hei = rowbox->img_area.hei;
         int udx_th = 25;
 
-        int img_hei = original_height - (original_height * (udx - udx_th) / GUI_SCREEN_WIDTH);
-        int img_wid = (img_hei * original_width) / original_height;
+        img_hei = img_hei - img_hei * (udx - udx_th) / 320;
+        img_wid = img_hei * img_wid / rowbox->img_area.hei;
 
         widget_set_size(rowbox->img[i], img_wid, img_hei);
-        widget_set_alpha(rowbox->img[i], img_wid >= original_width ? 255 : (img_wid * 255 / original_width));
+        widget_set_alpha(rowbox->img[i], img_wid >= rowbox->img_area.wid ? 255 : (img_wid * 255 / rowbox->img_area.wid));
         widget_set_pos(rowbox->img[i], lnx, lny);
         if (rowbox->margin_en)
         {

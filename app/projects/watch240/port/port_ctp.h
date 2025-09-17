@@ -32,9 +32,9 @@
 #define PORT_CTP_INT            IO_PB4
 #define PORT_CTP_INT_VECTOR     PORT_INT5_VECTOR
 
-#define PORT_CTP_RST            IO_PA7
-#define PORT_CTP_RST_H()        GPIOASET = BIT(7);
-#define PORT_CTP_RST_L()        GPIOACLR = BIT(7);
+#define PORT_CTP_RST            IO_PB7
+#define PORT_CTP_RST_H()        GPIOBSET = BIT(7);
+#define PORT_CTP_RST_L()        GPIOBCLR = BIT(7);
 
 #else
 #error CHIP_PACKAGE_SELECT defined select error!!!!

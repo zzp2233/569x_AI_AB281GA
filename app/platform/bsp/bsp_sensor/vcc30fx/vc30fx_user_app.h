@@ -25,6 +25,7 @@ extern InitParamTypeDef vc30fx_data;
 
 void vc30fx_pwr_en(void);
 void vc30fx_pwr_dis(void);
+void uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData(void);
 
 /* vc931x设备函数接口 */
 u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig );

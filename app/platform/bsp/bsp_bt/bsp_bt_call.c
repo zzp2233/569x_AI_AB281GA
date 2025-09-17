@@ -240,6 +240,7 @@ static void bt_call_alg_init(void)
 #endif
     sysclk = SYS_192M;
     sys_clk_req(INDEX_VOICE, sysclk);
+
     bt_call_init(&bt_voice_cb);
 }
 
@@ -263,19 +264,11 @@ void hfp_hf_call_notice(uint32_t evt)
     switch (evt)
     {
         case BT_NOTICE_INCOMING:
-            if(!bt_pbap_is_connected())
-            {
-                bt_pbap_connect();
-            }
             printf("===>>> InComing, is 3way:%d\n", hfp_hf_check_is_3way());
             uteModuleCallSetBeforeCallStatus(1);
             bsp_call_mgr_send(CALL_MGR_BT_INCOM);
             break;
         case BT_NOTICE_OUTGOING:
-            if(!bt_pbap_is_connected())
-            {
-                bt_pbap_connect();
-            }
             printf("===>>> OutGoing, is 3way:%d\n", hfp_hf_check_is_3way());
             uteModuleCallSetBeforeCallStatus(0);
             bsp_call_mgr_send(CALL_MGR_BT_OUTGO);
@@ -295,13 +288,11 @@ void hfp_hf_call_notice(uint32_t evt)
             bt_cb.call_type = CALL_TYPE_NONE;
 
             //保存通话记录
-            memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
-            bt_redial_init();
-#if UTE_BT_CALL_THREE_WAY_SUPPORT
-            uteModuleCallUpdateTempRecordsData();
-#else
-            uteModuleCallUpdateRecordsData();
-#endif
+            if (sys_cb.refresh_language_flag == false)    //切换语言的时候不保存
+            {
+                memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
+                uteModuleCallUpdateRecordsData();
+            }
 
 #if CALL_MGR_EN
             bt_cb.incall_flag = 0;
@@ -309,16 +300,8 @@ void hfp_hf_call_notice(uint32_t evt)
 #endif
             break;
         case BT_NOTICE_CALL_NUMBER:
-        {
             printf("===>>> Number: %s\n", hfp_get_last_call_number(0));
             uteModuleCallSetContactsNumberAndName((uint8_t*)hfp_get_last_call_number(0), strlen(hfp_get_last_call_number(0)), NULL, 0);
-            if(strlen(sys_cb.pbap_result_Name) == 0)
-            {
-                uint8_t nameLen;
-                uteModuleCallGetAddressBookContactName((uint8_t*)hfp_get_last_call_number(0),strlen(hfp_get_last_call_number(0)),(uint8_t *)&sys_cb.pbap_result_Name[0],&nameLen);
-                uteModuleCallSetContactsNumberAndName(NULL, 0, (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
-                printf("===>>> Address Book Name: %s\n", sys_cb.pbap_result_Name);
-            }
             bt_cb.number_sta = true;
 #if CALL_MGR_EN
             // 三方来电 延迟更新号码
@@ -327,8 +310,7 @@ void hfp_hf_call_notice(uint32_t evt)
             {
                 msg_enqueue(EVT_CALL_NUMBER_UPDATE);
             }
-        }
-        break;
+            break;
     }
 }
 
@@ -393,9 +375,6 @@ bool hfp_hf_3way_number_update_control(void)
 void hfp_hf_parse_clcc_cb(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type)
 {
     printf("===>>> clcc: idx:%d, dir:%d, status:%d, mode:%d, mpty:%d, number:%s, type:%d\n", idx, dir, status, mode, mpty, number, type);
-#if UTE_BT_CALL_THREE_WAY_SUPPORT
-    uteModuleCallSetClccTempData(idx, dir, status, mode, mpty, number, type);
-#endif
 }
 
 #endif //HFP_3WAY_CONTROL_EN

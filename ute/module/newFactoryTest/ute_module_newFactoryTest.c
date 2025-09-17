@@ -14,7 +14,6 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_heart.h"
 #include "ute_module_localRingtone.h"
-#include "ute_module_factorytest.h"
 
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
 /*! zn.zeng,2022-03-16*/
@@ -26,11 +25,12 @@
 
 /*! zn.zeng,2022-03-16*/
 ute_new_factory_test_data_t uteModuleNewFactoryTestData;
+ute_smoke_factory_test_data_t uteModuleSmokeFactoryData;
 
 /**
-*@brief     发给对端的测试数据暂定32byte ascii 数据
-*@details   类型+测试结果+数据长度+内容
-*/
+ *@brief     发给对端的测试数据暂定32byte ascii 数据
+ *@details   类型+测试结果+数据长度+内容
+ */
 ute_new_factory_test_send_app_data_t uteModuleNewFactorySendAppData;
 /**
  *@brief  初始化函数
@@ -168,16 +168,16 @@ void uteModuleNewFactoryTestEverySecond(void)
     {
         if (uteModuleNewFactoryTestData.u.vcxx.testMode == NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
         {
-            // ute_module_systemtime_time_t time;
-            // uteModuleSystemtimeGetTime(&time);
-            // if(time.sec%2)
-            // {
-            // uteDrvHeartVcxxStartHrMaxTest();
-            // }
-            // else
-            // {
-            // uteDrvHeartVcxxStartSpo2MaxTest();
-            // }
+            ute_module_systemtime_time_t time;
+            uteModuleSystemtimeGetTime(&time);
+            if (time.sec % 2)
+            {
+                // uteDrvHeartVcxxStartHrMaxTest();
+            }
+            else
+            {
+                // uteDrvHeartVcxxStartSpo2MaxTest();
+            }
         }
         else if (uteModuleNewFactoryTestData.u.vcxx.testMode == NEW_FACTORY_VCXX_TEST_MODE_BIO_B)
         {
@@ -194,33 +194,13 @@ void uteModuleNewFactoryTestEverySecond(void)
         }
         else
         {
-            uteModuleFactoryTestGetVkData(&uteModuleNewFactoryTestData.u.vcxx.pre,&uteModuleNewFactoryTestData.u.vcxx.current,&uteModuleNewFactoryTestData.u.vcxx.ps,&uteModuleNewFactoryTestData.u.vcxx.isPass);
-            if(uteModuleNewFactoryTestGetCheckLightMode()==NEW_FACTORY_VCXX_TEST_MODE_INFRARED)
-            {
-                if((uteModuleNewFactoryTestData.u.vcxx.ps >= DRV_HEART_VCXX_PS_MIN_VALUE)&&(uteModuleNewFactoryTestData.u.vcxx.current >= DRV_HEART_VCXX_LIGHT_I_MIN_VALUE))
-                {
-                    uteModuleNewFactoryTestData.u.vcxx.isPass = true;
-                }
-                else
-                {
-                    uteModuleNewFactoryTestData.u.vcxx.isPass = false;
-                }
-            }
-            else
-            {
-                if ((uteModuleNewFactoryTestData.u.vcxx.pre <= DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE) && (uteModuleNewFactoryTestData.u.vcxx.current >= DRV_HEART_VCXX_LIGHT_I_MIN_VALUE))
-                {
-                    uteModuleNewFactoryTestData.u.vcxx.isPass = true;
-                }
-                else
-                {
-                    uteModuleNewFactoryTestData.u.vcxx.isPass = false;
-                }
-            }
             // uteDrvHeartNewFactoryVcxxGetCrosstalktestValue(&uteModuleNewFactoryTestData.u.vcxx.pre,&uteModuleNewFactoryTestData.u.vcxx.current,&uteModuleNewFactoryTestData.u.vcxx.ps,&uteModuleNewFactoryTestData.u.vcxx.bioA,&uteModuleNewFactoryTestData.u.vcxx.isPass);
         }
     }
 #endif
+    // printf("%s,mode=%d,secondCount=%d,maxCount=%d,factoryAgingTestMode=%d\r\n", __func__, uteModuleNewFactoryTestData.mode, uteModuleNewFactoryTestData.secondCount, uteModuleNewFactoryTestData.maxCount, uteModuleNewFactoryTestData.factoryAgingTestMode);
+
+    // printf("SCREEN_ID=%d\r\n",uteModuleGuiCommonGetCurrentScreenId());
     if ((uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING) &&
         (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID))
     {
@@ -228,14 +208,8 @@ void uteModuleNewFactoryTestEverySecond(void)
         {
             if (uteModuleNewFactoryTestData.secondCount < uteModuleNewFactoryTestData.maxCount)
             {
-                //屏幕10分钟亮一次，震动一次
-                if((uteModuleNewFactoryTestData.secondCount%(60*10) == 0) && (uteModuleNewFactoryTestData.secondCount>0))
-                {
-                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID, 0, __func__);
-                }
-                //心率5分钟测一次，每次测1分钟
-                if(uteModuleNewFactoryTestData.secondCount%(60*5) == 0)
+                // 屏幕10分钟亮一次，震动一次
+                if ((uteModuleNewFactoryTestData.secondCount % (60 * 10) == 0) && (uteModuleNewFactoryTestData.secondCount > 0))
                 {
                     //uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID, 0, __func__);
@@ -501,8 +475,7 @@ void uteModuleNewFactoryTestSetCheckLightMode(uint8_t mode)
     uteModuleNewFactoryTestData.u.vcxx.testMode = mode;
     if (mode != NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
     {
-        //uteDrvHeartVcxxStartCrosstalktest();
-        uteModuleHeartStartSingleTesting(TYPE_FACTORY0);
+        // uteDrvHeartVcxxStartCrosstalktest();
     }
 #if !UTE_DRV_HEART_VC9202_VP60A2_SUPPORT
     if (mode == NEW_FACTORY_VCXX_TEST_MODE_BIO_A)

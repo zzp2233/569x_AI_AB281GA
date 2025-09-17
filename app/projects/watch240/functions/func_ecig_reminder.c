@@ -10,6 +10,11 @@
 #endif
 #if ECIG_POWER_CONTROL
 
+extern uint8_t  power_ecig;
+extern uint8_t  power_idx;
+extern uint16_t tick_200ms;
+
+
 enum
 {
     COMPO_ID_PIC_SMOCKING = 1,
@@ -86,7 +91,9 @@ compo_form_t *func_ecig_reminder_form_create(void)
         {
             animation = compo_animation_create(frm, UI_BUF_I330001_SMOKEING_FIRE1_BIN);
             compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-            compo_animation_set_radix(animation, 31);
+            //compo_animation_set_radix(animation, 19);//机器人
+            compo_animation_set_radix(animation, 38);//黑衣女人
+            //compo_animation_set_radix(animation, 28);//中东女人
             compo_animation_set_interval(animation, 8);
             compo_setid(animation, COMPO_ID_PIC_SMOCKING);
         }
@@ -241,6 +248,8 @@ static void func_ecig_reminder_exit(void)
     if(!slider_unlock )
         func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
     ecig_clear_short_flag(0);
+    power_ecig = 0;
+    tick_200ms = 0;
 }
 
 // 功能
@@ -248,11 +257,29 @@ void func_ecig_reminder(void)
 {
     printf("%s\n", __func__);
     func_ecig_reminder_enter();
+    extern ute_module_smoke_data_t uteModuleSmokeData;
+
     while (func_cb.sta == FUNC_ECIG_REMINDER)
     {
         func_ecig_reminder_process();
         func_ecig_reminder_message(msg_dequeue());
+
+
+        if(power_ecig)
+        {
+            power_ecig = 0;
+            if (power_idx < BAR_COUNT)
+            {
+                uteModuleSmokeData.current_power = uteModuleSmokeData.power_seq[power_idx];
+                ecig_set_power(uteModuleSmokeData.current_power); // 直接赋值并应用
+                power_idx++;
+            }
+            printf("zzp_reminder_%d\n",uteModuleSmokeData.current_power);
+        }
+
     }
+
+
     func_ecig_reminder_exit();
 }
 #endif

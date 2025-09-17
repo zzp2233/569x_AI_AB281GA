@@ -7,8 +7,6 @@
 *@version       v1.0
 */
 #include "ute_drv_screen_common.h"
-#include "ute_application_common.h"
-#include "ute_module_message.h"
 #include "ute_module_log.h"
 #include "gui.h"
 
@@ -25,40 +23,10 @@
 #include "ute_drv_tft_s240x284_nv3030b_zd183g1196.h"
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
 #include "ute_drv_tft_s360X360_nv3030b_hy139071a.h"
-#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
-#include "ute_drv_tft_s360X360_gc9b71_zd138g1616.h"
-#elif UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
-#include "ute_drv_tft_s240x284_jd9853_hy018214ov.h"
-#elif UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT
-#include "ute_drv_tft_s240x284_i183_jd9853_0185A035_qspi.h"
-#elif UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT
-#include "ute_drv_tft_s240x296_gc9309_js202018a_qspi.h"
-#elif UTE_DRV_TFT_S360_X360_ST77916_HY138026A_OV_QSPI_SUPPORT
-#include "ute_drv_tft_s360X360_st77916_hy138026a_ov_qspi.h"
-#elif UTE_DRV_TFT_S360X360_I172_ST77916_QSPI_SUPPORT
-#include "ute_drv_tft_s360X360_i172_st77916_qspi.h"
-#elif UTE_DRV_TFT_S240X240_NV3002C_HY138026A_QSPI_SUPPORT
-#include "ute_drv_tft_s240X240_nv3002c_hy138026a.h"
-#elif UTE_DRV_AMOLED_S368X448_GC3A71_HK0J1931972B03_QSPI_SUPPORT
-#include "ute_drv_amoled_s368_x448_gc3a71_hk0j1931972b03_qspi.h"
-#elif UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
-#include "ute_drv_tft_s360X360_gc9b71_hy139074a.h"
-#elif UTE_DRV_TFT_S360X360_GC9B71_JS139005A_QSPI_SUPPORT
-#include "ute_drv_tft_s360X360_gc9b71_js139005a.h"
-#elif UTE_DRV_TFT_S240X284_I183_JD9853_SXT180G1911_QSPI_SUPPORT
-#include "ute_drv_tft_s240x284_i183_jd9853_sxt180g1911_qspi.h"
-#elif UTE_DRV_TFT_S320_X380_ST77916_TRULY_191_QSPI_SUPPORT
-#include "ute_drv_tft_s320X380_st77916_truly_191_qspi.h"
-#elif UTE_DRV_AMOLED_S368X448_CH13620_193WY01012_QSPI_SUPPORT
-#include "ute_drv_amoled_s368_x448_ch13620_193WY01012_qspi.h"
-#elif UTE_DRV_TFT_S240X296_JD9853_HKOE19124B01_QSPI_SUPPORT
-#include "ute_drv_tft_s240x296_jd9853_hkoe19124b01_qspi.h"
-#elif UTE_DRV_TFT_S240X296_NV3030B_HY201077R_QSPI_SUPPORT
-#include "ute_drv_tft_s240x296_nv3030b_hy201077r.h"
-#elif UTE_DRV_TFT_S240X284_C_JD9853_WV018LZQ_QSPI_SUPPORT
-#include "ute_drv_tft_s240x284_c_jd9853_wv018lzq_qspi.h"
-#elif DRV_BOE_S240X296_I183_JD9853_HKOE1912534B01_QSPI_SUPPORT
-#include "ute_drv_boe_s240x296_i183_jd9853_hkoe1912534b01.h"
+#elif UTE_DRV_TFT_S240X296NV3030B_ZD183G1196_QSPI_SUPPORT
+#include "ute_drv_boe_s240x296_i183_jd9853_wv018lzq_qspi.h"
+#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_nv3030b_zd138g1616.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -97,42 +65,8 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Nv3030BZd183g1196Config;
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BHy139071aConfig;
-#elif UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd9853Hy018214OvConfig;
-#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Gc9b71Zd138g1616Config;
-#elif UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd98530185A035Config;
-#elif UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X296Gc9309Js202018aConfig;
-#elif UTE_DRV_TFT_S360_X360_ST77916_HY138026A_OV_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360St77916Hy138026AConfig;
-#elif UTE_DRV_TFT_S360X360_I172_ST77916_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360I172St77916QspiConfig;
-#elif UTE_DRV_TFT_S240X240_NV3002C_HY138026A_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X240nv3002chy138026aConfig;
-#elif UTE_DRV_AMOLED_S368X448_GC3A71_HK0J1931972B03_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenAmoledS368X448Gc3A71Hk0J1931972B03Config;
-#elif UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Gc9b71Hy139074aConfig;
-#elif UTE_DRV_TFT_S360X360_GC9B71_JS139005A_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Gc9b71Js139005aConfig;
-#elif UTE_DRV_TFT_S240X284_I183_JD9853_SXT180G1911_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd9853Sxt180g1911Config;
-#elif UTE_DRV_TFT_S320_X380_ST77916_TRULY_191_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft320X380St77916Truly191Config;
-#elif UTE_DRV_AMOLED_S368X448_CH13620_193WY01012_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenAmoledS368X448Ch13620193WY01012Config;
-#elif UTE_DRV_TFT_S240X296_JD9853_HKOE19124B01_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd9853Hkoe19124B01Config;
-#elif UTE_DRV_TFT_S240X296_NV3030B_HY201077R_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X296Nv3030BHy201077rConfig;
-#elif UTE_DRV_TFT_S240X284_C_JD9853_WV018LZQ_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X284CJd9853Wv018LzqConfig;
-#elif DRV_BOE_S240X296_I183_JD9853_HKOE1912534B01_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenBoe240X296Hkoe1912534b01Config;
-#else
-#error "Please select a screen driver"
+#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BZd138g1616Config;
 #endif
 #if UTE_DRV_8080_FOR_SCREEN_SUPPORT
     uteModulePlatform8080Init();
@@ -173,19 +107,6 @@ void uteDrvScreenCommonInit(void)
     uteDrvScreenCommonData.isInit = true;
     uteDrvScreenCommonData.currBackLightPercent = 0;
 }
-
-/**
- * @brief        屏幕初始化标志
- * @details
- * @return       true 已经初始化 false 未初始化
- * @author       Wang.Luo
- * @date         2025-06-11
- */
-__SCREEN_COMMON bool uteDrvScreenCommonIsInit(void)
-{
-    return uteDrvScreenCommonData.isInit;
-}
-
 /**
 *@brief   设置屏reset 脚电平
 *@details
@@ -519,7 +440,7 @@ void uteDrvScreenCommonSt7789p3DspiWriteCmdParam(uint8_t cmd,uint8_t data)
 /*! ESD测试屏幕TE中断异常复位处理,wang.luo 2023-03-21 */
 #if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
 void *screenEsdTeIntErrorCheckTimerPointer = NULL;
-uint8_t screenEsdTeIntErrorCheckCnt = 0;
+uint8_t  EsdTeIntErrorCheckCnt=0;
 /**
 *@brief        延时初始化处理函数
 *@details
@@ -531,16 +452,18 @@ void uteDrvScreenEsdTeIntErrorCheckHandlerMsg(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s,", __func__);
     if (uteApplicationCommonIsPowerOn())
     {
-        if (!sys_cb.gui_sleep_sta)
+        if (uteModuleGuiCommonIsDisplayOn())
         {
-            tft_exit();
-            ctp_exit();
-            power_gate_3v3_off();
-            sys_cb.gui_sleep_sta = 1;
-            tft_cb.tft_bglight_first_set = false;
-            delay_5ms(10);
-            gui_wakeup();
-            uteDrvScreenEsdTeIntErrorCheckTimerStart(1000);
+            EsdTeIntErrorCheckCnt++;
+            /*! 灭屏*/
+            uteModuleGuiCommonDisplayOff(true);
+            /*! 关闭屏幕电源*/
+            uteDrvScreenCommonSetPowerEnable(false);
+            uteModulePlatformDelayUs(50 * 1000);
+            /*! 亮屏*/
+            ute_task_gui_message_t msg;
+            msg.type = MSG_TYPE_HNAD_SCREEN_ON_NOTIFY;
+            uteTaskGuiSendMsg(&msg);
         }
         else
         {
@@ -551,7 +474,6 @@ void uteDrvScreenEsdTeIntErrorCheckHandlerMsg(void)
     {
         uteDrvScreenEsdTeIntErrorCheckTimerStop();
     }
-    screenEsdTeIntErrorCheckCnt = 0;
 }
 /**
 *@brief        延时初始化回调函数
@@ -561,23 +483,8 @@ void uteDrvScreenEsdTeIntErrorCheckHandlerMsg(void)
 */
 void uteDrvScreenEsdTeIntErrorCheckTimerCallback(void *pxTimer)
 {
-    if(screenEsdTeIntErrorCheckCnt >= 3)
-    {
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET,0);
-    }
-    else
-    {
-        uteDrvScreenEsdTeIntErrorCheckTimerStart(1000);
-    }
-    screenEsdTeIntErrorCheckCnt ++;
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET,0);
 }
-
-AT(.com_text.tft_spi)
-void uteDrvScreenEsdTeIntErrorCheckCntReset(void)
-{
-    screenEsdTeIntErrorCheckCnt = 0;
-}
-
 /**
 *@brief        延时初始化定时器创建函数
 *@details

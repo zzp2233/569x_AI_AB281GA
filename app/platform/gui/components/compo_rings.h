@@ -27,7 +27,6 @@ typedef struct compo_rings_item_t_
 {
     u32 res_addr;                   //图标
     u8  func_sta;                   //任务序号
-    u16 str_id;                     //文本id
 } compo_rings_item_t;
 
 typedef struct compo_rings_ele_t_

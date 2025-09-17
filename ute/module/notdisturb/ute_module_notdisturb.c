@@ -261,12 +261,6 @@ bool uteModuleNotDisturbIsAllowVibration(void)
         isAllow = true;
     }
 #endif
-#if UTE_FIND_WATCH_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT
-    if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
-    {
-        isAllow = true;
-    }
-#endif
     return isAllow;
 }
 /**

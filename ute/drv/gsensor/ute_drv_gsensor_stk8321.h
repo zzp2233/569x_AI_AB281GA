@@ -21,7 +21,7 @@ bool uteDrvGsensorStk8321WriteReg(uint8_t reg,uint8_t data);
 uint8_t uteDrvGsensorStk8321ReadReg(uint8_t reg,uint8_t *data,uint8_t size);
 extern const ute_drv_gsensor_common_config_t drvGsensorStk8321Function;
 extern const ute_drv_gsensor_common_config_t drvGsensorStk8325Function;
-extern const ute_drv_gsensor_common_config_t drvGsensorStk8327Function;
+
 #endif
 #endif // _UTE_DRV_GSENSOR_STK8321_H__
 

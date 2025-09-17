@@ -113,7 +113,6 @@ void uteModuleNotifyInit(void)
 */
 void uteModuleNotifyCallDisableHandlerMsg(void)
 {
-    UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,BtIsConnected=%d,CurrentScreenId=%d", __func__, uteModuleCallBtIsConnected(), uteModuleGuiCommonGetCurrentScreenId());
 #if UTE_BT30_CALL_SUPPORT
     if(uteModuleCallBtIsConnected())
     {
@@ -522,18 +521,7 @@ void uteModuleNotifyAncsStartPairHandlerMsg(void)
         {
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,one pair", __func__);
             bsp_change_bt_mac();
-            if (!bt_is_connected()) // IOS
-            {
-                if (uteModuleCallIsHasConnection()) // 如果存在配对信息
-                {
-                    sys_cb.bt_reconn_flag = true;
-                    bt_connect();
-                }
-                else
-                {
-                    ble_bt_connect(); // 一键双联
-                }
-            }
+            ble_bt_connect();
         }
     }
 }

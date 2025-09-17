@@ -345,14 +345,14 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
     uteDrvBatteryCommonData.lvl = uteDrvBatteryCommonCalibrationBatLvl(uteDrvBatteryCommonData.voltage,uteDrvBatteryCommonData.current,uteDrvBatteryCommonData.chargerStatus);
 #endif
 
-    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,lvl=%d,chargerStatus=%d,chg_on=%d", __func__,uteDrvBatteryCommonData.lvl,uteDrvBatteryCommonData.chargerStatus,sys_cb.chg_on);
+    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,lvl=%d,chargerStatus=%d", __func__,uteDrvBatteryCommonData.lvl,uteDrvBatteryCommonData.chargerStatus);
     if(uteDrvBatteryCommonData.lvl>=100)
     {
         uteDrvBatteryCommonData.lvl = 100;
     }
     /*!xjc delete, 2022-05-04*/
 #if (!UTE_MODULE_BATTERY_CHARGED_DISPLAY_ON_SUPPORT)
-    if ((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGING) && (uteDrvBatteryCommonData.lvl == 100))
+    if((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGING)&&(uteDrvBatteryCommonData.lvl == 100))
     {
 #if UTE_MODULE_BATTERY_LINEAR_CONSUME_SUPPORT
         if (uteDrvBatteryCommonData.bat100PercentTimeout == 0)
@@ -411,14 +411,7 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
                     if (uteDrvBatteryCommonData.lastLvl > percent)
                     {
-                        if(uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_010)
-                        {
-                            uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
-                        }
-                        else
-                        {
-                            uteDrvBatteryCommonData.lastLvl = percent;
-                        }
+                        uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
                     }
                     else
 #endif
@@ -430,14 +423,7 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
                 if (uteDrvBatteryCommonData.lastLvl > percent)
                 {
-                    if(uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_010)
-                    {
-                        uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
-                    }
-                    else
-                    {
-                        uteDrvBatteryCommonData.lastLvl = percent;
-                    }
+                    uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
                 }
                 else
 #endif

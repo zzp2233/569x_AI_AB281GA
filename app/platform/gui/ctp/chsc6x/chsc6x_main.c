@@ -2,7 +2,6 @@
 #include "chsc6x_comp.h"
 #include "chsc6x_platform.h"
 #include "ute_application_common.h"
-#include "ute_module_newFactoryTest.h"
 
 #if (CTP_SELECT == CTP_CHSC6X)
 
@@ -132,26 +131,11 @@ AT(.com_text.ctp)
 bool ctp_chsc6x_get_point(s32 *x, s32 *y)
 {
 #if CTP_POINT_FLIP
-    s32 tempX = COMPO_GET_POS_X(events[0].x, events[0].y);
-    s32 tempY = COMPO_GET_POS_Y(events[0].x, events[0].y);
+    *x = COMPO_GET_POS_X(events[0].x, events[0].y);
+    *y = COMPO_GET_POS_Y(events[0].x, events[0].y);
 #else
-    s32 tempX = events[0].x;
-    s32 tempY = events[0].y;
-#endif
-#if UTE_DRV_TP_SWAP_XY_AXIS_EXCHANGE
-    s32 temp = tempX;
-    tempX = tempY;
-    tempY = temp;
-#endif
-#if UTE_DRV_TP_X_AXIS_EXCHANGE
-    *x = GUI_SCREEN_WIDTH - tempX;
-#else
-    *x = tempX;
-#endif
-#if UTE_DRV_TP_Y_AXIS_EXCHANGE
-    *y = GUI_SCREEN_HEIGHT - tempY;
-#else
-    *y = tempY;
+    *x = events[0].x;
+    *y = events[0].y;
 #endif
 
     return ((events[0].flag & 0x2) >> 1);
@@ -235,7 +219,7 @@ bool ctp_chsc6x_init(void)
     unsigned char fw_update_ret_flag = 0; //1:update OK, !0 fail
     struct ts_fw_infos fw_infos;
 
-    if (is_init) //chsc6x 获取TP信息太慢，影响亮屏速度，只在开机时获取一次
+    if (uteApplicationCommonGetSystemPowerOnSecond() > 5) //chsc6x 获取TP信息太慢，影响亮屏速度，只在开机时获取一次
     {
         return true;
     }
@@ -265,10 +249,6 @@ bool ctp_chsc6x_init(void)
             printf("chsc6x_tp_dect failed! i = %d \r\n", i);
         }
     }
-
-#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-    uteModuleNewFactoryTestSetTpVersion(fw_infos.chsc6x_cfg_version);
-#endif
 
     is_init = true;
     return true;

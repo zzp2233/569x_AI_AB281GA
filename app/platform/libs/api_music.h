@@ -8,7 +8,7 @@ enum
     MUSIC_PLAYING,
 };
 
-typedef enum
+enum
 {
     NONE_TYPE = 0,
     WAV_TYPE,
@@ -16,10 +16,7 @@ typedef enum
     WMA_TYPE,
     APE_TYPE,
     FLAC_TYPE,
-    SBCIO_TYPE,
-    SBC_TYPE,
-    AAC_TYPE,
-} enum_msc_type_t;
+};
 
 enum
 {
@@ -42,25 +39,10 @@ enum
 
 enum
 {
-    QSKIP_FORWARD,
     QSKIP_BACKWARD,
+    QSKIP_FORWARD,
 };
 
-enum FADE_DIR_T
-{
-    FADE_DIR_SUB    = -1,
-    FADE_DIR_KEEP   = 0,
-    FADE_DIR_ADD    = 1,
-};
-
-typedef struct
-{
-    u16 fade_step;
-    volatile s8 fade_dir;
-    u16 gain;
-    volatile u16 target_gain;
-} soft_vol_t;
-extern soft_vol_t soft_vol_cb;
 extern unsigned char avio_buf[556];
 
 void music_control(u8 msg);
@@ -84,23 +66,4 @@ void music_qskip(bool direct, u8 second);      //快进快退控制 direct = 1�
 void music_qskip_end(void);
 void music_set_jump(void *brkpt);
 void music_get_breakpiont(void *brkpt);
-
-void soft_vol_init(soft_vol_t* p);              //软件数字音量初始化
-
-/**
- * @brief 软件数字音量初始化
- * @param[in] p: 控制块
- * @param[in] vol: 设置的数字音量(0~0x7fff)
- * @param[in] vol_direct_set: 音量是否直接设置, 不过淡入淡出
-*/
-void soft_vol_set_vol_param(soft_vol_t* p, u16 vol, u8 vol_direct_set);
-
-/**
- * @brief 软件数字音量增益处理
- * @param[in] p: 控制块
- * @param[in] inputl: 左声道数据
- * @param[in] inputr: 右声道数据
-*/
-void soft_vol_process_stereo_one_sample(soft_vol_t* p, s16* inputl, s16* inputr);
-
 #endif // _API_MUSIC_H

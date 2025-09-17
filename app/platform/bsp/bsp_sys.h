@@ -97,14 +97,14 @@ typedef struct
     volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态，0关闭状态
 
     ///位变量不要用于需要在中断改值的变量。 请谨慎使用位变量，尽量少定义位变量。
-    u8  rtc_first_pwron     : 1,   //RTC是否第一次上电
+    u8  rtc_first_pwron         : 1,   //RTC是否第一次上电
     mute                    : 1,   //系统MUTE控制标志
     cm_factory              : 1,   //是否第一次FLASH上电
     cm_vol_change           : 1,   //音量级数是否需要更新到FLASH
     port2led_en             : 1,   //1个IO推两个灯
     voice_evt_brk_en        : 1;   //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
 
-    u8  sleep_en            : 1,   //用于控制是否进入sleep
+    u8  sleep_en                : 1,   //用于控制是否进入sleep
     lowbat_flag             : 1,
     bt_reconn_flag          : 1,   //回连失败时候发起一键双连标志
     flag_sleep_ble_status   : 1,   //用于未连接ble休眠后,当ble连接上后更新连接参数用
@@ -165,7 +165,6 @@ typedef struct
     u32 breathe_duration;                           //训练时间 ms
     u8 breathe_mode;                                //训练模式 0:2,慢中快
     u8 dialplate_index;                             //表盘编号
-    u32 dialplate_id;                               //表盘id
     //天气
     u8 weather_idx;
     s8 temperature[2];                              //温度（0:最低 1:最高）
@@ -213,7 +212,7 @@ typedef struct
 
     u8 set_sleep_time_id;//熄屏时常id
 
-    char pbap_result_Name[57];//存放来电与接听联系人名字
+    char pbap_result_Name[50];//存放来电与接听联系人名字
 
     char sos_call_number[11];
     bool sos_open_flag;
@@ -222,18 +221,37 @@ typedef struct
 
     bool ancs_missed_call;
     bool sys_init_complete; //系统初始化完成标志，用于互斥ute task和sys task，防止sys没初始化完成就执行ute task导致流程错误
-
+    bool need_wakeup_flag;
     bool loudspeaker_mute_flag; //mute 标志位
     u8 loudspeaker_mute_countdown; //mute 倒计时
 
-    u8 clock_side_add_widget[CLOCK_SIDE_ADD_WIDGET_NUM];//侧边栏添加组件界面号
+#if ASR_SELECT
+    bool asr_play;                                  //asr 指令响应状态
+    u8   asr_gain;                                  //asr 备份增益
+    u32  asr_mp3_addr;                              //asr MP3缓冲地址
+    u32  asr_mp3_lens;                              //asr MP3缓冲长度
+    bool asr_mp3_delay;                             //asr MP3延迟播放标志位
 
+#endif
+    u8 audio_path;
+#if ECIG_POWER_CONTROL
+    //电子烟
+    u8 resistance;                                  //阻值
+    u8 resistance_progress;                         //阻值进度条
+    u8 power;                                       //功率
+    u8 power_progress;                              //功率进度条
+    u16 smoke_time;                                 //吸烟时长
+    u8 smoke_oil;                                   //烟油
+    u8 smoke_index;                                 //吸烟类型
+#endif
 #if VDDHR_TRIM_EN
-    u8 vddhr_trim_sta; //vddhr trim
+    u8 vddhr_trim_sta;                              //vddhr trim
     u8 vddhr_trim_base;
     u8 vddhr_trim_cnt;
 #endif
-
+    bool idle_sta;                                  //是否处于idle状态
+    bool hall_close_wkup;                           //1:sniff时hall关盖唤醒不亮屏
+    bool bat_low;                                   //低电标志，低电时自动调低亮度
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

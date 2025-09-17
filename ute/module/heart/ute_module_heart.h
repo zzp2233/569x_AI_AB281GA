@@ -70,17 +70,6 @@ typedef enum
     TYPE_FACTORY1,
     TYPE_WEAR,
 } ute_module_heart_type_t;
-
-typedef struct
-{
-    uint16_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t min;
-    uint8_t sec;
-} ute_module_heart_test_time_t;
-
 /*! 心率数据结构zn.zeng, 2021-07-13  */
 typedef struct
 {
@@ -110,11 +99,6 @@ typedef struct
     uint8_t maxHourheartValue;
     uint8_t minHourheartValue;
 #endif
-    ute_module_heart_test_time_t lastTestTime;
-#if UTE_MODULE_HEART_WEAR_DETECTION_OPTIMIZATION_SUPPORT
-    uint8_t wearTestSecond;
-    bool isWearTesting;
-#endif
 } ute_module_heart_data_t;
 
 void uteModuleHeartInit(void);
@@ -125,7 +109,6 @@ bool uteModuleHeartIsNotNeedHeartLight(void);
 bool uteModuleHeartIsNeedTesting(void);
 bool uteModuleHeartIsAutoTesting(void);
 bool uteModuleHeartIsSingleTesting(void);
-bool uteModuleHeartIsAutoTestFlag(void);
 int uteModuleHeartGetHeartValue(void);
 void uteModuleHeartSetHeartValue(int heartValue);
 uint8_t uteModuleHeartGetMaxHeartValue(void);
@@ -151,7 +134,6 @@ uint8_t uteModuleHeartGetWorkMode(void);
 uint8_t uteModuleHeartGetHeartValueRange(uint8_t heart);
 uint8_t uteModuleHeartGetHeartWaringMaxValue(void);
 uint8_t uteModuleHeartGetHeartWaringMinValue(void);
-bool uteModuleHeartWaringOpenCtrl(bool isSet,bool isOpen);
 bool uteModuleHeartGetTodayHistoryData(uint8_t *heartHistoryGraph, uint8_t heartHistoryGraphCount);
 #if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT
 void uteModuleHeartReadSportHeartWaringInfo(void);
@@ -168,16 +150,15 @@ void uteModuleHeartSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
 void uteModuleHeartrReadStaticHeartData(void);
 void uteModuleHeartrSaveStaticHeartData(void);
 void uteModuleHeartWeekStaticSecond(ute_module_systemtime_time_t time);
+void uteModuleHeartLoadWeekDayStaticHeartData(UT_GraphsParam *weekDayStaticHeartGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
 uint8_t uteModuleHeartrGetCurrDayStaticHeartData(void);
 uint8_t uteModuleHeartrGetLast7DayAvgStaticHeartData(void);
-void uteModuleHeartrGetWeekDayStaticHeartData(uint8_t *weekDayStaticHeart);
 #endif
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
 void uteModuleHeartRestingHeartrateSend(void);
 void uteModuleHeartSendEveryHourMaxMInHeartData(uint8_t hour);
 void uteModuleHeartSendHistoryRestingHeartData(void);
 #endif
-void uteModuleHeartGetLastTestTime(ute_module_heart_test_time_t *time);
 #endif
 #endif //_UTE_MODULE_HEART_H_
 

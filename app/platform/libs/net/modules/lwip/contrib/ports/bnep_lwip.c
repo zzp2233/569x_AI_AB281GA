@@ -59,28 +59,30 @@ static void netif_status_callback(struct netif *netif)
 {
     struct dhcp *dhcp = netif_dhcp_data(netif);
 
-    switch (dhcp->state) {
-    case DHCP_STATE_OFF:
-        printf("DHCP state: off\n");
-        // bsp_net_set_state(BSP_NET_OFF);
-        break;
-    case DHCP_STATE_REQUESTING:
-        printf("DHCP state: request\n");
-        // bsp_net_set_state(BSP_NET_SEARCHING);
-        break;
-    case DHCP_STATE_BOUND:
-        printf("DHCP state: bound\n");
-        printf("IP : %s\n", ipaddr_ntoa(&netif->ip_addr));
-        printf("gw : %s\n", ipaddr_ntoa(&netif->gw));
-        printf("netmask : %s\n", ipaddr_ntoa(&netif->netmask));
-        break;
-    // 其他状态可根据需要添加
-    default:
-        printf("DHCP state: %d\n", dhcp->state);
-        break;
+    switch (dhcp->state)
+    {
+        case DHCP_STATE_OFF:
+            printf("DHCP state: off\n");
+            // bsp_net_set_state(BSP_NET_OFF);
+            break;
+        case DHCP_STATE_REQUESTING:
+            printf("DHCP state: request\n");
+            // bsp_net_set_state(BSP_NET_SEARCHING);
+            break;
+        case DHCP_STATE_BOUND:
+            printf("DHCP state: bound\n");
+            printf("IP : %s\n", ipaddr_ntoa(&netif->ip_addr));
+            printf("gw : %s\n", ipaddr_ntoa(&netif->gw));
+            printf("netmask : %s\n", ipaddr_ntoa(&netif->netmask));
+            break;
+        // 其他状态可根据需要添加
+        default:
+            printf("DHCP state: %d\n", dhcp->state);
+            break;
     }
 
-    if (bnep_network_is_ok()) {
+    if (bnep_network_is_ok())
+    {
         ip_addr_t ntp_addr;
         // ipaddr_aton("ntp.aliyun.com", &ntp_addr);
         IP_ADDR4(&ntp_addr, 203, 107, 6, 88); //ntp.aliyun.com
@@ -116,7 +118,8 @@ static bool bnep_lwip_outgoing_queue_packet(struct pbuf *p)
 {
     // printf("%s\n", __func__);
     u32_t addr = (u32_t)p;
-    if (os_mq_send(bnep_lwip_outgoing_mbox, &addr, 4) != OS_EOK) {
+    if (os_mq_send(bnep_lwip_outgoing_mbox, &addr, 4) != OS_EOK)
+    {
         printf("outgoing full\n");
         return false;
     }
@@ -125,12 +128,14 @@ static bool bnep_lwip_outgoing_queue_packet(struct pbuf *p)
 
 static struct pbuf *bnep_lwip_outgoing_pop_packet(void)
 {
-    if (bnep_lwip_outgoing_mbox == NULL) {
+    if (bnep_lwip_outgoing_mbox == NULL)
+    {
         return NULL;
     }
     u32_t          addr = 0;
     struct pbuf *p    = NULL;
-    if (os_mq_recv(bnep_lwip_outgoing_mbox, &addr, 4, 0) != 0) {
+    if (os_mq_recv(bnep_lwip_outgoing_mbox, &addr, 4, 0) != 0)
+    {
         return NULL;
     }
     p = (struct pbuf *)addr;
@@ -139,8 +144,10 @@ static struct pbuf *bnep_lwip_outgoing_pop_packet(void)
 
 static void bnep_lwip_outgoing_reset_queue(void)
 {
-    if (bnep_lwip_outgoing_mbox) {
-        while (bnep_lwip_outgoing_mbox->entry > 0) {
+    if (bnep_lwip_outgoing_mbox)
+    {
+        while (bnep_lwip_outgoing_mbox->entry > 0)
+        {
             pbuf_free(bnep_lwip_outgoing_pop_packet());
         }
     }
@@ -171,7 +178,8 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
                 bnep_lwip_outgoing_mbox != NULL);
 
     // queue up
-    if (!bnep_lwip_outgoing_queue_packet(p)) {
+    if (!bnep_lwip_outgoing_queue_packet(p))
+    {
         return ERR_MEM;
     }
 
@@ -289,7 +297,8 @@ AT(.com_text.stack.run_loop)
 static void bnep_lwip_discard_packets(void)
 {
     // discard current packet
-    if (bnep_lwip_outgoing_next_packet) {
+    if (bnep_lwip_outgoing_next_packet)
+    {
         bnep_lwip_outgoing_packet_processed();
     }
 
@@ -302,21 +311,24 @@ static void bnep_lwip_netif_process_packet(const uint8_t *packet, uint16_t size)
     struct pbuf *p = pbuf_alloc(PBUF_RAW, size, PBUF_RAM);
     // log_debug("%s alloc=%x\n", __func__, p);
 
-    if (!p) {
+    if (!p)
+    {
         printf("%s err\n", __func__);
         return;
     }
 
     /* store packet in pbuf chain */
     struct pbuf *q = p;
-    while (q != NULL && size) {
+    while (q != NULL && size)
+    {
         memcpy(q->payload, packet, q->len);
         packet += q->len;
         size -= q->len;
         q = q->next;
     }
 
-    if (size != 0) {
+    if (size != 0)
+    {
         log_error("failed to copy data into pbuf");
         pbuf_free(p);
         return;
@@ -324,7 +336,8 @@ static void bnep_lwip_netif_process_packet(const uint8_t *packet, uint16_t size)
 
     /* pass all packets to ethernet_input, which decides what packets it supports */
     int res = btstack_netif.input(p, netif_default);
-    if (res != ERR_OK) {
+    if (res != ERR_OK)
+    {
         log_error("bnep_lwip_netif_process_packet: IP input error %d\n", res);
         pbuf_free(p);
         p = NULL;
@@ -359,16 +372,19 @@ void bnep_network_outgoing_process(void)
     uint16_t len;
 
     // previous packet not sent yet
-    if (bnep_lwip_outgoing_next_packet) {
+    if (bnep_lwip_outgoing_next_packet)
+    {
         return;
     }
 
-    if (bnep_lwip_outgoing_packets_empty()) {
+    if (bnep_lwip_outgoing_packets_empty())
+    {
         return;
     }
 
     void *packet = bnep_lwip_outgoing_pop_packet();
-    if (!packet) {
+    if (!packet)
+    {
         printf("%s empty\n", __func__);
         return;
     }
@@ -393,7 +409,8 @@ void bnep_network_packet_sent(uint8_t *buf)
     bnep_lwip_outgoing_packet_processed();
 
     // more ?
-    if (!bnep_lwip_outgoing_packets_empty()) {
+    if (!bnep_lwip_outgoing_packets_empty())
+    {
         btstack_thread_event_trigger();
         bt_thread_check_trigger();
     }
@@ -404,28 +421,39 @@ bool bnep_network_is_ok(void)
     struct netif *netif = netif_default;
 
     // 检查接口状态
-    if (!netif_is_up(netif) || !netif_is_link_up(netif)) {
+    if (!netif_is_up(netif) || !netif_is_link_up(netif))
+    {
         return false;
     }
 
     // 检查IP地址
     const ip_addr_t* ip_addr = netif_ip_addr4(netif);
-    if (ip_addr_isany(ip_addr)) {
+    if (ip_addr_isany(ip_addr))
+    {
         return false;
     }
 
     // 检查网关
     const ip_addr_t* gw_addr = netif_ip_gw4(netif);
-    if (ip_addr_isany(gw_addr)) {
+    if (ip_addr_isany(gw_addr))
+    {
         return false;
     }
 
     // 检查DNS
     const ip_addr_t* dns_addr = dns_getserver(0);
-    if (ip_addr_isany(dns_addr)) {
+    if (ip_addr_isany(dns_addr))
+    {
         return false;
     }
 
+#if LWIP_DHCP
+    struct dhcp *dhcp = netif_dhcp_data(netif);
+    if (dhcp->state != DHCP_STATE_BOUND)
+    {
+        return false;
+    }
+#endif
     return true;
 }
 

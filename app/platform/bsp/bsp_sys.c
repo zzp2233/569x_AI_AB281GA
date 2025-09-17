@@ -33,7 +33,7 @@ void tbox_uart_isr(void);
 #if USER_IO_QEDC_EN
 void bsp_qdec_io_process(void);
 #endif
-u8 heap_func[HEAP_FUNC_SIZE] AT(.heap.func);
+static u8 heap_func[HEAP_FUNC_SIZE] AT(.heap.func);
 
 #if TRACE_EN
 AT(.com_text.str_sddet)
@@ -334,19 +334,6 @@ void usr_tmr5ms_isr(void)
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
 #endif
     }
-
-    if (sys_cb.loudspeaker_mute_flag)
-    {
-        if (sys_cb.loudspeaker_mute_countdown > 0)
-        {
-            sys_cb.loudspeaker_mute_countdown--;
-        }
-        else
-        {
-            sys_cb.loudspeaker_mute_flag = false;
-            dac_set_power_on_off(0);
-        }
-    }
 }
 
 AT(.com_text.bsp.sys)
@@ -354,17 +341,14 @@ void bsp_loudspeaker_mute(void)
 {
     LOUDSPEAKER_MUTE();
     sys_cb.loudspeaker_mute = 1;
-
-    sys_cb.loudspeaker_mute_flag = true;
-    sys_cb.loudspeaker_mute_countdown = 4; //延迟25ms再mute
-
+    delay_5ms(4);
+    dac_set_power_on_off(0);
 }
 
 AT(.com_text.bsp.sys)
 void bsp_loudspeaker_unmute(void)
 {
     sys_cb.loudspeaker_mute = 0;
-    sys_cb.loudspeaker_mute_flag = false;
     LOUDSPEAKER_UNMUTE();
 }
 
@@ -864,8 +848,8 @@ void bsp_sys_init(void)
 
     mic_bias_trim_w4_done();
     dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC
+#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
     i2c_gsensor_init();
-#if 0//(SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)    
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
     uteDrvGsensorCommonInit(UTE_DRV_GSENSOR_DEFAULT_ACC_RATE_VALUE,UTE_DRV_GSENSOR_DEFAULT_ACC_RANGE_VALUE);
     bsp_sensor_step_init();             //步数传感器初始化

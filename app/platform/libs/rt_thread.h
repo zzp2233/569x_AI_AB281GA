@@ -246,6 +246,7 @@ typedef os_err_t (*os_thread_init_func)(struct os_thread *thread,
                                         os_uint32_t       stack_size,
                                         os_uint8_t        priority,
                                         os_uint32_t       tick);
+typedef os_err_t (*os_thread_detach_func)(os_thread_t thread);
 typedef os_thread_t (*os_thread_create_func)(const char *name,
         void (*entry)(void *parameter),
         void       *parameter,
@@ -334,6 +335,7 @@ typedef os_err_t (*os_sleep_func)(os_tick_t tick);
 #define     os_tick_get                     ((os_tick_get_func)(OS_FUNC_BASE + 56))
 
 #define     os_thread_init                  ((os_thread_init_func)(OS_FUNC_BASE5 + 0))
+#define     os_thread_detach                ((os_thread_detach_func)(OS_FUNC_BASE5 + 4))
 #define     os_thread_create                ((os_thread_create_func)(OS_FUNC_BASE5 + 8))
 #define     os_thread_suspend               ((os_thread_suspend_func)(OS_FUNC_BASE5 + 16))
 #define     os_thread_resume                ((os_thread_resume_func)(OS_FUNC_BASE5 + 20))

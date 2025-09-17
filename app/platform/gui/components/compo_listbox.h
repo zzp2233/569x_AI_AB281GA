@@ -18,8 +18,6 @@ enum COMPO_LISTBOX_STYLE
     COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT,         //带Title的列表，头部不做缩放，两行Text
     COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD,
     COMPO_LISTBOX_STYLE_CUM_SPORT_LIST,         //客户自己运动界面列表
-    COMPO_LISTBOX_STYLE_MENU_CIRCLE_SELECT,     //园屏弧形选择模式
-    COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE,
 };
 
 enum COMPO_LISTBOX_ITEM_MODE
@@ -128,10 +126,8 @@ typedef struct compo_listbox_t_
 
     u8 flag_area;                   //是否点击特定区域
     int sidx;                       //起始编号
-    int sidx2;                       //起始编号
     bool flash_read_flag;
     bool txt_roll_need_rst;         //文本滚动重置标志
-    bool txt2_roll_need_rst;         //文本滚动重置标志
     widget_page_t *item_page[LISTBOX_ITEM_CNT];
     widget_icon_t *item_bgimg[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon[LISTBOX_ITEM_CNT];
@@ -139,7 +135,6 @@ typedef struct compo_listbox_t_
     widget_text_t *item_text2[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon2[LISTBOX_ITEM_CNT];
     compo_roll_cb_t roll_cb[LISTBOX_ITEM_CNT];
-    compo_roll_cb_t roll_cb2[LISTBOX_ITEM_CNT];
     s16 item_idx[LISTBOX_ITEM_CNT];
 
     u8 idx_time;                //加入时分秒针元素
@@ -327,15 +322,6 @@ void compo_listbox_set_location(compo_listbox_t *listbox, s16 x, s16 y, s16 widt
 void compo_listbox_set_item_height(compo_listbox_t *listbox, int item_height);
 
 /**
- * @brief 设置列表控件item的高度
-          用于无图标和背景图时，自定义列表中item的高度
- * @param[in] listbox : 列表指针
- * @param[in] item_height : item高度
- **/
-void compo_listbox_set_item_width(compo_listbox_t *listbox, int item_width);
-
-
-/**
  * @brief 设置列表控件的文本坐标、大小、是否居中显示
           注意：需在compo_listbox_update前一步调用，避免被compo_listbox_init_update刷新了
  * @param[in] listbox : 列表指针
@@ -343,38 +329,6 @@ void compo_listbox_set_item_width(compo_listbox_t *listbox, int item_width);
  * @param[in] item_cnt : 存放列表信息的数量
  **/
 void compo_listbox_set_item_text(compo_listbox_t *listbox, s16 x, s16 y, s16 width, s16 height, bool align_center);
-
-/**
- * @brief 设置列表控件的文本坐标、大小、是否居中显示
-          注意：需在compo_listbox_update前一步调用，避免被compo_listbox_init_update刷新了
-                listbox->flag_text_center与第一个文本需要设置为一致
- * @param[in] listbox : 列表指针
- * @param[in] x\y\width\height : 文本坐标、大小
- * @param[in] align_center : 是否居中
- **/
-void compo_listbox_set_item_text2(compo_listbox_t *listbox, s16 x, s16 y, s16 width, s16 height, bool align_center);
-
-/**
- * @brief 设置列表框所有项的图标位置
- * 注意：需在compo_listbox_update前一步调用，避免被compo_listbox_init_update刷新了
- * 该函数遍历列表框中的所有项，将每个项的图标位置设置为指定的坐标(x,y)。
- *
- * @param listbox 指向列表框对象的指针，该对象包含要设置位置的图标数组
- * @param x 图标新的水平坐标位置
- * @param y 图标新的垂直坐标位置
- * @return 无返回值
- */
-void compo_listbox_set_item_icon_pos(compo_listbox_t *listbox, s16 x, s16 y);
-
-/**
- * 设置列表框中所有项目的第二个文本(text2)右对齐
- * 注意：需在compo_listbox_update前一步调用，避免被compo_listbox_init_update刷新了
- * @param listbox 列表框组件指针
- * @param align_right 是否右对齐(true为右对齐，false为左对齐)
- * @note 该函数会遍历列表框中的所有项目，统一设置第二个文本的对齐方式
- *       对齐方式由widget_text_set_right_align函数实现
- */
-void compo_listbox_set_item_text2_align_right(compo_listbox_t *listbox,bool align_right);
 
 /**
  * @brief 是否修改列表控件的文本内容
@@ -468,5 +422,4 @@ void compo_listbox_set_icon_callback(compo_listbox_t *listbox, void* callback);
 void compo_listbox_set_text1_color_callback(compo_listbox_t *listbox, void* callback);
 void compo_listbox_set_text2_color_callback(compo_listbox_t *listbox, void* callback);
 
-void compo_listbox_set_pos(compo_listbox_t *listbox, s16 x, s16 y);
 #endif

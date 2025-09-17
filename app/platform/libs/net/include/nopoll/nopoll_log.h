@@ -79,10 +79,12 @@ void            nopoll_log_set_handler (noPollCtx * ctx, noPollLogHandler handle
 
 
 #define SHOW_DEBUG_LOG
-#define printf(...) a_printf(__VA_ARGS__)
-#define vprintf(...) a_vprintf(__VA_ARGS__)
-void a_printf(const char *format, ...);
-void a_vprintf(const char *format, va_list param);
+#undef printf
+#undef vprintf
+#define printf(...) my_printf(__VA_ARGS__)
+#define vprintf(...) my_vprintf(__VA_ARGS__)
+void my_printf(const char *format, ...);
+void my_vprintf(const char *format, va_list param);
 
 #if defined(SHOW_DEBUG_LOG)
 # define nopoll_log(ctx,level,message, ...) do{__nopoll_log(ctx, __function_name__, __file__, __line__, level, message, ##__VA_ARGS__);}while(0)
@@ -105,7 +107,7 @@ void a_vprintf(const char *format, va_list param);
  */
 #if defined(SHOW_FORMAT_BUGS)
 # undef  nopoll_log
-# define nopoll_log(ctx,level,message, ...) do{a_printf (message, ##__VA_ARGS__);}while(0)
+# define nopoll_log(ctx,level,message, ...) do{my_printf (message, ##__VA_ARGS__);}while(0)
 #endif
 
 void __nopoll_log (noPollCtx * ctx, const char * function_name, const char * file, int line, noPollDebugLevel level, const char * message, ...);

@@ -76,18 +76,18 @@ typedef struct
 
 typedef struct
 {
-    bool isFindband;           // 查找手环
-    bool isTurnTheWrist;       // 翻腕亮屏开关
-    bool isSedentary;          // 久坐提醒开关
-    bool isNotDisturb;         // 勿扰开关
-    bool isFindPhone;          // 查找手机开关
-    bool isRejectCall;         // 长按拒接开关
-    bool isHeart24h;           // 24小时开关
-    bool isDisplayTime;        // 可以设置亮屏时间
-    bool isShockTime;          // 可以震动单次时长
-    bool isGoalReach;          // 目标达成提示开关
-    bool isDrinkWater;         // 喝水提醒开关
-    bool isHrAbnormalWarnning; // 心率异常告警开关
+    bool isFindband;             //查找手环
+    bool isTurnTheWrist;   //翻腕亮屏开关
+    //bool isSedentary;      //久坐提醒开关
+    bool isNotDisturb;      //勿扰开关
+    bool isFindPhone;      //查找手机开关
+    bool isRejectCall;         //长按拒接开关
+    bool isHeart24h;       //24小时开关
+    bool isDisplayTime;       //可以设置亮屏时间
+    bool isShockTime;         //可以震动单次时长
+    bool isGoalReach;         //目标达成提示开关
+    //bool isDrinkWater;      //喝水提醒开关
+    //bool isHrAbnormalWarnning;   //心率异常告警开关
 } ute_quick_switch_t;
 /*! 发送历史数据结构zn.zeng, 2021-08-25  */
 typedef struct
@@ -246,10 +246,7 @@ void uteApplicationCommonSetAncsConnStatus(bool isConnected);
 bool uteApplicationCommonGetAncsConnStatus(void);
 uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len);
 void uteModuleHardfaultInfoSave(void);
-void uteModuleHardfaultCustInfoSave(char *buf, uint16_t len);
 void uteModuleHardfaultStartSendlogData(void);
-bool uteApplicationCommonIsHardfaultReboot(void);
-void uteApplicationCommonSetHardfaultReboot(bool isHardfaul);
 
 float ExactDecimalPoint(float data,uint8_t bit);
 

@@ -48,7 +48,7 @@ int *_os_errno(void);
 #include <sys/fcntl.h>
 
 #include <stdlib.h>
-void a_printf(const char *format, ...);
+void my_printf(const char *format, ...);
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -74,9 +74,9 @@ typedef struct sio_status_s sio_status_t;
 
 #define SSIZE_MAX INT_MAX
 
-#define LWIP_PLATFORM_DIAG(x) do {a_printf x;} while(0)
+#define LWIP_PLATFORM_DIAG(x) do {my_printf x;} while(0)
 
-#define LWIP_PLATFORM_ASSERT(x) do {a_printf("Assertion \"%s\" failed at line %d in %s\n", \
+#define LWIP_PLATFORM_ASSERT(x) do {my_printf("Assertion \"%s\" failed at line %d in %s\n", \
                                      x, __LINE__, __FILE__); lwip_wdt_rst();} while(0)
 
 void lwip_wdt_rst(void);

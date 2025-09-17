@@ -21,7 +21,5 @@ uint huart_get_rxcnt(void);
 void huart_rxfifo_clear(void);
 char huart_getchar(void);
 void huart_exit(void);
-void huart_sleep(void);
-void huart_wakeup(void);
 
 #endif // __API_UART_H__

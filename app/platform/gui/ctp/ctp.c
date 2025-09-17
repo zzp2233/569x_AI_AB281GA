@@ -81,8 +81,6 @@ void ctp_int_isr(void)
         AXS5106_read_readkick();
 #elif (CTP_SELECT == CTP_AXS152x)
         AXS152x_read_readkick();
-#elif (CTP_SELECT == CTP_SPT5113C)
-        spt5113c_readkick();
 #endif
     }
 }
@@ -251,8 +249,6 @@ void ctp_isr(void)
         {
             return;
         }
-#elif (CTP_SELECT == CTP_SPT5113C)
-        press = spt5113c_get_point(&ctp_cb.x, &ctp_cb.y);
 #endif
         if (press)
         {
@@ -280,6 +276,7 @@ void ctp_isr(void)
 #endif
         TRACE_K(str_xy, press, ctp_cb.x, ctp_cb.y);
         ctp_msg_deal(press);
+        // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
     }
 }
 
@@ -428,8 +425,6 @@ void ctp_init(void)
     res = AXS5106_init();
 #elif (CTP_SELECT == CTP_AXS152x)
     res = AXS152x_init();
-#elif (CTP_SELECT == CTP_SPT5113C)
-    res = spt5113c_init();
 #endif
     if (!res)
     {

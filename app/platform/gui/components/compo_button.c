@@ -36,27 +36,6 @@ compo_button_t *compo_button_create_by_image(compo_form_t *frm, u32 res_addr)
 }
 
 /**
- * @brief 根据图像创建一个按钮
- * @param[in] frm : 窗体指针
- * @param[in] res_addr : 图像资源的地址
- * @param[in] x : x轴坐标
- * @param[in] y : y轴坐标
- * @param[in] width : 按钮宽度
- * @param[in] height : 按钮高度
- * @return 返回按钮指针
- * 注释：按键内的图片，创建后坐标不能修改
- **/
-compo_button_t *compo_button_create_image_in_btn(compo_form_t *frm, u32 res_addr, s16 x, s16 y, s16 width, s16 height)
-{
-    compo_button_t *btn = compo_create(frm, COMPO_TYPE_BUTTON);
-    widget_icon_t *img = widget_icon_create(frm->page_body, res_addr);
-    btn->widget = widget_page_create(frm->page_body);
-    widget_set_pos(img, x, y);
-    widget_set_location(btn->widget, x, y, width, height);
-    return btn;
-}
-
-/**
  * @brief 设置按钮坐标及大小
           注意：该设置默认的坐标是以中心点作为参考点
  * @param[in] btn : 按钮指针

@@ -7,7 +7,6 @@
 #include "msa310/msa310.h"
 #include "vc30fx_user_app.h"
 #include "internal_sensor/bsp_internal_sensor.h"
-#include "vcHr11Hci.h"
 
 typedef enum
 {
@@ -16,23 +15,6 @@ typedef enum
     SENSOR_INIT_HR   = BIT(1),
     SENSOR_INIT_GEO  = BIT(2),
 } sensor_init_type;
-
-typedef enum
-{
-    HR_WORK_MODE_HR = 0,
-    HR_WORK_MODE_SPO2,
-    HR_WORK_MODE_HRV,
-    HR_WORK_MODE_STRESS,
-    HR_WORK_MODE_BLOODPRESSURE,
-    HR_WORK_MODE_WEAR,
-    HR_WORK_MODE_TEMPERATURE,
-    HR_WORK_MODE_FACTORY0,
-    HR_WORK_MODE_FACTORY1,
-    HR_WORK_MODE_HRSPO2,
-
-    HR_WORK_MODE_UNKNOWN,
-    HR_WORK_MODE_MAX_NUNBER
-} sensor_hr_mode_t;
 
 typedef struct
 {
@@ -83,13 +65,6 @@ void bsp_sensor_pe2_pwr_pg_off(void);
 u8   bsp_sensor_hr_init(u8 mode);
 //心率关闭
 u8   bsp_sensor_hr_stop(void);
-//心率工作状态
-bool bsp_sensor_hr_work_status(void);
-//心率工作模式
-uint8_t bsp_sensor_hr_get_work_mode(void);
-void bsp_sensor_hr_algo_input_data_handle(void);
-bool bsp_sensor_hr_interrupt_flag_get(void);
-void bsp_sensor_hr_interrupt_flag_set(bool flag);
 //保存心率值
 void bsp_sensor_hrs_data_save(u8 bpm);
 //保存血氧值

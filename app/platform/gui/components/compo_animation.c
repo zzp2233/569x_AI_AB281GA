@@ -99,7 +99,7 @@ void compo_animation_set_radix(compo_animation_t *animation, u8 radix)
 /**
  * @brief 设置动画的播放间隔
  * @param[in] animation : 动画指针
- * @param[in] interval : 动画播放间隔 单位：10ms
+ * @param[in] interval : 动画播放间隔
  **/
 void compo_animation_set_interval(compo_animation_t *animation, u32 interval)
 {

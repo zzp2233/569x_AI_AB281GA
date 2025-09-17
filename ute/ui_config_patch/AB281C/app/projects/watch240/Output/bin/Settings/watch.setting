@@ -47,7 +47,7 @@
         <add key="charge_full_bled" value="0" />
         <add key="bt_name" value="BT-AB569X" />
         <add key="bt_addr_mode" value="固定地址" />
-        <add key="bt_addr" value="78:02:B7:00:44:44" />
+        <add key="bt_addr" value="78:02:B7:00:66:66" />
         <add key="bt_addr_start" value="78:02:B7:00:00:01" />
         <add key="bt_addr_step" value="00:00:00:00:00:01" />
         <add key="bt_addr_end" value="78:02:B7:FF:FF:FF" />

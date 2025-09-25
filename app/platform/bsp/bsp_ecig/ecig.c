@@ -1124,5 +1124,72 @@ void ecig_res_proc(void)
 
     saradc_kick_start_do(BIT(ecig.cfg->adc1_ch) | BIT(ecig.cfg->adc_res1_ch) | SADCCH, 0, 0); // 启动下一次ADC采样：发热丝电压通道、电阻检测通道和系统ADC通道
 }
+AT(.com_text.ecig.process) WEAK                                      // 将函数放置在电子烟处理代码段，WEAK允许被重写
+/**
+  * @brief  获取电池电压值（带滤波算法）
+  * @note   通过ADC采样获取电池电压，使用内部基准电压进行校准
+  *         实现了32次采样的移动平均滤波算法，提高电压检测精度
+  *         只有当电压变化超过2mV阈值时才更新输出值，减少噪声影响
+  * @param  None
+  * @retval u32: 滤波后的电池电压值(毫伏)
+  */
+u32 ecig_vbat_get(void)
+{
+    u32 vbat = saradc_vbat_get_calc_value(saradc_get_value10(ADCCH_VBAT), saradc_get_value10(ADCCH_BGOP),0, 0);  // 获取原始电池电压值，通过ADC采样和基准电压校准计算
+
+    // 滤波处理，每次新采样时减去旧值加上新值，然后除以32得到平均值
+    static u32 vbat_total = 0;                                       // 累积电压总和，用于移动平均计算
+    static u32 vbat_val = 0;                                         // 当前平均电压值，32次采样的平均结果
+    static u32 vbat_bak = 0;                                         // 备份电压值，用于阈值比较和最终输出
+    static bool first_init = false;                                  // 首次初始化标志，确保滤波器正确启动
+
+    if (!first_init)                                                 // 检查是否为首次调用，需要初始化滤波器状态
+    {
+        vbat_total = vbat << 5;                                      // 初始化累积总和为当前值的32倍（左移5位等于乘以32）
+        vbat_val = vbat;                                             // 初始化平均值为当前采样值
+        vbat_bak = vbat;                                             // 初始化备份值为当前采样值
+        first_init = true;                                           // 设置初始化完成标志，后续调用将执行滤波算法
+        return vbat;                                                 // 首次调用直接返回原始值，不进行滤波处理
+    }
+
+    // 移动平均滤波                                                   // 移动平均滤波算法实现
+    vbat_total = vbat_total - vbat_val + vbat;                       // 更新累积总和：减去旧的平均值，加上新的采样值
+    vbat_val = vbat_total >> 5;                                      // 计算新的平均值：累积总和右移5位（除以32）得到32次采样的平均值
+
+    // 只有变化超过阈值才更新
+    u32 diff = (vbat_val > vbat_bak) ? (vbat_val - vbat_bak) : (vbat_bak - vbat_val);  // 计算当前平均值与备份值的绝对差值
+    if (diff >= 2)                                                                     // 检查电压变化是否超过2mV阈值
+    {
+        vbat_bak = vbat_val;                                                           // 变化超过阈值时更新备份值为新的平均值
+    }
+
+    return vbat_bak;                                                                   // 返回经过滤波和阈值处理的最终电压值
+}
+
+/**
+  * @brief  电池电压处理函数
+  * @note   处理电池电压的ADC采样和数据更新
+  *         检查ADC采样完成状态，获取电池电压值并启动下一次采样
+  *         确保ADC15通道配置为内部基准电压模式
+  * @param  None
+  * @retval None
+  */
+AT(.com_text.ecig.process)
+void ecig_vbat_proc(void)
+{
+    if (!saradc_is_finish())                                         // 检查ADC采样是否完成，如果未完成则输出调试信息
+    {
+        TRACE(not_finish_str, 3, SADCCH, BIT(ADCCH_VBAT) | BIT(ADCCH_BGOP) | SADCCH);
+    }
+
+    ecig.AD_BAT_voltage_mv = ecig_vbat_get();                        // 调用电池电压获取函数，将结果保存到全局变量中（毫伏单位）
+
+    if (!saradc_adc15_is_bg())                                       // 检查ADC15通道是否已配置为内部基准电压模式
+    {
+        saradc_adc15_analog_select(ADCCH15_ANA_BG);                  // 将ADC15通道切换到内部基准电压(BG)模式，确保电压校准准确性
+    }
+    saradc_kick_start_do(BIT(ADCCH_VBAT) | BIT(ADCCH_BGOP) | SADCCH, 0, 0); // 启动下一次ADC采样：电池电压通道、内部基准电压通道和系统ADC通道
+}
+
 ///------------------------------------------------------------------------------------------------------------
 #endif

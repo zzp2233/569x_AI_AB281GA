@@ -1,0 +1,2360 @@
+#include "include.h"
+#include "func_menu.h"
+#include "func_cover.h"
+#include "ute_module_systemtime.h"
+#include "ute_language_common.h"
+#include "ute_drv_motor.h"
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+#include "ute_module_keysetfunc.h"
+#endif
+#include "ute_module_watchonline.h"
+#include "ute_module_music.h"
+
+#if TRACE_EN
+#define TRACE(...)              printf(__VA_ARGS__)
+#else
+#define TRACE(...)
+#endif
+
+#define FUNC_CREATE_CNT                       ((int)(sizeof(tbl_func_create) / sizeof(tbl_func_create[0])))
+#define FUNC_ENTRY_CNT                        ((int)(sizeof(tbl_func_entry) / sizeof(tbl_func_entry[0])))
+
+typedef struct func_t_
+{
+    int func_idx;
+    void *func;
+} func_t;
+
+extern void func_menu(void);
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+extern void func_menustyle(void);
+#endif
+extern void func_clock(void);
+extern void func_clock_preview(void);
+//extern void func_clock_sub_sidebar(void);
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+extern void func_clock_sub_card(void);
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+extern void func_heartrate(void);
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+extern void func_compo_select(void);
+extern void func_compo_select_sub(void);
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+extern void func_alarm_clock(void);
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+extern void func_alarm_clock_sub_set(void);
+extern void func_alarm_clock_sub_repeat(void);
+extern void func_alarm_clock_sub_edit(void);
+extern void func_alarm_clock_sub_label(void);
+extern void func_alarm_clock_sub_pop(void);
+extern void func_disturd_sub_set(void);
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+extern void func_blood_oxygen(void);
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_MEASURE_SUPPORT
+extern void func_measure(void);
+#endif //UTE_MODULE_SCREENS_MEASURE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_EXPAND_SUPPORT
+extern void func_scan_expand(void);
+#endif
+#if UTE_MODULE_SCREENS_SCAN_ABOUT_SUPPORT
+extern void func_scan_about(void);
+#endif
+#if UTE_MODULE_SCREENS_CALL_ABOUT_SUPPORT
+extern void func_call_about(void);
+#endif
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+extern void func_breathe(void);
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+extern void func_breathe_sub_mode(void);
+extern void func_breathe_sub_time(void);
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+extern void func_calculator(void);
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+extern void func_camera(void);
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
+extern void func_light(void);
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_VOLUME_SUPPORT
+extern void func_set_sub_volume(void);
+#endif //UTE_MODULE_SCREENS_VOLUME_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+extern void func_timer(void);
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+extern void func_sleep(void);
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+extern void func_stopwatch(void);
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+extern void func_stopwatch_sub_record(void);
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+extern void func_weather(void);
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+extern void func_sport(void);
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SET_SUPPORT
+extern void func_sport_sub_set(void);
+extern void func_sport_sub_set_list(void);
+extern void func_sport_history(void);
+#endif //UTE_MODULE_SCREENS_SPORT_SET_SUPPORT
+//extern void func_sport_config(void);
+extern void func_sport_sub_run(void);
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+extern void func_sport_sub_pause(void);
+#endif
+extern void func_sport_sort(void);
+extern void func_calendar(void);
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+extern void func_call(void);
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+extern void func_call_sub_record(void);
+extern void func_call_sub_dial(void);
+extern void func_call_sort(void);
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+extern void func_game(void);
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+extern void func_style(void);
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+extern void func_findphone(void);
+// extern void func_altitude(void);
+//extern void func_map(void);
+extern void func_message_info(void);
+extern void func_message_detail_info(void);
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
+extern void func_scan(void);
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+extern void func_voice(void);
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+extern void func_compass(void);
+#endif
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+extern void func_address_book(void);
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+extern void func_set_sub_list(void);
+extern void func_set_sub_sav(void);
+extern void func_set_sub_dousing(void);
+extern void func_set_sub_disturd(void);
+#if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+extern void func_set_sub_language(void);
+#endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+extern void func_set_sub_wrist(void);
+extern void func_wrist_sub_set(void);
+#if UTE_MODULE_POWER_SAVING_SUPPORT
+extern void func_set_sub_saving(void);
+extern void func_saving_sub_show(void);
+#endif
+#if UTE_MODULE_SCREENS_SETTING_REMIND_SUPPORT
+extern void func_setting_remind(void);
+#endif
+#if APP_CUSTOM_REMIND_SETTING_SUPPORT
+extern void func_remind_prayer(void);
+#endif
+extern void func_switch_designor(void);
+#if UTE_MODULE_COVER_DISPLAY_OFF_SUPPORT
+extern void func_set_sub_cover_screen(void);
+#endif
+//extern void func_set_sub_time(void);
+//extern void func_time_sub_custom(void);
+//extern void func_set_sub_password(void);
+// extern void func_password_sub_disp(void);
+// extern void func_password_sub_select(void);
+extern void func_set_sub_about(void);
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
+extern void func_set_sub_restart(void);
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
+#if UTE_MODULE_SCREENS_RESFY_SUPPORT
+extern void func_set_sub_rstfy(void);
+#endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
+extern void func_set_sub_off(void);
+//extern void func_set_sub_4g(void);
+extern void func_switching_to_menu(void);
+extern void func_volume(void);
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+extern void func_activity(void);
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+extern void func_sport_switching(void);
+extern void func_bloodsugar(void);
+//extern void func_bloodpressure(void);
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+extern void func_flashlight(void);
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+extern void func_charge(void);
+#if UTE_MODULE_SCREENS_APP_BINDING_NOTIFY_SUPPORT
+extern void func_binding_notify(void);
+#endif
+// extern void func_debug_info(void);
+extern void func_heart_warning(void);
+extern void func_music(void);
+extern void func_idle(void);
+extern void func_bt_update(void);
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+extern void func_bt(void);
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+extern void func_bt_ring(void);
+extern void func_bt_call(void);
+extern void func_bthid(void);
+extern void func_usbdev(void);
+extern void func_aux(void);
+//extern void func_smartstack(void);
+extern void func_modem_call(void);
+extern void func_modem_ring(void);
+extern void func_message_reply_info(void);
+// extern void func_mic_test(void);
+#if UTE_MODULE_SCREENS_TETRIS_SUPPORT
+extern void func_tetris(void);
+//extern void func_tetris_start(void);
+#endif
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
+extern void func_bird(void);
+#endif
+#if UTE_MODULE_SCREENS_TP_TEST
+extern void func_tp_test(void);
+#endif
+extern void func_ota_ui(void);
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+extern void func_pressure(void);//压力
+#endif
+#if UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT
+extern void func_pressure_explain(void);//压力说明
+#endif
+extern void func_long_press(void);//关机 重启 SOS
+extern void func_ota_update(void);
+extern void func_ota_err(void);
+extern void func_ota_succ(void);
+extern void func_ble_call(void);
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+extern void func_sub_sos(void);
+extern void func_sos_book(void);
+#endif
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
+extern void func_power_on(void);//开机
+#endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+extern void func_power_off(void);//关机logo界面
+#endif
+extern void func_power_on_scan(void);
+extern void func_power_on_language(void);
+extern void func_test_mode(void);///*出厂测试模式选择*/
+// extern void func_test_mode_list(void);///*出厂测试模式选择*/
+extern void func_factory_testing(void);///*工厂测试*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
+extern void func_ageing(void);///*老化测试*/
+#endif
+extern void func_audio(void);///*音频测试*/
+extern void func_online_factory_test(void);
+extern void func_empty(void);
+extern void func_sport_finish(void);
+#if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
+extern void func_up_watch_dial(void);
+#endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
+extern void func_breathe_finish(void);
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+extern void func_women_health(void);
+#endif
+extern void func_menu_football_list(void);
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+extern void func_system_sub_system(void);
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+extern void func_dial_and_theme(void);
+#endif
+#if UTE_MODULE_SCREENS_HEARTRATE_INFO_SUPPORT
+extern void func_heart_about(void);
+#endif
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
+extern void func_oxygen_about(void);
+#endif
+extern void func_breathe_run(void);
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+extern void func_bright_set(void);
+extern void func_display_sub_set(void);
+extern void func_display_time_period(void);
+#endif
+#if UTE_MODULE_SCREENS_WORLD_CLOCK_SUPPORT
+extern void func_world_clock(void);
+#endif
+
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+extern void func_toolbox_list(void);
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+extern void func_mood(void);
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+extern void func_mood_about(void);
+#endif
+#if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
+extern void func_motor_grade(void);
+#endif
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+extern void func_clock_dropdown_menu(void);
+#endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+extern void func_key_set_function(void);//KEY_LEFT按键进入设置选择功能界面
+#endif
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+extern void func_clock_saver(void);
+extern void func_clock_saver_preview(void);
+#endif
+extern void func_sort_preview(void);
+extern void func_card_setting(void);
+#if UTE_MODULE_SCREENS_QUICKLY_SET_SUPPORT
+extern void func_quick_card_setting(void);
+#endif
+#if UTE_MODULE_SCREENS_MINI_CARD_SUPPORT
+extern void func_mini_compo_card(void);
+#endif
+#if UTE_MODULE_SCREENS_TBL_SORT_CUBE_SUPPORT
+extern void func_tbl_sort_cube(void);
+#endif
+
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+compo_form_t *func_clock_dropdown_menu_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
+compo_form_t *func_motor_grade_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+compo_form_t *func_mood_about_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+compo_form_t *func_mood_form_create(void);
+#endif
+compo_form_t *func_breathe_run_form_create(void);
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
+compo_form_t *func_oxygen_about_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_CALL_ABOUT_SUPPORT
+compo_form_t *func_call_about_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_SCAN_ABOUT_SUPPORT
+compo_form_t *func_scan_about_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_WORLD_CLOCK_SUPPORT
+compo_form_t *func_world_clock_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_SCAN_EXPAND_SUPPORT
+compo_form_t *func_scan_expand_form_create(void);
+#endif
+compo_form_t *func_heart_warning_form_create(void);
+compo_form_t *func_menu_football_list_form_create(void);
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+compo_form_t *func_women_health_form_create(void);
+#endif
+compo_form_t *func_breathe_finish_form_create(void);
+compo_form_t *func_up_watch_dial_form_create(void);
+compo_form_t *func_power_on_language_form_create(void);
+compo_form_t *func_power_on_scan_form_create(void);
+compo_form_t *func_sport_finish_form_create(void);
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
+compo_form_t *func_power_on_form_create(void);//开机
+#endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+compo_form_t *func_power_off_form_create(void);//关机logo界面
+#endif
+compo_form_t *func_ble_call_form_create(void);
+compo_form_t *func_ota_update_form_create(void);
+compo_form_t *func_ota_err_form_create(void);
+compo_form_t *func_ota_succ_form_create(void);
+compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+compo_form_t *func_pressure_form_create(void);//压力
+#endif
+#if UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT
+compo_form_t *func_pressure_explain_form_create(void);//压力说明
+#endif
+compo_form_t *func_menu_form_create(void);
+compo_form_t *func_clock_form_create(void);
+//compo_form_t *func_clock_sub_sidebar_form_create(void);
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+compo_form_t *func_clock_sub_card_form_create(void);
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+compo_form_t *func_heartrate_form_create(void);
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+compo_form_t *func_bt_form_create(void);
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+compo_form_t *func_alarm_clock_form_create(void);
+compo_form_t *func_alarm_clock_sub_set_form_create(void);
+compo_form_t *func_alarm_clock_sub_repeat_form_create(void);
+compo_form_t *func_alarm_clock_sub_edit_form_create(void);
+compo_form_t *func_alarm_clock_sub_label_form_create(void);
+compo_form_t *func_alarm_clock_sub_pop_form_create(void);
+compo_form_t *func_blood_oxygen_form_create(void);
+compo_form_t *func_measure_form_create(void);
+compo_form_t *func_breathe_form_create(void);
+compo_form_t *func_breathe_sub_mode_form_create(void);
+compo_form_t *func_breathe_sub_time_form_create(void);
+compo_form_t *func_calculator_form_create(void);
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+compo_form_t *func_camera_form_create(void);
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+compo_form_t *func_light_form_create(void);
+#if UTE_MODULE_SCREENS_VOLUME_SUPPORT
+compo_form_t* func_set_sub_volume_form_create();
+#endif //UTE_MODULE_SCREENS_VOLUME_SUPPORT
+compo_form_t *func_timer_form_create(void);
+compo_form_t *func_sleep_form_create(void);
+compo_form_t *func_stopwatch_form_create(void);
+compo_form_t *func_stopwatch_sub_record_form_create(void);
+compo_form_t *func_weather_form_create(void);
+compo_form_t *func_sport_form_create(void);
+compo_form_t *func_sport_sub_set_form_create(void);
+compo_form_t *func_sport_sub_set_list_form_create(void);
+compo_form_t *func_sport_history_form_create(void);
+//compo_form_t *func_sport_config_form_create(void);
+compo_form_t *func_sport_sub_run_form_create(void);
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+compo_form_t *func_sport_sub_pause_form_create(void);
+#endif
+compo_form_t *func_sport_switching_form_create(void);
+compo_form_t *func_sport_sort_form_create(void);
+compo_form_t *func_set_sub_disturd_form_create(void);
+compo_form_t *func_disturd_sub_set_form_create(void);
+compo_form_t *func_call_form_create(void);
+compo_form_t *func_call_sub_record_form_create(void);
+compo_form_t *func_call_sub_dial_form_create(void);
+compo_form_t *func_call_sort_form_create(void);
+compo_form_t *func_game_form_create(void);
+compo_form_t *func_style_form_create(void);
+compo_form_t *func_findphone_form_create(void);
+// compo_form_t *func_altitude_form_create(void);
+//compo_form_t *func_map_form_create(void);
+compo_form_t *func_message_form_create(void);
+compo_form_t *func_message_detail_form_create(void);
+compo_form_t *func_scan_form_create(void);
+compo_form_t *func_voice_form_create(void);
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+compo_form_t *func_compass_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_SETTING_REMIND_SUPPORT
+compo_form_t *func_setting_remind_form_create(void);
+#endif
+#if APP_CUSTOM_REMIND_SETTING_SUPPORT
+compo_form_t *func_remind_prayer_form_create(void);
+#endif
+#if UTE_MODULE_POWER_SAVING_SUPPORT
+compo_form_t *func_set_sub_saving_form_create(void);
+compo_form_t *func_saving_sub_show_form_create(void);
+#endif
+compo_form_t *func_switch_designor_form_create(void);
+#if UTE_MODULE_COVER_DISPLAY_OFF_SUPPORT
+compo_form_t *func_set_sub_cover_screen_form_create(void);
+#endif
+compo_form_t *func_address_book_form_create(void);
+compo_form_t *func_set_sub_list_form_create(void);
+compo_form_t *func_wrist_sub_set_form_create(void);
+compo_form_t *func_set_sub_wrist_form_create(void);
+compo_form_t *func_set_sub_sav_form_create(void);
+compo_form_t *func_set_sub_dousing_form_create(void);
+compo_form_t *func_set_sub_language_form_create(void);
+//compo_form_t *func_set_sub_time_form_create(void);
+//compo_form_t *func_time_sub_custom_form_create(void);
+//compo_form_t *func_set_sub_password_form_create(void);
+// compo_form_t *func_password_sub_disp_form_create(void);
+// compo_form_t *func_password_sub_select_form_create(void);
+//compo_form_t *func_set_sub_4g_form_create(void);
+compo_form_t *func_set_sub_about_form_create(void);
+compo_form_t *func_set_sub_restart_form_create(void);
+compo_form_t *func_set_sub_rstfy_form_create(void);
+compo_form_t *func_set_sub_off_form_create(void);
+compo_form_t *func_calender_form_create(void);
+compo_form_t *func_volume_form_create(void);
+compo_form_t *func_activity_form_create(void);
+#if UTE_MODULE_SCREENS_APP_BINDING_NOTIFY_SUPPORT
+compo_form_t *func_binding_notify_form_create(void);
+#endif
+//compo_form_t *func_bloodsugar_form_create(void);
+//compo_form_t *func_bloodpressure_form_create(void);
+compo_form_t *func_flashlight_form_create(void);
+compo_form_t *func_charge_form_create(void);
+compo_form_t *func_clock_preview_form_create(void);
+compo_form_t *func_compo_select_form_create(void);
+compo_form_t *func_compo_select_sub_form_create(void);
+// compo_form_t *func_debug_info_form_create(void);
+//compo_form_t * func_smartstack_form_create(void);
+compo_form_t *func_music_form_create(void);
+compo_form_t *func_usbdev_form_create(void);
+compo_form_t *func_recorder_form_create(void);
+compo_form_t *func_message_reply_form_create(void);
+// compo_form_t *func_mic_test_form_create(void);
+#if UTE_MODULE_SCREENS_TETRIS_SUPPORT
+compo_form_t *func_tetris_form_create(void);
+//compo_form_t *func_tetris_start_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
+compo_form_t *func_bird_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_TP_TEST
+compo_form_t *func_tp_test_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+compo_form_t *func_sub_sos_form_create(void);
+compo_form_t *func_sos_book_form_create(void);
+#endif
+compo_form_t *func_empty_form_create(void);
+compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
+// compo_form_t *func_test_mode_list_form_create(void);///*出厂测试模式选择*/
+compo_form_t *func_factory_testing_create(void);///*工厂测试*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
+compo_form_t *func_ageing_create(void);///*老化测试*/
+#endif
+compo_form_t *func_audio_create(void);///*音频测试*/
+compo_form_t *func_online_factory_test_form_create(void);
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+compo_form_t *func_dial_and_theme_form_create(void);  //表盘与主题
+#endif
+compo_form_t *func_system_sub_system_form_create(void); //系统
+#if UTE_MODULE_SCREENS_HEARTRATE_INFO_SUPPORT
+compo_form_t *func_heart_about_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+compo_form_t *func_bright_set_form_create(void);
+compo_form_t *func_display_time_period_form_create(void);
+compo_form_t *func_display_sub_set_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+compo_form_t *func_toolbox_list_form_create(void);   //工具箱
+#endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+compo_form_t *func_key_set_function_form_create(void);//KEY_LEFT按键进入设置选择功能界面
+#endif
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+compo_form_t *func_clock_saver_form_create(void);
+compo_form_t *func_clock_saver_preview_form_create(void);
+#endif
+compo_form_t *func_sort_preview_form_create(void);
+compo_form_t* func_card_setting_form_create(void);
+#if UTE_MODULE_SCREENS_QUICKLY_SET_SUPPORT
+compo_form_t* func_quick_card_setting_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_MINI_CARD_SUPPORT
+compo_form_t* func_mini_compo_card_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_TBL_SORT_CUBE_SUPPORT
+compo_form_t *func_tbl_sort_cube_form_create(void);
+#endif
+
+bool func_music_is_play(void);
+void func_music_play(bool sta);
+
+func_cb_t func_cb AT(.buf.func_cb);
+
+const func_t tbl_func_create[] =
+{
+    {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list_form_create},
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    {FUNC_WOMEN_HEALTH,                 func_women_health_form_create},
+#endif
+    {FUNC_BLE_CALL,                     func_ble_call_form_create},
+    {FUNC_MENU,                         func_menu_form_create},
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+    {FUNC_MENUSTYLE,                    NULL},
+#endif
+    {FUNC_CLOCK,                        func_clock_form_create},
+    {FUNC_CLOCK_PREVIEW,                func_clock_preview_form_create},
+//    {FUNC_SIDEBAR,                      func_clock_sub_sidebar_form_create},
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+    {FUNC_CARD,                         func_clock_sub_card_form_create},
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+#if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
+    {FUNC_UP_WATCH_DIAL,                func_up_watch_dial_form_create},     //在线表盘
+#endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
+    {FUNC_BREATHE_FINISH,               func_breathe_finish_form_create},
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {FUNC_HEARTRATE,                    func_heartrate_form_create},
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {FUNC_BT,                           func_bt_form_create},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
+    {FUNC_MOTOR_GRADE,                  func_motor_grade_form_create},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {FUNC_POWER_ON_SCAN,                func_power_on_scan_form_create},
+    {FUNC_POWER_ON_LANGUAGE,            func_power_on_language_form_create},
+    {FUNC_COMPO_SELECT,                 func_compo_select_form_create},
+    {FUNC_COMPO_SELECT_SUB,             func_compo_select_sub_form_create},
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {FUNC_ALARM_CLOCK,                  func_alarm_clock_form_create},
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set_form_create},
+    {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat_form_create},
+    {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
+    {FUNC_ALARM_CLOCK_SUB_LABEL,         func_alarm_clock_sub_label_form_create},
+    {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop_form_create},
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_MEASURE_SUPPORT
+    {FUNC_MEASURE,                 func_measure_form_create},
+#endif //UTE_MODULE_SCREENS_MEASURE_SUPPORT
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+    {FUNC_CLOCK_DROPDOWN_MENU,          func_clock_dropdown_menu_form_create},
+#endif
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {FUNC_PRESSURE,                     func_pressure_form_create},//压力
+#endif
+#if UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
+#endif
+    {FUNC_LONG_PRESS,                   func_long_press_form_create},//关机 重启 SOS
+//    {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
+//    {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {FUNC_BREATHE,                      func_breathe_form_create},
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode_form_create},
+    {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time_form_create},
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {FUNC_CALCULATOR,                   func_calculator_form_create},
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {FUNC_CAMERA,                       func_camera_form_create},
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {FUNC_TIMER,                        func_timer_form_create},
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {FUNC_SLEEP,                        func_sleep_form_create},
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {FUNC_MOOD,                         func_mood_form_create},
+#endif
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {FUNC_STOPWATCH,                    func_stopwatch_form_create},
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {FUNC_STOPWATCH_SUB_RECORD,         func_stopwatch_sub_record_form_create},
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {FUNC_WEATHER,                      func_weather_form_create},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {FUNC_SPORT,                        func_sport_form_create},
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SET_SUPPORT
+    {FUNC_SPORT_SUB_SET,                func_sport_sub_set_form_create},
+    {FUNC_SPORT_SUB_SET_LIST,                func_sport_sub_set_list_form_create},
+    {FUNC_SPORT_HISTORY,                func_sport_history_form_create},
+#endif //UTE_MODULE_SCREENS_SPORT_SET_SUPPORT
+//    {FUNC_SPORT_CONFIG,                 func_sport_config_form_create},
+    {FUNC_SPORT_SUB_RUN,                func_sport_sub_run_form_create},
+    {FUNC_SPORT_SWITCH,                 func_sport_switching_form_create},
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {FUNC_SPORT_SORT,                   func_sport_sort_form_create},
+    {FUNC_SPORT_FINISH,                 func_sport_finish_form_create},
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+    {FUNC_SPORT_SUB_PAUSE,              func_sport_sub_pause_form_create},
+#endif
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {FUNC_GAME,                         func_game_form_create},
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {FUNC_STYLE,                        func_style_form_create},
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {FUNC_FINDPHONE,                    func_findphone_form_create},
+    // {FUNC_ALTITUDE,                     func_altitude_form_create},
+//    {FUNC_MAP,                          func_map_form_create},
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {FUNC_MESSAGE,                      func_message_form_create},
+    {FUNC_MESSAGE_DETAIL,               func_message_detail_form_create},
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
+    {FUNC_SCAN,                         func_scan_form_create},
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {FUNC_VOICE,                        func_voice_form_create},
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+    {FUNC_COMPASS,                      func_compass_form_create},
+#endif
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+    {FUNC_ADDRESS_BOOK,                 func_address_book_form_create},
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {FUNC_CALL,                         func_call_form_create},
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+    {FUNC_CALL_SUB_RECORD,              func_call_sub_record_form_create},
+    {FUNC_CALL_SUB_DIAL,                func_call_sub_dial_form_create},
+    {FUNC_CALL_SORT,                    func_call_sort_form_create},
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {FUNC_SETTING,                      func_set_sub_list_form_create},
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {FUNC_CALENDAER,                    func_calender_form_create},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {FUNC_VOLUME,                  func_volume_form_create},
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {FUNC_ACTIVITY,                     func_activity_form_create},
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {FUNC_FLASHLIGHT,                   func_flashlight_form_create},
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
+    {FUNC_LIGHT,                        func_light_form_create},
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_VOLUME_SUPPORT
+    {FUNC_SET_SUB_VOLUME,               func_set_sub_volume_form_create},
+#endif //UTE_MODULE_SCREENS_VOLUME_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+    {FUNC_MOOD_ABOUT,                   func_mood_about_form_create},
+#endif
+#if UTE_MODULE_SCREENS_SETTING_REMIND_SUPPORT
+    {FUNC_SETTING_REMIND,               func_setting_remind_form_create},
+#endif
+#if APP_CUSTOM_REMIND_SETTING_SUPPORT
+    {FUNC_REMIND_PRAYER,                func_remind_prayer_form_create},
+#endif
+#if UTE_MODULE_POWER_SAVING_SUPPORT
+    {FUNC_SET_SUB_SAVING,               func_set_sub_saving_form_create},
+    {FUNC_SAVING_SUB_SHOW,              func_saving_sub_show_form_create},
+#endif
+    {FUNC_SWITCH_DESIGOR,               func_switch_designor_form_create},
+#if UTE_MODULE_COVER_DISPLAY_OFF_SUPPORT
+    {FUNC_SET_COVER_SCREEN,             func_set_sub_cover_screen_form_create},
+#endif
+    {FUNC_SET_SUB_DOUSING,              func_set_sub_dousing_form_create},
+    {FUNC_SET_SUB_WRIST,                func_set_sub_wrist_form_create},
+    {FUNC_WRIST_SUB_SET,                func_wrist_sub_set_form_create},
+    {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd_form_create},
+    {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set_form_create},
+#if UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT
+    {FUNC_HEART_WARNING,                func_heart_warning_form_create},
+#endif
+#if UTE_MODULE_SCREENS_HEARTRATE_INFO_SUPPORT
+    {FUNC_HEAR_ABOUT,                   func_heart_about_form_create},
+#endif
+#if UTE_MODULE_SCREENS_SCAN_ABOUT_SUPPORT
+    {FUNC_SCAN_ABOUT,                   func_scan_about_form_create},
+#endif
+#if UTE_MODULE_SCREENS_CALL_ABOUT_SUPPORT
+    {FUNC_CALL_ABOUT,                   func_call_about_form_create},
+#endif
+#if UTE_MODULE_SCREENS_SCAN_EXPAND_SUPPORT
+    {FUNC_SCAN_EXPAND,                  func_scan_expand_form_create},
+#endif
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
+    {FUNC_OXYGEN_ABOUT,                 func_oxygen_about_form_create},
+#endif
+    {FUNC_BREATHE_RUN,                  func_breathe_run_form_create},
+#if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+    {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
+#endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+//    {FUNC_SET_SUB_TIME,                 func_set_sub_time_form_create},
+//    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom_form_create},
+//    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
+#if UTE_MODULE_SCREENS_WORLD_CLOCK_SUPPORT
+    {FUNC_WORLD_CLOCK,                 func_world_clock_form_create},
+#endif
+    // {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp_form_create},
+    // {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
+    {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
+    {FUNC_SET_SUB_ABOUT,                func_set_sub_about_form_create},
+//    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
+    {FUNC_SET_SUB_RESTART,              func_set_sub_restart_form_create},
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
+#if UTE_MODULE_SCREENS_APP_BINDING_NOTIFY_SUPPORT
+    {FUNC_BINDING_NOTIFY,              func_binding_notify_form_create},
+#endif
+#if UTE_MODULE_SCREENS_RESFY_SUPPORT
+    {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy_form_create},
+#endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
+    {FUNC_SET_SUB_OFF,                  func_set_sub_off_form_create},
+    {FUNC_CHARGE,                       func_charge_form_create},
+    // {FUNC_DEBUG_INFO,                   func_debug_info_form_create},
+//    {FUNC_SMARTSTACK,                   func_smartstack_form_create},
+#if FUNC_MUSIC_EN
+    {FUNC_MUSIC,                        func_music_form_create},
+#endif
+#if FUNC_USBDEV_EN
+    {FUNC_USBDEV,                       func_usbdev_form_create},
+#endif
+#if FUNC_RECORDER_EN
+    {FUNC_RECORDER,                     func_recorder_form_create},
+#endif
+#if FLASHDB_EN
+    {FUNC_MESSAGE_REPLY,                func_message_reply_form_create},
+#endif
+#if 0//MIC_TEST_EN
+    {FUNC_MIC_TEST,                     func_mic_test_form_create},
+#endif // MIC_TEST_EN
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
+    {FUNC_BIRD,                         func_bird_form_create},
+#endif
+#if UTE_MODULE_SCREENS_TETRIS_SUPPORT
+    {FUNC_TETRIS,                       func_tetris_form_create},
+//    {FUNC_TETRIS_START,                 func_tetris_start_form_create},
+#endif
+#if UTE_MODULE_SCREENS_TP_TEST
+    {FUNC_TP_TEST,                       func_tp_test_form_create},
+#endif
+    {FUNC_OTA_MODE,                     func_ota_update_form_create},
+    {FUNC_OTA_ERROR,                    func_ota_err_form_create},
+    {FUNC_OTA_SUCC,                     func_ota_succ_form_create},
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
+    {FUNC_POWER_ON,                     func_power_on_form_create},
+#endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    {FUNC_POWER_OFF,                    func_power_off_form_create},
+#endif
+    {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
+    // {FUNC_TEST_MODE_LIST,               func_test_mode_list_form_create},///*出厂测试模式选择*/
+    {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
+    {FUNC_AGEING,                       func_ageing_create},///*老化测试*/
+#endif
+    {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
+    {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test_form_create},
+    {FUNC_EMPTY,                        func_empty_form_create},
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+    {FUNC_SYSTEM,                       func_system_sub_system_form_create},//系统设置
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+    {FUNC_DIAL_AND_THEME,               func_dial_and_theme_form_create},//表盘&主题
+#endif
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+    {FUNC_SUB_SOS,                  func_sub_sos_form_create},//SOS
+    {FUNC_SOS_BOOK,                 func_sos_book_form_create},//SOS联系人
+#endif
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+    {FUNC_BRIGHT_SET,                   func_bright_set_form_create},//亮度设置列表
+    {FUNC_DISPLAY_TIME_PERIOD,          func_display_time_period_form_create},
+    {FUNC_DISPLAY_SUB_SET,              func_display_sub_set_form_create},
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    {FUNC_TOOLBOX,                      func_toolbox_list_form_create},//工具箱
+#endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+    {FUNC_KEY_SET_FUNCTION,        func_key_set_function_form_create},//KEY_LEFT按键进入设置选择功能界面
+#endif
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+    {FUNC_CLOCK_SAVER,                  func_clock_saver_form_create},
+    {FUNC_CLOCK_SAVER_PREVIEW,          func_clock_saver_preview_form_create},
+#endif
+    {FUNC_SWITCH_MODE_ROTARY,           func_sort_preview_form_create},
+    {FUNC_CARD_SETTING,                 func_card_setting_form_create},
+#if UTE_MODULE_SCREENS_QUICKLY_SET_SUPPORT
+    {FUNC_QUICK_CARD_SETTING,           func_quick_card_setting_form_create},
+#endif
+#if UTE_MODULE_SCREENS_MINI_CARD_SUPPORT
+    {FUNC_MINI_COMPO_CARD,              func_mini_compo_card_form_create},
+#endif
+#if UTE_MODULE_SCREENS_TBL_SORT_CUBE_SUPPORT
+    {FUNC_TBL_SORT_CUBE,                func_tbl_sort_cube_form_create},
+#endif
+};
+
+const func_t tbl_func_entry[] =
+{
+    {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list},
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    {FUNC_WOMEN_HEALTH,                 func_women_health},
+#endif
+    {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+    {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
+#endif
+    {FUNC_CLOCK,                        func_clock},                    //时钟表盘
+    {FUNC_CLOCK_PREVIEW,                func_clock_preview},            //时钟表盘预览
+//    {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+    {FUNC_CARD,                         func_clock_sub_card},           //表盘上拉
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+    {FUNC_BREATHE_FINISH,               func_breathe_finish},
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {FUNC_HEARTRATE,                    func_heartrate},                //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {FUNC_ALARM_CLOCK,                  func_alarm_clock},              //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set},      //闹钟--设置
+    {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat},   //闹钟--重复
+    {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
+    {FUNC_ALARM_CLOCK_SUB_LABEL,         func_alarm_clock_sub_label},     //闹钟--标签
+    {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_MEASURE_SUPPORT
+    {FUNC_MEASURE,                 func_measure},             //血氧
+#endif //UTE_MODULE_SCREENS_MEASURE_SUPPORT
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+    {FUNC_CLOCK_DROPDOWN_MENU,          func_clock_dropdown_menu},
+#endif
+#if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
+    {FUNC_MOTOR_GRADE,                  func_motor_grade},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {FUNC_PRESSURE,                     func_pressure},                 //压力
+#endif
+#if UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
+#endif
+    {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
+//    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
+//    {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
+#if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
+    {FUNC_UP_WATCH_DIAL,                func_up_watch_dial},             //在线表盘
+#endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {FUNC_BREATHE,                      func_breathe},                  //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+    {FUNC_MOOD_ABOUT,                   func_mood_about},
+#endif
+    {FUNC_POWER_ON_SCAN,                func_power_on_scan},             //开机二维码
+    {FUNC_POWER_ON_LANGUAGE,            func_power_on_language},        //开机语言
+    {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
+    {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time},         //呼吸--时间设置
+    {FUNC_COMPO_SELECT,                 func_compo_select},             //组件选择
+    {FUNC_COMPO_SELECT_SUB,             func_compo_select_sub},         //组件选择子界面
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {FUNC_CALCULATOR,                   func_calculator},               //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {FUNC_CAMERA,                       func_camera},                   //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
+    {FUNC_LIGHT,                        func_light},                    //亮度调节
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_VOLUME_SUPPORT
+    {FUNC_SET_SUB_VOLUME,                        func_set_sub_volume},                    //音量调节
+#endif //UTE_MODULE_SCREENS_VOLUME_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {FUNC_TIMER,                        func_timer},                    //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {FUNC_MOOD,                         func_mood},
+#endif
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {FUNC_SLEEP,                        func_sleep},                    //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {FUNC_STOPWATCH,                    func_stopwatch},                //秒表
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {FUNC_STOPWATCH_SUB_RECORD,         func_stopwatch_sub_record},     //秒表--秒表记录
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {FUNC_WEATHER,                      func_weather},                  //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {FUNC_SPORT,                        func_sport},                    //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SET_SUPPORT
+    {FUNC_SPORT_SUB_SET,                        func_sport_sub_set},    //运动设置
+    {FUNC_SPORT_SUB_SET_LIST,                        func_sport_sub_set_list},    //运动设置
+    {FUNC_SPORT_HISTORY,                        func_sport_history},    //运动设置
+#endif //UTE_MODULE_SCREENS_SPORT_SET_SUPPORT
+//    {FUNC_SPORT_CONFIG,                 func_sport_config},             //运动配置
+    {FUNC_SPORT_SUB_RUN,                func_sport_sub_run},            //运动--室内跑步
+    {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
+    {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
+    {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+    {FUNC_SPORT_SUB_PAUSE,              func_sport_sub_pause},            //运动--暂停
+#endif
+#if UTE_MODULE_SCREENS_HEARTRATE_INFO_SUPPORT
+    {FUNC_HEAR_ABOUT,                   func_heart_about},               //
+#endif
+#if UTE_MODULE_SCREENS_SCAN_ABOUT_SUPPORT
+    {FUNC_SCAN_ABOUT,                   func_scan_about},               //
+#endif
+#if UTE_MODULE_SCREENS_CALL_ABOUT_SUPPORT
+    {FUNC_CALL_ABOUT,                   func_call_about},
+#endif
+#if UTE_MODULE_SCREENS_SCAN_EXPAND_SUPPORT
+    {FUNC_SCAN_EXPAND,                  func_scan_expand},
+#endif
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
+    {FUNC_OXYGEN_ABOUT,                 func_oxygen_about},
+#endif
+    {FUNC_BREATHE_RUN,                  func_breathe_run},
+#if UTE_MODULE_SCREENS_WORLD_CLOCK_SUPPORT
+    {FUNC_WORLD_CLOCK,                  func_world_clock},
+#endif
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {FUNC_GAME,                         func_game},                     //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {FUNC_STYLE,                        func_style},                    //菜单风格
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+    // {FUNC_ALTITUDE,                     func_altitude},                 //海拔
+    {FUNC_FINDPHONE,                    func_findphone},                //寻找手机
+//    {FUNC_MAP,                          func_map},                      //地图
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {FUNC_MESSAGE,                      func_message_info},             //消息
+    {FUNC_MESSAGE_DETAIL,               func_message_detail_info},             //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
+    {FUNC_SCAN,                         func_scan},                     //扫一扫
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {FUNC_VOICE,                        func_voice},                    //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+    {FUNC_COMPASS,                      func_compass},                  //指南针
+#endif
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+    {FUNC_ADDRESS_BOOK,                 func_address_book},             //电话簿
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {FUNC_CALENDAER,                    func_calendar},                 //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {FUNC_CALL,                         func_call},                     //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+    {FUNC_CALL_SUB_RECORD,              func_call_sub_record},          //电话--最近通话
+    {FUNC_CALL_SUB_DIAL,                func_call_sub_dial},            //电话--拨号
+    {FUNC_CALL_SORT,                    func_call_sort},                //电话--一级界面
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {FUNC_ACTIVITY,                     func_activity},                 //活动记录
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {FUNC_FLASHLIGHT,                   func_flashlight},               //手电筒
+#endif
+#if UTE_MODULE_SCREENS_SETTING_REMIND_SUPPORT
+    {FUNC_SETTING_REMIND,               func_setting_remind},
+#endif
+#if APP_CUSTOM_REMIND_SETTING_SUPPORT
+    {FUNC_REMIND_PRAYER,                func_remind_prayer},
+#endif
+#if UTE_MODULE_POWER_SAVING_SUPPORT
+    {FUNC_SET_SUB_SAVING,               func_set_sub_saving},
+    {FUNC_SAVING_SUB_SHOW,              func_saving_sub_show},
+#endif
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {FUNC_SETTING,                      func_set_sub_list},             //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {FUNC_SWITCH_DESIGOR,               func_switch_designor},
+#if UTE_MODULE_COVER_DISPLAY_OFF_SUPPORT
+    {FUNC_SET_COVER_SCREEN,             func_set_sub_cover_screen},
+#endif
+    {FUNC_SET_SUB_DOUSING,              func_set_sub_dousing},          //设置--熄屏
+    {FUNC_SET_SUB_WRIST,                func_set_sub_wrist},            //设置--抬腕
+    {FUNC_WRIST_SUB_SET,                func_wrist_sub_set},            //设置--抬腕--定时
+    {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd},          //设置--勿扰
+    {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set},          //勿扰--时间设置
+    {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
+#if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+    {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language},         //设置--语言
+#endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+//    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
+//    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
+//    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password},         //设置--密码锁
+    // {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp},        //设置--新密码锁设置
+    // {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认
+    {FUNC_SET_SUB_ABOUT,                func_set_sub_about},            //设置--关于
+#if UTE_MODULE_SCREENS_APP_BINDING_NOTIFY_SUPPORT
+    {FUNC_BINDING_NOTIFY,              func_binding_notify},
+#endif
+//    {FUNC_SET_SUB_4G,                   func_set_sub_4g},               //设置--4G
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
+    {FUNC_SET_SUB_RESTART,              func_set_sub_restart},          //设置--重启
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
+#if UTE_MODULE_SCREENS_RESFY_SUPPORT
+    {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy},            //设置--恢复出厂
+#endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
+    {FUNC_SET_SUB_OFF,                  func_set_sub_off},              //设置--关机
+    {FUNC_CHARGE,                       func_charge},                   //充电
+#if UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT
+    {FUNC_HEART_WARNING,                func_heart_warning},
+#endif
+    // {FUNC_DEBUG_INFO,                   func_debug_info},               //DEBUG
+//    {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
+#if FUNC_BT_EN
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {FUNC_BT,                           func_bt},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {FUNC_BT_RING,                      func_bt_ring},
+    {FUNC_BT_CALL,                      func_bt_call},
+#endif // FUNC_BT_EN
+#if FUNC_BT_DUT_EN
+    {FUNC_BT_DUT,                       func_bt_dut},
+#endif // FUNC_BT_DUT_EN
+#if FUNC_MUSIC_EN
+    {FUNC_MUSIC,                        func_music},
+#endif
+#if FUNC_USBDEV_EN
+    {FUNC_USBDEV,                       func_usbdev},
+#endif
+#if FUNC_RECORDER_EN
+    {FUNC_RECORDER,                     func_recorder},
+#endif
+#if FUNC_IDLE_EN
+    {FUNC_IDLE,                         func_idle},
+#endif
+#if FOTA_UI_EN
+    {FUNC_OTA_UI_MODE,                  func_ota_ui},
+#endif
+    {FUNC_MODEM_CALL,                   func_modem_call},
+    {FUNC_MODEM_RING,                   func_modem_ring},
+    {FUNC_BT_UPDATE,                    func_bt_update},
+#if FLASHDB_EN
+    {FUNC_MESSAGE_REPLY,                func_message_reply_info},
+#endif
+#if 0//MIC_TEST_EN
+    {FUNC_MIC_TEST,                     func_mic_test},
+#endif // MIC_TEST_EN
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
+    {FUNC_BIRD,                         func_bird},
+#endif
+    {FUNC_VOLUME,                       func_volume},
+#if UTE_MODULE_SCREENS_TETRIS_SUPPORT
+    {FUNC_TETRIS,                       func_tetris},
+//    {FUNC_TETRIS_START,                 func_tetris_start},
+#endif
+#if UTE_MODULE_SCREENS_TP_TEST
+    {FUNC_TP_TEST,                       func_tp_test},
+#endif
+    {FUNC_OTA_MODE,                     func_ota_update},
+    {FUNC_OTA_ERROR,                    func_ota_err},
+    {FUNC_OTA_SUCC,                     func_ota_succ},
+    {FUNC_BLE_CALL,                     func_ble_call},
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+    {FUNC_SUB_SOS,                      func_sub_sos},
+    {FUNC_SOS_BOOK,                     func_sos_book},
+#endif
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
+    {FUNC_POWER_ON,                     func_power_on},
+#endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    {FUNC_POWER_OFF,                    func_power_off},
+#endif
+    {FUNC_TEST_MODE,                    func_test_mode}, ///*出厂测试模式选择*/
+    {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/
+    // {FUNC_TEST_MODE_LIST,               func_test_mode_list},///*出厂测试模式选择*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
+    {FUNC_AGEING,                       func_ageing},///*老化测试*/
+#endif
+    {FUNC_AUDIO,                        func_audio},///*音频测试*/
+    {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test},
+    {FUNC_EMPTY,                        func_empty},
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+    {FUNC_SYSTEM,                        func_system_sub_system},//系统设置
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+    {FUNC_DIAL_AND_THEME,               func_dial_and_theme},//表盘&主题
+#endif
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+    {FUNC_BRIGHT_SET,                   func_bright_set},//亮度设置列表
+    {FUNC_DISPLAY_TIME_PERIOD,          func_display_time_period},
+    {FUNC_DISPLAY_SUB_SET,              func_display_sub_set},
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    {FUNC_TOOLBOX,                      func_toolbox_list},//工具箱
+#endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+    {FUNC_KEY_SET_FUNCTION,        func_key_set_function},//KEY_LEFT按键进入设置选择功能界面
+#endif
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+    {FUNC_CLOCK_SAVER,                  func_clock_saver},
+    {FUNC_CLOCK_SAVER_PREVIEW,          func_clock_saver_preview},
+#endif
+    {FUNC_SWITCH_MODE_ROTARY,           func_sort_preview},
+    {FUNC_CARD_SETTING,                 func_card_setting},
+#if UTE_MODULE_SCREENS_QUICKLY_SET_SUPPORT
+    {FUNC_QUICK_CARD_SETTING,           func_quick_card_setting},
+#endif
+#if UTE_MODULE_SCREENS_MINI_CARD_SUPPORT
+    {FUNC_MINI_COMPO_CARD,              func_mini_compo_card},
+#endif
+#if UTE_MODULE_SCREENS_TBL_SORT_CUBE_SUPPORT
+    {FUNC_TBL_SORT_CUBE,                func_tbl_sort_cube},
+#endif
+};
+
+AT(.text.func.process)
+void func_watch_bt_process(void)
+{
+    uint disp_status = bsp_bt_disp_status();
+#if UTE_LOG_CALL_LVL
+    if (disp_status > BT_STA_PLAYING)
+    {
+        static uint last_disp_status = 0;
+        if (disp_status != last_disp_status)
+        {
+            last_disp_status = disp_status;
+            printf("%s, disp_status = %d, call_type = %d, sta = %d\n", __func__, disp_status, bt_cb.call_type, func_cb.sta);
+        }
+    }
+#endif
+    if (disp_status == BT_STA_OTA)
+    {
+        sfunc_bt_ota();
+    }
+#if !CALL_MGR_EN
+    else if (sys_cb.reject_tick)
+    {
+        if (tick_check_expire(sys_cb.reject_tick, 3000) || disp_status < BT_STA_INCOMING)
+        {
+            sys_cb.reject_tick = 0;
+        }
+#if BT_VOIP_REJECT_EN
+    }
+    else if (bt_cb.disp_status == BT_STA_INCOMING && bt_cb.call_type == CALL_TYPE_PHONE)
+    {
+#else
+    }
+    else if (bt_cb.disp_status == BT_STA_INCOMING)
+    {
+#endif
+        if (func_cb.sta != FUNC_BT_RING)
+        {
+            func_cb.sta = FUNC_BT_RING;
+            msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+            msg_enqueue(EVT_MSGBOX_EXIT);
+            msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
+        }
+
+#if BT_VOIP_REJECT_EN
+    }
+    else if (bt_cb.disp_status >= BT_STA_OUTGOING && bt_cb.call_type == CALL_TYPE_PHONE)
+    {
+#else
+    }
+    else if (bt_cb.disp_status >= BT_STA_OUTGOING)
+    {
+#endif
+#if UTE_MODULE_CALL_NOT_SHOW_CALL_SCREEN_WHEN_SCO_OFF_SUPPORT
+        if (func_cb.sta != FUNC_BT_CALL && sys_cb.sco_state)
+        {
+            func_cb.sta = FUNC_BT_CALL;
+            msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+            msg_enqueue(EVT_MSGBOX_EXIT);
+            msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
+        }
+#else
+        if (func_cb.sta != FUNC_BT_CALL)
+        {
+            func_cb.sta = FUNC_BT_CALL;
+            msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+            msg_enqueue(EVT_MSGBOX_EXIT);
+            msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
+        }
+#endif
+    }
+#endif
+}
+void print_info(void)
+{
+    static u32 ticks = 0;
+    if (tick_check_expire(ticks, 1000))
+    {
+        ticks = tick_get();
+        extern void mem_monitor_run(void);
+        mem_monitor_run();
+        printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d], func_cb.sta[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status,func_cb.sta);
+        extern void thread_info_printf(void);
+        thread_info_printf();
+    }
+}
+
+AT(.text.func.process)
+void func_process(void)
+{
+    WDT_CLR();
+    // print_info();
+
+#if (FUNC_MUSIC_EN || FUNC_RECORDER_EN) && SD_SOFT_DETECT_EN
+    sd_soft_cmd_detect(120);
+#endif
+
+    tft_bglight_frist_set_check();
+    // gui 没有休眠才更新 防止客户乱改我们的唤醒流程导致卡主的问题
+    if (((!sys_cb.gui_sleep_sta) && !sys_cb.flag_halt)
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+        || (uteModuleGuiCommonIsInScreenSaver()) //息屏表盘
+#endif
+       )
+    {
+        compo_update(); // 更新组件
+        gui_process();  // 刷新UI
+
+    }
+
+#if OPUS_ENC_EN
+    if (bsp_opus_is_encode())
+    {
+        reset_sleep_delay_all();
+        u8 temp_buf[80];
+        memset(temp_buf, 0, sizeof(temp_buf));
+        if (bsp_opus_get_enc_frame(temp_buf, sizeof(temp_buf)))
+        {
+            print_r(temp_buf, sizeof(temp_buf));
+        }
+    }
+#endif//OPUS_ENC_EN
+
+    co_timer_pro(false);
+    bsp_sensor_step_pro_isr();
+
+    if (sys_cb.mp3_res_playing)
+    {
+        mp3_res_process();                                 //提示音后台处理
+    }
+
+    if (sleep_process(bt_is_allow_sleep))
+    {
+        bt_cb.disp_status = 0xff;
+    }
+
+    if (sys_cb.remind_tag)   //闹钟响起
+    {
+        sys_cb.remind_tag = false;
+        gui_cover_msg_enqueue(sys_cb.cover_index);
+        printf(">>>REMIND POP\n");
+    }
+
+    if (sys_cb.msg_tag)   //有消息弹出
+    {
+        sys_cb.msg_tag = false;
+        app_msg_pop_up(sys_cb.msg_index);
+        printf(">>>MSG POP\n");
+    }
+
+    if (sys_cb.timer_done)
+    {
+        sys_cb.timer_done = false;
+        msg_enqueue(EVT_MSGBOX_EXIT);
+        msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
+        msg_enqueue(EVT_WATCH_TIMER_DONE);
+        printf(">>>TIMER DONE\n");
+    }
+
+#if VBAT_DETECT_EN
+    bsp_vbat_lpwr_process();
+#endif
+
+#if BT_BACKSTAGE_EN
+    func_watch_bt_process();
+#endif
+
+#if CALL_MGR_EN
+    bsp_call_mgr_process();
+#endif
+
+    //PWRKEY模拟硬开关关机处理
+    if ((PWRKEY_2_HW_PWRON) && (sys_cb.pwrdwn_hw_flag))
+    {
+        func_cb.sta = FUNC_PWROFF;
+        sys_cb.pwrdwn_hw_flag = 0;
+    }
+
+#if CHARGE_EN
+    if (xcfg_cb.charge_en)
+    {
+        charge_detect(1);
+        if (bsp_charge_sta_get())
+        {
+            if (func_cb.sta != FUNC_BT_RING && func_cb.sta != FUNC_BT_CALL && func_cb.sta != FUNC_OTA_UI_MODE && is_fot_start() == 0)
+            {
+                if (charge_dc_change_detect())
+                {
+                    if (sys_cb.gui_sleep_sta)           //亮屏
+                    {
+                        sys_cb.gui_need_wakeup = 1;
+                    }
+                    reset_sleep_delay_all();
+                }
+                // if (func_cb.sta != FUNC_CHARGE)
+                // {
+                //     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+                //     msg_enqueue(EVT_MSGBOX_EXIT);
+                // }
+                // func_cb.sta = FUNC_CHARGE;
+            }
+        }
+    }
+#endif // CHARGE_EN
+
+#if VDDHR_TRIM_EN
+    bsp_vddhr_trim_save();
+#if VDDHR_TRIM_TEST_EN
+    bsp_vddhr_test();
+#endif
+#endif
+
+    if(bt_cb.bt_is_inited)
+    {
+        bt_thread_check_trigger();
+#if LE_EN
+        ble_app_process();
+#endif
+#if LE_AB_FOT_EN
+        bsp_fot_process();
+        if (is_fot_start() == true)
+        {
+            reset_sleep_delay_all()
+            if (sys_cb.gui_sleep_sta)
+            {
+                sys_cb.gui_need_wakeup = 1;
+            }
+        }
+#endif
+    }
+}
+
+//根据任务名创建窗体。此处调用的创建窗体函数不要调用子任务的控制结构体
+compo_form_t *func_create_form(u8 sta)
+{
+    compo_form_t *frm = NULL;
+    compo_form_t *(*func_create)(void) = NULL;
+    for (int i = 0; i < FUNC_CREATE_CNT; i++)
+    {
+        if (tbl_func_create[i].func_idx == sta)
+        {
+            func_create = tbl_func_create[i].func;
+            if (func_create != NULL)
+            {
+                frm = func_create();
+            }
+            break;
+        }
+    }
+    if (frm == NULL)
+    {
+        printf("halt %s->create sta:%d\n", __func__, sta);
+        halt(HALT_FUNC_SORT);
+    }
+    return frm;
+
+}
+
+//获取当前任务顺序
+static int func_get_order(u8 sta)
+{
+    int i;
+    for (i=0; i<func_cb.sort_cnt; i++)
+    {
+        if (sta == func_cb.tbl_sort[i])
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+//切换到上一个任务
+void func_switch_prev(bool flag_auto)
+{
+#if EN_CUM_SWITCH_LR_MODE_CHOOSE
+    u16 switch_mode = flag_auto ? (sys_cb.switch_lr_rigth_mode_choose | FUNC_SWITCH_AUTO) : sys_cb.switch_lr_rigth_mode_choose;
+#else
+    u16 switch_mode = flag_auto ? (FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO) : FUNC_SWITCH_LR_ZOOM_RIGHT;
+#endif
+    s8 idx = func_get_order(func_cb.sta);
+    if (idx <= 0)
+    {
+        return;
+    }
+    u8 sta = func_cb.tbl_sort[idx - 1];
+    compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
+    u8 alpha = 255;
+    bool res = false;
+    if ((sta == FUNC_CLOCK || func_cb.sta == FUNC_CLOCK) && (switch_mode & 0x7FFF) == FUNC_SWITCH_LR_ZOOM_RIGHT)
+    {
+        res = func_switching(switch_mode, &alpha);                              //切换动画
+    }
+    else
+    {
+        res = func_switching(switch_mode, NULL);                                //切换动画
+    }
+    compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
+    if (res)
+    {
+        if (sta == FUNC_CLOCK)
+        {
+            func_cb.flag_sort = false;
+            func_cb.flag_sort_jump = false;
+        }
+        func_cb.sta = sta;
+    }
+}
+
+//切换到下一个任务
+void func_switch_next(bool flag_auto, bool flag_loop)
+{
+#if EN_CUM_SWITCH_LR_MODE_CHOOSE
+    u16 switch_mode = flag_auto ? (sys_cb.switch_lr_left_mode_choose | FUNC_SWITCH_AUTO) : sys_cb.switch_lr_left_mode_choose;
+#else
+    u16 switch_mode = flag_auto ? (FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO) : FUNC_SWITCH_LR_ZOOM_LEFT;
+#endif
+    u8 idx = func_get_order(func_cb.sta);
+    if (idx < 0)
+    {
+        return ;
+    }
+    u8 sta;
+    if (idx >= func_cb.sort_cnt - 1)
+    {
+        if (flag_loop)
+        {
+            sta = func_cb.tbl_sort[0];
+        }
+        else
+        {
+            return ;
+        }
+    }
+    else
+    {
+        sta = func_cb.tbl_sort[idx + 1];
+    }
+
+    compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
+    u8 alpha = 255;
+    bool res = false;
+    if ((sta == FUNC_CLOCK || func_cb.sta == FUNC_CLOCK) && (switch_mode & 0x7FFF) == FUNC_SWITCH_LR_ZOOM_LEFT)
+    {
+        res = func_switching(switch_mode, &alpha);                              //切换动画
+    }
+    else
+    {
+        res = func_switching(switch_mode, NULL);                                //切换动画
+    }
+    compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
+    if (res)
+    {
+        if (sta == FUNC_CLOCK)
+        {
+            func_cb.flag_sort = false;
+            func_cb.flag_sort_jump = false;
+        }
+        else
+        {
+            func_cb.flag_sort = true;
+            func_cb.flag_sort_jump = false;
+        }
+        func_cb.sta = sta;
+    }
+}
+
+
+//切换
+void func_switch_to(u8 sta, u16 switch_mode)
+{
+    compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
+    bool res = 0;
+    u8 alph = 255;
+    if ((sta == FUNC_CARD || sta == FUNC_CLOCK || func_cb.sta == FUNC_CLOCK) && (switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT || switch_mode == FUNC_SWITCH_LR_ZOOM_LEFT))
+    {
+        res = func_switching(switch_mode, &alph);                               //切换动画
+    }
+    else
+    {
+        res = func_switching(switch_mode, NULL);                               //切换动画
+    }
+    compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
+    if (res)
+    {
+        func_cb.sta = sta;
+    }
+}
+
+//切换回主时钟
+void func_switch_to_clock(void)
+{
+#if EN_CUM_SWITCH_LR_MODE_CHOOSE
+    func_switch_to(FUNC_CLOCK, sys_cb.switch_lr_rigth_mode_choose | FUNC_SWITCH_AUTO);
+#else
+    func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+#endif
+    func_cb.flag_sort = false;
+    func_cb.flag_sort_jump = false;
+}
+
+
+//退回到主菜单
+void func_switch_to_menu(void)
+{
+    u16 switch_mode;
+    bool flag_frm_menu;                                                         //是否需要创建菜单窗体
+    flag_frm_menu = true;
+
+    if (func_cb.menu_style == MENU_STYLE_FOOTBALL)
+    {
+        switch_mode = FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO;;
+        flag_frm_menu = false;
+    }
+    else if (func_cb.sta != FUNC_CLOCK || func_cb.menu_style == MENU_STYLE_HONEYCOMB)
+    {
+        switch_mode = FUNC_SWITCH_ZOOM_EXIT | FUNC_SWITCH_AUTO;
+    }
+    else if (func_cb.menu_style == MENU_STYLE_WATERFALL)
+    {
+        switch_mode = FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO;
+        func_cb.flag_animation = true;                                          //淡出后进入入场动画
+        flag_frm_menu = false;
+    }
+    else
+    {
+        switch_mode = FUNC_SWITCH_ZOOM_FADE_EXIT | FUNC_SWITCH_AUTO;
+    }
+    if (flag_frm_menu)
+    {
+        widget_icon_t *icon;
+        compo_form_t *frm = func_create_form(FUNC_MENU);                        //创建下一个任务的窗体
+        component_t *compo = compo_get_next((component_t *)frm->title);
+        if (compo->type == COMPO_TYPE_ICONLIST)
+        {
+            compo_iconlist_t *iconlist = (compo_iconlist_t *)compo;
+            icon = compo_iconlist_select_byidx(iconlist, func_cb.menu_idx);
+        }
+        else if (compo->type == COMPO_TYPE_LISTBOX)
+        {
+            compo_listbox_t *listbox = (compo_listbox_t *)compo;
+            icon = compo_listbox_select_byidx(listbox, func_cb.menu_idx);
+        }
+        else if (compo->type == COMPO_TYPE_DISKLIST)
+        {
+            compo_disklist_t *disklist = (compo_disklist_t *)compo;
+            icon = compo_disklist_select_byidx(disklist, func_cb.menu_idx);
+        }
+        else if (compo->type == COMPO_TYPE_KALEIDOSCOPE)
+        {
+            compo_kaleidoscope_t *kale = (compo_kaleidoscope_t *)compo;
+            icon = compo_kale_select_byidx(kale, func_cb.menu_idx);
+        }
+        else if (compo->type == COMPO_TYPE_RINGS)
+        {
+            compo_rings_t *rings = (compo_rings_t *)compo;
+            icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+            if (icon == NULL)
+            {
+                extern u8 func_menu_sub_skyrer_get_first_idx(void);
+                func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+                icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+            }
+        }
+        else
+        {
+            halt(HALT_GUI_COMPO_ICONLIST_TYPE);
+            return;
+        }
+        func_switching(switch_mode, icon);                                      //退出动画
+        compo_form_destroy(frm);                                                //切换完成或取消，销毁窗体
+    }
+    else
+    {
+        func_switching(switch_mode, NULL);                                      //退出动画
+    }
+    func_cb.sta = FUNC_MENU;
+}
+
+//手动退回到主菜单
+void func_switching_to_menu(void)
+{
+    widget_icon_t *icon;
+    u16 switch_mode;
+    compo_form_t *frm = func_create_form(FUNC_MENU);                            //创建下一个任务的窗体
+    component_t *compo = compo_get_next((component_t *)frm->title);
+    if (compo->type == COMPO_TYPE_ICONLIST)
+    {
+        compo_iconlist_t *iconlist = (compo_iconlist_t *)compo;
+        icon = compo_iconlist_select_byidx(iconlist, func_cb.menu_idx);
+    }
+    else if (compo->type == COMPO_TYPE_LISTBOX)
+    {
+        compo_listbox_t *listbox = (compo_listbox_t *)compo;
+        icon = compo_listbox_select_byidx(listbox, func_cb.menu_idx);
+    }
+    else if (compo->type == COMPO_TYPE_DISKLIST)
+    {
+        compo_disklist_t *disklist = (compo_disklist_t *)compo;
+        icon = compo_disklist_select_byidx(disklist, func_cb.menu_idx);
+    }
+    else if (compo->type == COMPO_TYPE_KALEIDOSCOPE)
+    {
+        compo_kaleidoscope_t *kale = (compo_kaleidoscope_t *)compo;
+        icon = compo_kale_select_byidx(kale, func_cb.menu_idx);
+    }
+    else if (compo->type == COMPO_TYPE_RINGS)
+    {
+        compo_rings_t *rings = (compo_rings_t *)compo;
+        icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+        if (icon == NULL)
+        {
+            extern u8 func_menu_sub_skyrer_get_first_idx(void);
+            func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+            icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+        }
+    }
+    else
+    {
+        halt(HALT_GUI_COMPO_ICONLIST_TYPE);
+        return;
+    }
+    if (func_cb.sta != FUNC_CLOCK || func_cb.menu_style == MENU_STYLE_HONEYCOMB)
+    {
+        switch_mode = FUNC_SWITCH_ZOOM_EXIT;
+    }
+    else
+    {
+        switch_mode = FUNC_SWITCH_ZOOM_FADE_EXIT;
+    }
+    bool res = func_switching(switch_mode, icon);                               //退出动画
+    compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
+    if (res)
+    {
+        func_cb.sta = FUNC_MENU;
+    }
+}
+
+
+//页面滑动回退功能
+void func_backing_to(void)
+{
+    if (func_cb.sta == FUNC_BT_RING || func_cb.sta == FUNC_BT_CALL)
+    {
+
+        return;
+    }
+
+    u8 stack_top = task_stack_pop();
+
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if (!stack_top)
+    {
+        stack_top = FUNC_CLOCK;                                 //异常返回表盘
+    }
+
+    if (stack_top == FUNC_MENU || FUNC_MENUSTYLE == stack_top)
+    {
+        func_switching_to_menu();                               //右滑缓慢退出任务
+    }
+    else
+    {
+#if EN_CUM_SWITCH_LR_MODE_CHOOSE
+        func_switch_to(stack_top, sys_cb.switch_lr_rigth_mode_choose);   //返回上一个界面
+#else
+        func_switch_to(stack_top, FUNC_SWITCH_LR_ZOOM_RIGHT);   //返回上一个界面
+#endif
+    }
+    if (func_cb.sta != stack_top)                               //如果页面没切换需要重新入栈
+    {
+        task_stack_push(func_cb.sta);
+    }
+    else
+    {
+        if (func_cb.flag_sort_jump && func_get_order(func_cb.sta) > 0)
+        {
+            func_cb.flag_sort = true;
+            func_cb.flag_sort_jump = false;
+            printf("func_backing_to: %d flag_sort\n", func_cb.sta);
+        }
+    }
+}
+
+//页面按键回退功能
+void func_back_to(void)
+{
+    if (func_cb.sta == FUNC_BT_RING || func_cb.sta == FUNC_BT_CALL)
+    {
+        return;
+    }
+
+    u8 stack_top = task_stack_pop();
+
+    if(stack_top == FUNC_UP_WATCH_DIAL && !uteModuleWatchOnlinegetIsStartReceive())
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if (!stack_top)
+    {
+        stack_top = FUNC_CLOCK;                                 //异常返回表盘
+    }
+
+    if (stack_top == FUNC_MENU
+#if FUNC_MUSIC_EN
+        || func_cb.sta == FUNC_MUSIC
+#endif
+       )
+    {
+        func_switch_to_menu();                                  //返回主菜单
+    }
+    else
+    {
+#if EN_CUM_SWITCH_LR_MODE_CHOOSE
+        func_switch_to(stack_top, sys_cb.switch_lr_rigth_mode_choose | FUNC_SWITCH_AUTO);    //返回上一个界面
+#else
+        func_switch_to(stack_top, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);    //返回上一个界面
+#endif
+    }
+
+    if (func_cb.flag_sort_jump && func_get_order(stack_top) > 0)
+    {
+        func_cb.flag_sort = true;
+        func_cb.flag_sort_jump = false;
+        printf("func_back_to: %d flag_sort\n", stack_top);
+    }
+}
+
+//页面直接回退,无动画效果
+u8 func_directly_back_to(void)
+{
+    u8 stack_top = task_stack_pop();
+
+    if(stack_top == FUNC_UP_WATCH_DIAL && !uteModuleWatchOnlinegetIsStartReceive())
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if (!stack_top)
+    {
+        stack_top = FUNC_CLOCK;                                 //异常返回表盘
+    }
+
+    func_cb.sta = stack_top;
+
+    return stack_top;
+}
+
+void evt_message(size_msg_t msg)
+{
+    switch (msg)
+    {
+        case EVT_READY_EXCHANGE_MTU:
+            ble_exchange_mtu_request();
+            break;
+
+#if BT_CONNECT_REQ_FROM_WATCH_EN
+        case EVT_BT_CONNECT_ONCE:
+            bt_connect();
+            break;
+#endif
+
+#if MUSIC_UDISK_EN
+        case EVT_UDISK_INSERT:
+            if (dev_is_online(DEV_UDISK))
+            {
+                if (dev_udisk_activation_try(0))
+                {
+                    sys_cb.cur_dev = DEV_UDISK;
+                    func_cb.sta = FUNC_MUSIC;
+                }
+            }
+            break;
+#endif // MUSIC_UDISK_EN
+
+#if MUSIC_SDCARD_EN
+        case EVT_SD_INSERT:
+            if (dev_is_online(DEV_SDCARD))
+            {
+                sys_cb.cur_dev = DEV_SDCARD;
+                func_cb.sta = FUNC_MUSIC;
+            }
+            break;
+#endif // MUSIC_SDCARD_EN
+
+#if FUNC_USBDEV_EN
+        case EVT_PC_INSERT:
+            if (dev_is_online(DEV_USBPC))
+            {
+                func_cb.sta = FUNC_USBDEV;
+            }
+            break;
+#endif // FUNC_USBDEV_EN
+
+        case EVT_HFP_SET_VOL:
+            if(sys_cb.incall_flag & INCALL_FLAG_SCO)
+            {
+                bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+                dac_fade_in();
+                printf("HFP SET VOL: %d\n", sys_cb.hfp_vol);
+            }
+            break;
+
+        case EVT_A2DP_SET_VOL:
+            if ((sys_cb.incall_flag & INCALL_FLAG_SCO) == 0)
+            {
+                printf("A2DP SET VOL: %d\n", sys_cb.vol);
+                bsp_change_volume(sys_cb.vol);
+                param_sys_vol_write();
+                sys_cb.cm_times = 0;
+                sys_cb.cm_vol_change = 1;
+                if (bt_cb.music_playing)
+                {
+                    dac_fade_in();
+                }
+            }
+            break;
+
+        case EVT_A2DP_MUSIC_PLAY:
+            if (!sbc_is_bypass())
+            {
+                printf("EVT_A2DP_MUSIC_PLAY\n");
+                dac_fade_in();      //淡入前会先解MUTE
+            }
+            bt_cb.music_playing = true;
+#if BT_ID3_TAG_EN
+            if (uteApplicationCommonIsAppClosed() && !ble_ams_is_connected()) // 优先使用app返回的状态
+            {
+                uteModuleMusicSetPlayerPaused(false, 0);
+            }
+#endif
+            break;
+
+        case EVT_A2DP_MUSIC_STOP:
+            if (!sbc_is_bypass())
+            {
+                printf("EVT_A2DP_MUSIC_STOP\n");
+                dac_fade_out();     //淡出完成会自动MUTE功放
+                // dac_fade_wait();
+                // bsp_sys_mute();
+            }
+            bt_cb.music_playing = false;
+#if BT_ID3_TAG_EN
+            if (uteApplicationCommonIsAppClosed() && !ble_ams_is_connected()) // 优先使用app返回的状态
+            {
+                uteModuleMusicSetPlayerPaused(true, 0);
+            }
+#endif
+            break;
+
+        case EVT_BT_SCAN_START:
+            if (bt_get_status() < BT_STA_SCANNING)
+            {
+                bt_scan_enable();
+            }
+            break;
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+        case EVT_ONLINE_SET_EQ:
+            eq_parse_cmd();
+            break;
+#endif
+
+#if EQ_MODE_EN
+        case EVT_BT_SET_EQ:
+            music_set_eq_by_num(sys_cb.eq_mode);
+            break;
+#endif
+
+#if BT_SCO_APP_DBG_EN
+        case EVT_SCO_DBG_COMM_RSP:
+        case EVT_SCO_DBG_TLV_RSP:
+        case EVT_SCO_DBG_NOTIFY:
+            sco_app_msg_deal(msg);
+            break;
+#endif
+
+#if (SENSOR_HR_SEL == SENSOR_HR_VC30FX)
+        case EVT_VC30FX_ISR:
+            vc30fx_usr_device_handler(0, 1);
+            break;
+#endif
+        case EVT_HALT:
+            func_cb.sta = FUNC_BT_UPDATE;       //出现异常后要处理事情
+            break;
+    }
+}
+
+//func common message process
+void func_message(size_msg_t msg)
+{
+    switch (msg)
+    {
+        case MSG_CTP_SHORT_LEFT:
+            if (func_cb.sta == FUNC_CLOCK || func_cb.flag_sort)
+            {
+                func_switch_next(false, true);                    //切到下一个任务
+            }
+            else
+            {
+                //     if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0)
+                if(func_cb.left_sta != FUNC_NULL && func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT && func_cb.sta == func_cb.left_sta)
+                {
+#if EN_CUM_SWITCH_LR_MODE_CHOOSE
+                    func_switch_to(FUNC_CLOCK, sys_cb.switch_lr_left_mode_choose);
+#else
+                    func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
+#endif
+                }
+            }
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            if (func_cb.left_sta == func_cb.sta)
+            {
+                break;
+            }
+            if (func_cb.flag_sort)
+            {
+                func_switch_prev(false);                    //切到上一个任务
+            }
+            else if(func_cb.menu_style == MENU_STYLE_FOOTBALL)
+            {
+                func_back_to();
+            }
+            else /*if (ctp_get_sxy().x <= 32)*/
+            {
+                func_backing_to();                          //右滑缓慢退出任务
+            }
+            break;
+
+        case MSG_CTP_COVER:
+#if UTE_MODULE_COVER_DISPLAY_OFF_SUPPORT
+            if(!sys_cb.gui_sleep_sta && uteModuleGuiCommonGetCoverDisplayOffSwitch() && uteModuleGuiCommonIsAllowHandGestureDisplayOff())
+            {
+                sys_cb.guioff_delay = 1; //100ms后进入休眠
+                sys_cb.sleep_delay = 1;
+            }
+#endif
+            break;
+
+        case MSG_QDEC_FORWARD:
+            if (func_cb.sta == FUNC_CLOCK || func_cb.flag_sort)
+            {
+                msg_queue_detach(MSG_QDEC_FORWARD, 0);  //防止不停滚动
+                func_switch_next(true, true);                     //切到下一个任务
+            }
+            break;
+
+        case MSG_QDEC_BACKWARD:
+            if (func_cb.sta == FUNC_CLOCK || func_cb.flag_sort)
+            {
+                msg_queue_detach(MSG_QDEC_BACKWARD, 0);
+                func_switch_prev(true);                     //切到下一个任务
+            }
+            break;
+
+        case KU_BACK:
+        case KU_DELAY_BACK:
+            if (func_cb.flag_sort)
+            {
+                func_switch_to_clock();                     //切换回主时钟
+            }
+            else if (func_cb.sta == FUNC_CLOCK)
+            {
+
+
+#if UTE_MODULE_SCREENS_CLOCK_SUB_CLICK_SUPPORT
+                if(!sys_cb.gui_sleep_sta)
+                {
+                    sys_cb.guioff_delay = 1;
+                    sys_cb.sleep_delay = 1;
+                    // gui_sleep();              //熄屏且进入休眠
+                    // reset_sleep_delay_all();
+                    // reset_pwroff_delay();               //仅熄屏
+                }
+
+
+#else
+                if(sys_cb.dialplate_btf_ready)
+                {
+                    sys_cb.dialplate_btf_ready = false;
+                }
+                func_switch_to_menu();
+#endif                  //退回到主菜单
+            }
+            else
+            {
+                func_back_to();                             //直接退出任务
+            }
+            break;
+
+#if SOFT_POWER_ON_OFF
+        case KLH_BACK:
+        case KLH_LEFT:
+        case KLH_RIGHT:
+            func_cb.sta = FUNC_PWROFF;
+            break;
+#endif
+
+        case KU_MODE:
+            func_cb.sta = FUNC_NULL;
+            break;
+
+        case KL_BACK:   //堆栈后台
+        {
+            if (func_cb.sta == FUNC_CLOCK)  //|| func_cb.flag_sort
+            {
+                f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
+                if (f_clk->sub_frm)
+                {
+                    compo_form_destroy(f_clk->sub_frm);     //下拉界面存在双窗体
+                }
+            }
+            //func_switch_to(FUNC_SMARTSTACK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            uteTaskGuiStartScreen(FUNC_LONG_PRESS, 0, __func__);
+        }
+        break;
+
+        case KU_LEFT:
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+        {
+            uint8_t func_sta = uteModuleKeySetFuncGetMenu();
+#if UTE_DRV_PWRKEY_KEY1_BACK
+            if (func_sta != FUNC_NULL && func_cb.sta == func_sta)
+            {
+                func_sta = func_directly_back_to();
+            }
+#endif
+            if (func_sta == 0)
+            {
+                if (uteModuleGuiCommonGetCurrentScreenId() != FUNC_KEY_SET_FUNCTION)
+                {
+                    if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                    {
+                        uteTaskGuiStartScreen(FUNC_KEY_SET_FUNCTION, 0, __func__);
+                    }
+                }
+            }
+            else
+            {
+                uteTaskGuiStartScreen(func_sta, 0, __func__);
+            }
+        }
+#else
+        if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL && func_cb.sta != UTE_KEY_LEFT_SWITCH_SCREEN)
+        {
+            uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
+        }
+#if UTE_DRV_PWRKEY_KEY1_BACK
+        else if(func_cb.sta == UTE_KEY_LEFT_SWITCH_SCREEN )
+        {
+            printf("func_sta:%d\n",func_cb.sta);
+            func_back_to();
+        }
+#endif
+#endif
+        break;
+        case KTH_BACK:
+#if UTE_THREE_KEY_EVENT_SOS
+            if (uteApplicationCommonGetSosEnableStatus())
+            {
+                sys_cb.sos_open_flag = true;
+                uteTaskGuiStartScreen(FUNC_SUB_SOS, 0, __func__);
+            }
+#endif
+            break;
+
+//        case KU_LEFT:
+//            ble_bt_connect();               //ios一键双连测试
+//            printf("send sm req\n");
+//            break;
+
+//        case KU_LEFT:
+//            ble_ancs_start();               //ancs, ams测试
+//            printf("ble_ancs_start\n");
+//            break;
+
+//#if EQ_MODE_EN
+//        case KU_EQ:
+//            sys_set_eq();
+//            break;
+//#endif // EQ_MODE_EN
+//
+//        case KU_MUTE:
+//            if (sys_cb.mute) {
+//                bsp_sys_unmute();
+//            } else {
+//                bsp_sys_mute();
+//            }
+//            break;
+//
+        case MSG_SYS_500MS:
+            break;
+
+        case MSG_SYS_1S:
+#if CALL_MGR_EN
+            bsp_bt_call_times_inc();
+            bsp_modem_call_times_inc();
+#endif
+#if BT_HFP_BAT_REPORT_EN
+            bt_hfp_report_bat();
+#endif
+            break;
+
+        case EVT_WATCH_SET_COVER:
+            gui_set_cover_index(sys_cb.cover_index);
+            break;
+
+        case EVT_WATCH_MSG_POP_UP:
+            app_ute_msg_pop_up(sys_cb.msg_index);
+            break;
+
+        case MSG_CHECK_LANGUAGE://APP语言切换
+//            compo_form_destroy(func_cb.frm_main);
+//            func_cb.frm_main = func_create_form(func_cb.sta);
+            sys_cb.sta_old = func_cb.sta;
+            sys_cb.refresh_language_flag = true;
+//            func_switch_to(FUNC_CLOCK, 0);
+            func_cb.sta = FUNC_NULL;
+            break;
+
+        case EVT_WATCH_TIMER_DONE:      //计时器响铃
+            // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            // if(func_cb.sta != FUNC_TIMER || !sys_cb.gui_sleep_sta)
+            // {
+            sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
+            sys_cb.remind_tag = true;
+            // }
+            sys_cb.timer_left_sec = sys_cb.timer_custom_sec;
+//            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);
+            break;
+
+        default:
+            evt_message(msg);
+            break;
+    }
+    //调节音量，3秒后写入flash
+    if ((sys_cb.cm_vol_change) && (sys_cb.cm_times >= 6))
+    {
+        sys_cb.cm_vol_change = 0;
+        cm_sync();
+    }
+}
+
+static bool get_destroy_fcb(void)
+{
+    if((func_cb.sta == FUNC_CLOCK_SAVER) && ((func_cb.last == FUNC_TETRIS)\
+            || (func_cb.last == FUNC_BIRD)\
+                                            ))
+    {
+        return false;
+    }
+    else if((func_cb.last == FUNC_CLOCK_SAVER) && ((func_cb.sta == FUNC_TETRIS)\
+            || (func_cb.sta == FUNC_BIRD)\
+                                                  ))
+    {
+        return false;
+    }
+    return true;
+}
+
+///进入一个功能的总入口
+AT(.text.func)
+void func_enter(void)
+{
+    //检查Func Heap
+#if 0
+    u32 heap_size = func_heap_get_free_size();
+    if (heap_size != HEAP_FUNC_SIZE)
+    {
+        extern u8 heap_func[HEAP_FUNC_SIZE];
+        func_heap_init(heap_func, HEAP_FUNC_SIZE);
+        printf("Func heap leak (%d -> %d): %d\n", func_cb.last, func_cb.sta, heap_size);
+        halt(HALT_FUNC_HEAP);
+    }
+#else
+    extern u8 heap_func[HEAP_FUNC_SIZE];
+    func_heap_init(heap_func, HEAP_FUNC_SIZE);
+#if UTE_MODULE_LOG_SUPPORT
+    u32 heap_size = func_heap_get_free_size();
+    printf("Func heap (%d -> %d): %d\n", func_cb.last, func_cb.sta, heap_size);
+#endif
+#endif
+
+//    gui_box_clear();
+    param_sync();
+    reset_sleep_delay_all();
+    reset_pwroff_delay();
+    func_cb.mp3_res_play = NULL;
+    func_cb.set_vol_callback = NULL;
+    if (func_cb.sta == FUNC_NULL)
+    {
+        func_cb.sta = FUNC_CLOCK;
+    }
+//    bsp_clr_mute_sta();
+//    sys_cb.voice_evt_brk_en = 1;    //播放提示音时，快速响应事件。
+    AMPLIFIER_SEL_D();
+}
+
+AT(.text.func)
+void func_exit(void)
+{
+    //销毁窗体
+    if (func_cb.frm_main != NULL)
+    {
+        compo_form_destroy(func_cb.frm_main);
+    }
+    //释放FUNC控制结构体
+    if (func_cb.f_cb != NULL)
+    {
+        if(get_destroy_fcb())
+        {
+            func_free(func_cb.f_cb);
+            func_cb.f_cb = NULL;
+        }
+    }
+    func_cb.frm_main = NULL;
+}
+
+AT(.text.func)
+void func_run(void)
+{
+    void (*func_entry)(void) = NULL;
+    printf("%s\n", __func__);
+    memset(func_cb.tbl_sort, 0, sizeof(func_cb.tbl_sort));
+    //默认跳转空白界面，具体开机跳转界面在uteApplicationCommonStartupSecond
+    func_cb.sta = FUNC_EMPTY;//FUNC_OTA_SUCC;//FUNC_OTA_MODE;//FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
+    // 获取自定义排序
+    uteModuleGuiCommonGetScreenTblSort(func_cb.tbl_sort, &func_cb.sort_cnt);
+
+    //小组件自定义顺序
+#if UTE_MODULE_SCREENS_MINI_CARD_SUPPORT
+    uteModuleGuiCommonGetMiniCardTblSort(func_cb.mini_tbl_sort, &func_cb.mini_sort_cnt);
+#endif
+
+    task_stack_init();  //任务堆栈
+    latest_task_init(); //最近任务
+    sys_cb.sys_init_complete = true;
+
+    for (;;)
+    {
+        if(sys_cb.refresh_language_flag) //刷新语言
+        {
+            // printf("sta_old = %d\n", sys_cb.sta_old);
+//            func_switch_to(sys_cb.sta_old, 0);
+            func_cb.sta = sys_cb.sta_old;
+            sys_cb.refresh_language_flag = false;
+        }
+
+        func_enter();
+        for (int i = 0; i < FUNC_ENTRY_CNT; i++)
+        {
+            if (tbl_func_entry[i].func_idx == func_cb.sta)
+            {
+                task_stack_push(func_cb.sta);
+                latest_task_add(func_cb.sta);
+                func_entry = tbl_func_entry[i].func;
+                func_entry();
+#if UTE_MODULE_SLIDE_BAR_SUPPORT
+                uteModuleSlideBarSetCurrentScreenIdToAppIds(func_cb.sta);
+#endif
+                break;
+            }
+        }
+        if (func_cb.sta == FUNC_PWROFF)
+        {
+            func_pwroff(1);
+        }
+        if (func_cb.sta == FUNC_DEEPSLEEP)
+        {
+            func_deepsleep();
+        }
+        func_exit();
+    }
+}

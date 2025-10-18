@@ -1,0 +1,2045 @@
+#include "include.h"
+#include "func.h"
+#include "func_cover.h"
+#include "ute_module_notify.h"
+#include "ute_drv_motor.h"
+#include "api_co_time.h"
+#include "ute_module_sport.h"
+#include "ute_module_systemtime.h"
+#include "ute_module_localRingtone.h"
+#include "ute_module_music.h"
+#if UTE_MODULE_SCREENS_TARGET_SELECT_SUPPORT
+#include "ute_module_sportTarget.h"
+#endif
+
+#define TRACE_EN    0
+
+#if TRACE_EN
+#define TRACE(...)              printf(__VA_ARGS__)
+#else
+#define TRACE(...)
+#endif
+
+
+//计时状态
+enum
+{
+    TIMER_STA_IDLE,
+    TIMER_STA_WORKING,
+    TIMER_STA_PAUSE,
+    TIMER_STA_DONE,
+    TIMER_STA_RESET,
+};
+
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {0,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I335001_REMIND_EVENT_REMINDER_ICON_GET_UP_AND_MOVE_112X138_X60_Y30_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_FIND_WATCH]       = {0,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I335001_REMIND_CALORIE_GOAL_ACHIEVED_ICON_DISTANCE_REMINDER_112X128_X60_Y28_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I335001_22_VOICE_ASSISTANT_3_BLUETOOTH_NOT_CONNECTED_ICON_NOT_CONNECTED_72X74_X84_Y74_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_BLE_OFF]          = {UI_BUF_I335001_UPGRADE_UPDATE_SUCCESSED_ICON_SUCCEEDED_92X92_X74_Y65_BIN,     STR_BLE_SUCCESSFUL, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_MMS_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+#if GUI_SCREEN_SIZE_240X284RGB_I335003_SUPPORT
+    [MSG_WhatsApp]          = {UI_BUF_I335003_MESSGE_MSG_WATCH_BIN,                        GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+#else
+    [MSG_WhatsApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+#endif
+    [MSG_Skype]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_LINKEDIN_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_INSTAGRAM_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_KAKAOTAKTE_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TELEGRAM_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TRUECALLER_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_PAYTM_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_ZALO_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*                         res_addr,                                                        pic_y,                   txt_y,                     title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_QQ_BIN,                 8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_WECHAT_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_MMS_BIN,                8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOK_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TWITTER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
+#if GUI_SCREEN_SIZE_240X284RGB_I335003_SUPPORT
+    [MSG_WhatsApp]          = {UI_BUF_I335003_MESSGE_MSG_WATCH_BIN,                        8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+#else
+    [MSG_WhatsApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+#endif
+    [MSG_Skype]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_SKYPE_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_HANGOUTS_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_LINE_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_LINKEDIN_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_INSTAGRAM_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_VIBER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_KAKAOTAKTE_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_VKONTAKTE_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_SNAPCHAT_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_GOOGLEPLUS_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_GMAIL_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FLICKR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TUMBLR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_PINTEREST_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_YOUTUBE_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TELEGRAM_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TRUECALLER_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_PAYTM_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_ZALO_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I345001_SUPPORT
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                               str_idx,                  pic_y,                      txt_y                       title_y   */
+    [REMIND_COVER_ALARM]            = {0,                                      STR_NULL,                 GUI_SCREEN_HEIGHT/3,        GUI_SCREEN_HEIGHT/5-20,     GUI_SCREEN_CENTER_Y-20},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I341001_REMIND_ICON_BIN,         STR_SEDENTARY_REMIND, GUI_SCREEN_CENTER_Y-10, GUI_SCREEN_HEIGHT*4/5,      0},
+    [REMIND_COVER_HEALTH_DRINK]     = {UI_BUF_I341001_REMIND_DRINK_WATER_BIN,  STR_DRINK_TIP,            81 + 100,                   GUI_SCREEN_HEIGHT*4/5,      0},
+#if APP_CUSTOM_REMIND_SETTING_SUPPORT
+    [REMIND_COVER_PRAY]             = {UI_BUF_I341001_10_PRAY_PRAY_BIN,        STR_NULL,                 68 + 94,                    0,                          0},
+#endif
+#if UTE_MODULE_SCREENS_MENSTRUAL_NOTIFY_SUPPORT
+    [REMIND_COVER_MENSTRUAL]        = {0,                                      STR_NULL,                 100+ 78,                    GUI_SCREEN_HEIGHT*4/5,      0},
+#endif
+    [REMIND_COVER_FIND_WATCH]       = {0,                                      STR_NULL,                 GUI_SCREEN_CENTER_Y,        GUI_SCREEN_HEIGHT*4/5,      0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I341001_3_EXERCISE_REMINDER_DURING_EXERCISE_ICON_BIN,STR_GOAL_ACHIEVE,22 + 130,        GUI_SCREEN_HEIGHT*5/6,      318},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I341001_23_SOS_BLUETOOTH_BIN,    STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,        GUI_SCREEN_HEIGHT*4/5,      0},
+    [REMIND_GCOVER_APP_CONNECT]     = {UI_BUF_I341001_23_SOS_BLUETOOTH_BIN,    STR_APP_DISCONNECT,       GUI_SCREEN_CENTER_Y,        GUI_SCREEN_HEIGHT*4/5,      0},
+    [REMIND_COVER_SUCC]             = {UI_BUF_I341001_1_START_SUCCEED_BIN,     STR_QUICK_SUCC,           102 + 72,                   GUI_SCREEN_CENTER_Y+80,     0},
+    [REMIND_COVER_FAIL]             = {UI_BUF_I341001_1_START_FAIL_BIN,        STR_QUICK_FAIL,           102 + 72,                   GUI_SCREEN_CENTER_Y+80,     0},
+    [REMIND_COVER_LOW_BATTERY]      = {UI_BUF_I341001_CHARGE_LOW_BATTERY20_BIN,STR_NULL,                 0,                          0,                          0},  //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL,                                   STR_NULL,                 0,                          0,                          0},  //自定义
+    [REMIND_SPORT_TIME_TARGET]      = {UI_BUF_I341001_3_EXERCISE_REMINDER_DURING_EXERCISE_ICON_BIN,     STR_GOAL_ACHIEVE,          22 + 130,        GUI_SCREEN_HEIGHT*5/6,      318},
+    [REMIND_SPORT_KCAL_TARGET]      = {UI_BUF_I341001_3_EXERCISE_REMINDER_DURING_EXERCISE_ICON_BIN,     STR_GOAL_ACHIEVE,          22 + 130,        GUI_SCREEN_HEIGHT*5/6,      318},
+    [REMIND_SPORT_DANST_TARGET]      = {UI_BUF_I341001_3_EXERCISE_REMINDER_DURING_EXERCISE_ICON_BIN,     STR_GOAL_ACHIEVE,          22 + 130,        GUI_SCREEN_HEIGHT*5/6,      318},
+    [REMIND_SPORT_LAST_SPEED]      = {UI_BUF_I341001_3_EXERCISE_REMINDER_DURING_EXERCISE_ICON_BIN,     STR_PACE_IN_LAST,          22 + 130,        GUI_SCREEN_HEIGHT*5/6,      318},
+    [REMIND_SPORT_LAST_KCAL]      = {UI_BUF_I341001_3_EXERCISE_REMINDER_DURING_EXERCISE_ICON_BIN,     STR_LAST_HOUR_BURN,          22 + 130,        GUI_SCREEN_HEIGHT*5/6,      318},
+    [REMIND_HEART_WARING]     = {NULL,                                   STR_NULL,                 0,                          0,                          0},  //自定义
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                              txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_MESSAGE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_X_BIN,                  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_MESSENGER_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_LINK_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_INS_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_KAKAO_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_TELEGRAM_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    //[MSG_Truecaller]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_TRUECALLER_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    //[MSG_Paytm]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_PAYTM_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    //[MSG_Zalo]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_ZALO_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*id                       res_addr,                                                      pic_y,        txt_y,      title_y                time_txt_y    str*/
+    [MSG_QQ]                = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_QQ_BIN,                 8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_QQ},      //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_WECHAT_BIN,             8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_WECHAT},  //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_MESSAGE_BIN,            8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_ME},      //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,              8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,           8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_FACEBOOK},//MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_X_BIN,                  8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_X},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,           8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_WHATS},   //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_SKYPE_BIN,              8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_MESSENGER_BIN,          8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_MGER},    //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,           8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_LINE_BIN,               8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_LINE},    //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_LINK_BIN,               8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_LIK},     //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_INS_BIN,                8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_INS},     //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_VIBER_BIN,              8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_KAKAO_BIN,              8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,          8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,           8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_SNP},     //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,         8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_GMAIL_BIN,              8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_GMAIL},   //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_FLICKR_BIN,             8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,             8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,          8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,            8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_OTHER},   //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_TELEGRAM_BIN,           8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2,  STR_MES_TELEG},   //MSG_Telegram
+    //[MSG_Truecaller]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_TRUECALLER_BIN,         8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Truecaller
+    //[MSG_Paytm]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_PAYTM_BIN,              8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Paytm
+    //[MSG_Zalo]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_ZALO_BIN,               8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OUTL},      //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_BUSIN},      //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+232/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2, STR_MES_OTHER},      //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {0,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I343001_REMIND_ICON_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_FIND_WATCH]       = {0,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I343001_REMIND_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-35,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I343001_23_SOS_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    //[MSG_MMS]               = {UI_BUF_I341001_14_INFORMATION_ICON_MSG_MMS_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    //[MSG_FacebookMessenger] = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_FACEBOOKMESSENGER_BIN,  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_LINK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_INS_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_KAKAO_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    //[MSG_Telegram]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TELEGRAM_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    //[MSG_Truecaller]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TRUECALLER_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    //[MSG_Paytm]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_PAYTM_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    //[MSG_Zalo]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_ZALO_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*                         res_addr,                                                        pic_y,                   txt_y,                     title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_QQ_BIN,                 8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_WECHAT_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WECHAT
+    //[MSG_MMS]               = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_MMS_BIN,                8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TWITTER_BIN,                  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_SKYPE_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
+    //[MSG_FacebookMessenger] = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_FACEBOOKMESSENGER_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_LINE_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_LINK_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_INS_BIN,                8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_VIBER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_KAKAO_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_GMAIL_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_FLICKR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YouTube
+    //[MSG_Telegram]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TELEGRAM_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Telegram
+    //[MSG_Truecaller]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_TRUECALLER_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
+    //[MSG_Paytm]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_PAYTM_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
+    //[MSG_Zalo]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_ZALO_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I343001_14_INFORMATION_ICON_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {0,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I338001_REMIND_SPORTS_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_FIND_WATCH]       = {0,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I338001_REMIND_GOAL_BIN,         STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I338001_27_MORE_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_BLE_OFF]          = {UI_BUF_I338001_UPGRADE_00_SUCCEED_BIN,     STR_BLE_SUCCESSFUL, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_MESSAGE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_X_BIN,                  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_MESSENGER_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_LINK_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_INS_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_KAKAO_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*                         res_addr,                                                        pic_y,                   txt_y,                     title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_QQ_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_WECHAT_BIN,      8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_MESSAGE_BIN,     8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_X_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_SKYPE_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_MESSENGER_BIN,   8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_LINE_BIN,        8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_LINK_BIN,        8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_INS_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_VIBER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_KAKAO_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,   8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_GMAIL_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_FLICKR_BIN,      8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,      8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,   8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,     8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I338001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {UI_BUF_I330001_THEME_1_ALARM_BIN,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5,  GUI_SCREEN_CENTER_Y},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I330001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+//    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I330001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+//    [REMIND_COVER_HEALTH_DRINK]     = {UI_BUF_POP_UP_WATER_CLOCK_BIN,             STR_DRINK_REMIND,       102,            190},
+    [REMIND_COVER_FIND_WATCH]       = {UI_BUF_I330001_FINGWATCH_WATCH_BIN,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I330001_REPEAT_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I330001_PUBLIC_NOT_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+//    [REMIND_GCOVER_APP_CONNECT]     = {UI_BUF_POP_UP_APP_CONNECTION_BIN,          STR_APP_CONNECT,        175,            290},
+    [REMIND_COVER_LOW_BATTERY]          = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_MMS_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+    // [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_WHATSAPP_07_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_LINKEDIN_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_INSTAGRAM_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_KAKAOTAKTE_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TELEGRAM_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*                         res_addr,                                                        pic_y,                   txt_y,                     title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_QQ_BIN,                 8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_WECHAT_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_MMS_BIN,                8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
+//    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_WHATSAPP_07_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    // [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_LINE_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_LINKEDIN_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_INSTAGRAM_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_VIBER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_KAKAOTAKTE_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_VKONTAKTE_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_SNAPCHAT_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_GOOGLEPLUS_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_GMAIL_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FLICKR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TUMBLR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_PINTEREST_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_YOUTUBE_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TELEGRAM_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {UI_BUF_I332001_THEME_ICON1_ALARM_BIN,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I332001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_FIND_WATCH]       = {UI_BUF_I332001_FINGWATCH_WATCH_BIN,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I332001_REPEAT_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I332001_PUBLIC_NOT_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_LOW_BATTERY]          = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_MMS_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_LINKEDIN_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_INSTAGRAM_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_KAKAOTAKTE_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TELEGRAM_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*                         res_addr,                                                        pic_y,                   txt_y,                     title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_QQ_BIN,                 8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_WECHAT_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_MMS_BIN,                8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
+//    [MSG_WhatsApp]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_WhatsApp]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_LINE_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_LINKEDIN_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_INSTAGRAM_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_VIBER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_KAKAOTAKTE_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_VKONTAKTE_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_SNAPCHAT_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_GOOGLEPLUS_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_GMAIL_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_FLICKR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TUMBLR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_PINTEREST_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_YOUTUBE_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TELEGRAM_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I332001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {UI_BUF_I340001_THEME_ICON1_ALARM_BIN,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I340001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_FIND_WATCH]       = {UI_BUF_I340001_FINGWATCH_WATCH_BIN,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I340001_REPEAT_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I340001_PUBLIC_NOT_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_LOW_BATTERY]          = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_MMS_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_LINKEDIN_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_INSTAGRAM_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_KAKAOTAKTE_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TELEGRAM_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*                         res_addr,                                                        pic_y,                   txt_y,                     title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_QQ_BIN,                 8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_WECHAT_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_MMS_BIN,                8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
+//    [MSG_WhatsApp]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_WhatsApp]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_LINE_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_LINKEDIN_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_INSTAGRAM_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_VIBER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_KAKAOTAKTE_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_VKONTAKTE_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_SNAPCHAT_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_GOOGLEPLUS_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_GMAIL_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_FLICKR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TUMBLR_BIN,             8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_PINTEREST_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_YOUTUBE_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TELEGRAM_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I340001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {0,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I342001_REMIND_ACTIVITY_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_FIND_WATCH]       = {0,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I342001_REMIND_GOAL_ICON_BIN,         STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I342001_27_MORE_BLUETOOTH_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    /*id                       res_addr,                                                        pic_y,                txt_y,                title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_QQ_BIN,                 GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_WECHAT_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_MESSAGE_BIN,                GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_LINE_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_VIBER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_KAKAO_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_GMAIL_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_FLICKR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,             GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,          GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    /*                         res_addr,                                                        pic_y,                   txt_y,                     title_y                  time_txt_y   */
+    [MSG_QQ]                = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_QQ_BIN,          8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_QQ
+    [MSG_WECHAT]            = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_WECHAT_BIN,      8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WECHAT
+    [MSG_MMS]               = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_MESSAGE_BIN,     8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MMS
+    [MSG_OTHER]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
+    [MSG_Facebook]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
+    [MSG_Twitter]           = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_TWITTER_BIN,     8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
+    [MSG_WhatsApp]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_WHATSAPP_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_Skype]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_SKYPE_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
+    [MSG_FacebookMessenger] = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_FACEBOOK_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
+    [MSG_Hangouts]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_HANGOUTS_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
+    [MSG_Line]              = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_LINE_BIN,        8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Line
+    [MSG_Linkedin]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Linkedin
+    [MSG_Instagram]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,   8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Instagram
+    [MSG_Viber]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_VIBER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Viber
+    [MSG_KakaoTalk]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_KAKAO_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_KakaoTalk
+    [MSG_VKontakte]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_VKONTAKTE_BIN,   8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_VKontakte
+    [MSG_Snapchat]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_SNAPCHAT_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Snapchat
+    [MSG_Googleplus]        = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_GOOGLEPLUS_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Googleplus
+    [MSG_Gmail]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_GMAIL_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gmail
+    [MSG_Flickr]            = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_FLICKR_BIN,      8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flickr
+    [MSG_Tumblr]            = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_TUMBLR_BIN,      8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Tumblr
+    [MSG_Pinterest]         = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_PINTEREST_BIN,   8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Pinterest
+    [MSG_YouTube]           = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_YOUTUBE_BIN,     8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YouTube
+    [MSG_Telegram]          = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Telegram
+    [MSG_Truecaller]        = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
+    [MSG_Paytm]             = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
+    [MSG_Zalo]              = {UI_BUF_I342001_14_INFORMATION_ICON_MSG_OTHER_BIN,       8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+    [MSG_imo]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
+    [MSG_MicrosoftTeams]    = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
+    [MSG_Outlook]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Outlook
+    [MSG_Swiggy]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Swiggy
+    [MSG_Zomato]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zomato
+    [MSG_Gpay]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gpay
+    [MSG_PhonePe]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PhonePe
+    [MSG_Hotstar]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hotstar
+    [MSG_PrimeVideo]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_PrimeVideo
+    [MSG_Flipkart]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Flipkart
+    [MSG_Amazon]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Amazon
+    [MSG_Myntra]            = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Myntra
+    [MSG_NoiseApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_NoiseApp
+    [MSG_DailyHunt]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_DailyHunt
+    [MSG_Inshorts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Inshorts
+    [MSG_BookMyShow]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_BookMyShow
+    [MSG_Calendar]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Calendar
+    [MSG_JioTv]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_JioTv
+    [MSG_MakeMyTrip]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MakeMyTrip
+    [MSG_Netflix]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Netflix
+    [MSG_Ola]               = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Ola
+    [MSG_ReflexApp]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_ReflexApp
+    [MSG_Uber]              = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Uber
+    [MSG_YTMusic]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_YTMusic
+    [MSG_WhatsApp_Business] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp_Business
+    [MSG_Dunzo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Dunzo
+    [MSG_Gaana]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Gaana
+    [MSG_Google_Drive]      = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Google_Drive
+    [MSG_googlechat]        = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_googlechat
+    [MSG_Wynkmusic]         = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Wynkmusic
+    [MSG_Yahoo]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Yahoo
+    [MSG_TitanSmartWorld]   = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_TitanSmartWorld
+    [MSG_Slack]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Slack
+    [MSG_Spotify]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Spotify
+#endif // APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+};
+
+#else
+///闹钟蓝牙连接提醒等简单界面弹窗
+#define COVER_REMIND_ITEM_CNT            ((int)(sizeof(tbl_cover_remind_item) / sizeof(tbl_cover_remind_item[0])))
+typedef struct f_cover_remind_item_t_
+{
+    u32 res_addr;
+    u16 str_idx;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+} f_cover_remind_item_t;
+
+//和func_cover.h里的宏定义顺序一致
+const f_cover_remind_item_t tbl_cover_remind_item[] =
+{
+    /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
+    [REMIND_COVER_ALARM]            = {0},
+};
+
+///消息弹窗界面（简略）
+#define COVER_BRIEF_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_brief_msg_item) / sizeof(tbl_cover_brief_msg_item[0])))
+const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
+{
+    [MSG_WECHAT]            = {0},
+};
+
+///消息弹窗界面（详细）
+#define COVER_DETAIL_MSG_ITEM_CNT            ((int)(sizeof(tbl_cover_detail_msg_item) / sizeof(tbl_cover_detail_msg_item[0])))
+const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
+{
+    [MSG_WECHAT]            = {0},
+};
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+u32 func_cover_get_detail_msg_cnt(void)
+{
+    return COVER_DETAIL_MSG_ITEM_CNT;
+}
+
+u32 func_cover_get_detail_msg_ui(u8 index)
+{
+    return tbl_cover_detail_msg_item[index].res_addr;
+}
+
+typedef struct f_cover_t_
+{
+
+} f_cover_t;
+
+
+u32 func_cover_get_pic_res_addr(u8 type)
+{
+    switch (type)
+    {
+
+        case MSGBOX_MSG_TYPE_DETAIL:
+            return tbl_cover_detail_msg_item[sys_cb.msg_index].res_addr;
+            break;
+
+        case MSGBOX_MSG_TYPE_BRIEF:
+            return tbl_cover_brief_msg_item[sys_cb.msg_index].res_addr;
+            break;
+
+        case MSGBOX_MSG_TYPE_REMIND_COVER:
+            return tbl_cover_remind_item[sys_cb.cover_index].res_addr;
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+
+u16 func_cover_get_str_idx(u8 type)
+{
+    switch (type)
+    {
+        case MSGBOX_MSG_TYPE_REMIND_COVER:
+            return tbl_cover_remind_item[sys_cb.cover_index].str_idx;
+            break;
+
+        case MSGBOX_MSG_TYPE_DETAIL:
+            return tbl_cover_detail_msg_item[sys_cb.msg_index].str_idx;
+            break;
+
+        case MSGBOX_MSG_TYPE_BRIEF:
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+
+s16 func_cover_get_pic_y(u8 type)
+{
+    switch (type)
+    {
+        case MSGBOX_MSG_TYPE_REMIND_COVER:
+            return tbl_cover_remind_item[sys_cb.cover_index].pic_y;
+            break;
+
+        case MSGBOX_MSG_TYPE_DETAIL:
+            return tbl_cover_detail_msg_item[sys_cb.msg_index].pic_y;
+            break;
+
+        case MSGBOX_MSG_TYPE_BRIEF:
+            return tbl_cover_brief_msg_item[sys_cb.msg_index].pic_y;
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+
+s16 func_cover_get_txt_y(u8 type)
+{
+    switch (type)
+    {
+        case MSGBOX_MSG_TYPE_REMIND_COVER:
+            return tbl_cover_remind_item[sys_cb.cover_index].txt_y;
+            break;
+
+        case MSGBOX_MSG_TYPE_DETAIL:
+            return tbl_cover_detail_msg_item[sys_cb.msg_index].txt_y;
+            break;
+
+        case MSGBOX_MSG_TYPE_BRIEF:
+            return tbl_cover_brief_msg_item[sys_cb.msg_index].txt_y;
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+
+s16 func_cover_get_title_txt_y(u8 type)
+{
+    switch (type)
+    {
+        case MSGBOX_MSG_TYPE_REMIND_COVER:
+            return tbl_cover_remind_item[sys_cb.cover_index].title_y;
+            break;
+
+        case MSGBOX_MSG_TYPE_DETAIL:
+            return tbl_cover_detail_msg_item[sys_cb.msg_index].title_y;
+            break;
+
+        case MSGBOX_MSG_TYPE_BRIEF:
+            return tbl_cover_brief_msg_item[sys_cb.msg_index].title_y;
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+
+s16 func_cover_get_time_txt_y(u8 type)
+{
+    switch (type)
+    {
+        case MSGBOX_MSG_TYPE_REMIND_COVER:
+            break;
+
+        case MSGBOX_MSG_TYPE_DETAIL:
+            return tbl_cover_detail_msg_item[sys_cb.msg_index].time_txt_y;
+            break;
+
+        case MSGBOX_MSG_TYPE_BRIEF:
+            return tbl_cover_brief_msg_item[sys_cb.msg_index].time_txt_y;
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+
+void app_msg_pop_up(uint8_t index)
+{
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
+
+    sys_cb.msg_index = index;
+
+    msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+    msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
+    msg_enqueue(EVT_WATCH_MSG_POP_UP);
+}
+static u32 ticks = 0;
+void app_ute_msg_pop_up(uint8_t index)
+{
+    sys_cb.msg_index = index;
+
+    if ((sys_cb.msg_index > MSG_CALL) && (sys_cb.msg_index < MSG_MAX_CNT))
+    {
+
+        ute_module_notify_data_t *ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
+
+        if (ute_msg == NULL)
+        {
+            printf("%s malloc err!!\n", __func__);
+            return;
+        }
+        uteModuleNotifyGetData(ute_msg);
+        char *msg = (char*)ute_msg->historyNotify[0].content;
+        char *title = NULL;
+        char time[30]= {0};
+
+#if UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
+        if(tick_check_expire(ticks, 10000))
+        {
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        }
+        ticks = tick_get();
+#endif
+
+        uint8_t hour=ute_msg->historyNotify[0].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+        uint8_t min =ute_msg->historyNotify[0].min ;/*!系统时间，分钟，数值为0~59 */
+        uint8_t str_am[30];
+        memset(str_am,0,sizeof(str_am));
+        if(uteModuleSystemtime12HOn())
+        {
+            // printf("MSGBOX_MSG_TYPE_BRIEF:%02d:%02d\n",hour,min);
+            if(hour<12)
+            {
+                memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
+            }
+            else
+            {
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_PM])+1);
+            }
+            hour %= 12;
+            if(hour==0)
+            {
+                hour = 12;
+            }
+        }
+        snprintf(time,sizeof(time),"%02d:%02d %s", hour,min,str_am);
+
+        int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
+        if (res == MSGBOX_RES_ENTER_DETAIL_MSG) //点击进入详细消息弹窗
+        {
+            int res = msgbox(msg, i18n[func_cover_get_str_idx(MSGBOX_MSG_TYPE_DETAIL)], time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
+            if (res == MSGBOX_RES_DELETE)
+            {
+                uteModuleNotifySetDisplayIndex(0);
+                uteModuleNotifyDelAllHistoryData(false);
+            }
+        }
+
+        ab_free(ute_msg);
+    }
+}
+
+void gui_cover_msg_enqueue(uint8_t index)
+{
+    if (func_cb.sta == FUNC_BT_RING || func_cb.sta == FUNC_BT_CALL)
+    {
+        return;
+    }
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
+    sys_cb.cover_index = index;
+    msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
+    msg_enqueue(EVT_WATCH_SET_COVER);
+}
+
+static co_timer_t alarm_clock_timer;
+
+void alarm_clock_timer_cb(void)
+{
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
+}
+
+void gui_set_cover_index(uint8_t index)
+{
+    printf("%s:%d\n", __func__, index);
+
+//    ute_module_systemtime_one_alarm_t alarm = {0};
+    ute_module_systemtime_one_alarm_t* alarm_p = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm_p == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return;
+    }
+
+    if (index > COVER_REMIND_ITEM_CNT)
+    {
+        printf("cover index exceed!\n");
+        ab_free(alarm_p);
+        return;
+    }
+    if (!COVER_REMIND_ITEM_CNT)
+    {
+        printf("COVER_REMIND_ITEM_CNT err\n");
+        ab_free(alarm_p);
+        return;
+    }
+    sys_cb.cover_index = index;
+    u8 mode = MSGBOX_MODE_BTN_NONE;
+    if (sys_cb.cover_index)
+    {
+        //char *msg = (char *)i18n[tbl_cover_remind_item[sys_cb.cover_index - 1].str_idx];
+        char *msg = (char *)i18n[func_cover_get_str_idx(MSGBOX_MSG_TYPE_REMIND_COVER)];
+        char title[20] = {'\0'};
+        char txt[50] = {'\0'};
+        if ((sys_cb.cover_index >= REMIND_COVER_ALARM) && (sys_cb.cover_index <= REMIND_COVER_HEALTH_DRINK))
+        {
+#if GUI_SCREEN_SIZE_368X448RGB_I345001_SUPPORT
+            if (sys_cb.cover_index == REMIND_COVER_ALARM)                   //用户闹钟
+            {
+                //获取用户闹钟
+                if (uteModuleSystemtimeGetAlarmRingIndex() != 0xff)
+                {
+                    uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+                }
+                u8 hour_num = alarm_p->alarmRepeat.repeatRemindHour;
+
+                if(uteModuleSystemtime12HOn())
+                {
+                    if(hour_num <12)
+                    {
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
+                    }
+                    else
+                    {
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
+                    }
+
+                    hour_num%=12;
+                    if(hour_num == 0)
+                    {
+                        hour_num=12;
+                    }
+                }
+                snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->alarmRepeat.repeatRemindMin);
+                if (!uteModuleMusicGetPlayerPaused() && bt_a2dp_profile_completely_connected()) //暂停音乐
+                {
+                    uteModuleMusicCtrlPaused(false);
+                }
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                if(!uteModuleLocalRingtoneGetMuteStatus())
+                {
+                    uteModuleLocalRingtonePlayRing(RINGTON_TYPE_ALARM);
+                }
+#endif
+                uteDrvMotorStart(500,500,10);
+                //开启马达 喇叭
+                co_timer_set(&alarm_clock_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, alarm_clock_timer_cb, NULL);
+                mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
+            }
+#else
+            if (sys_cb.cover_index == REMIND_COVER_ALARM)                   //用户闹钟
+            {
+                //获取用户闹钟
+                if (uteModuleSystemtimeGetAlarmRingIndex() != 0xff)
+                {
+                    uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+                }
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                u8 hour_num=alarm_p->repeatRemindHour;
+                u8 min_num=alarm_p->repeatRemindMin;
+#else
+                u8 hour_num=alarm_p->hour;
+                u8 min_num=alarm_p->min;
+#endif
+
+                if(uteModuleSystemtime12HOn())
+                {
+                    if(hour_num <12)
+                    {
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
+                    }
+                    else
+                    {
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
+                    }
+
+                    hour_num%=12;
+                    if(hour_num == 0)
+                    {
+                        hour_num=12;
+                    }
+                }
+                snprintf(title, sizeof(title), "%02d:%02d", hour_num, min_num);
+                if (bt_is_connected())//暂停音乐
+                {
+                    bt_music_pause();
+                }
+                else if (ble_ams_is_connected())
+                {
+                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
+                }
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                uteModuleLocalRingtonePlayRing(RINGTON_TYPE_ALARM);
+#endif
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+                //开启马达 喇叭
+                co_timer_set(&alarm_clock_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, alarm_clock_timer_cb, NULL);
+                mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
+            }
+#endif
+//            else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒
+//            {
+//                tm_t tm = time_to_tm(RTCCNT);
+//                snprintf(title, sizeof(title), "%02d:%02d", tm.hour, tm.min);
+//            }
+        }
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+        else if (sys_cb.cover_index == REMIND_COVER_GOAL)
+        {
+            ute_module_target_notify_data_t todayTarget;
+            uteModuleSportGetTodayTargetNotifyData(&todayTarget);
+            if (todayTarget.todayTargetNotifyType.isTodayDistanceTargetNotify)
+            {
+                snprintf(title, sizeof(title), "%d", todayTarget.todayDistanceTarget);
+            }
+            else if (todayTarget.todayTargetNotifyType.isTodayExerciseTimeTargetNotify)
+            {
+                snprintf(title, sizeof(title), "%d", todayTarget.exerciseTimeTargetSetMin);
+            }
+            else if (todayTarget.todayTargetNotifyType.isTodayKcalTargetNotify)
+            {
+                snprintf(title, sizeof(title), "%d", todayTarget.todayKcalTarget);
+            }
+            else
+            {
+                snprintf(title, sizeof(title), "%d", uteModuleSportGetStepsTargetCnt());
+            }
+        }
+        else if(sys_cb.cover_index == REMIND_SPORT_TIME_TARGET)
+        {
+            snprintf(title, sizeof(title), "%d", uteModuleSportTargetGetTimeGoal() / 60);
+        }
+        else if(sys_cb.cover_index == REMIND_SPORT_KCAL_TARGET)
+        {
+            snprintf(title, sizeof(title), "%d", uteModuleSportTargetGetKcalGoal());
+        }
+        else if(sys_cb.cover_index == REMIND_SPORT_DANST_TARGET)
+        {
+            snprintf(title, sizeof(title), "%d.%d", uteModuleSportTargetGetDistanceGoal() / 1000,uteModuleSportTargetGetDistanceGoal() % 1000 / 100);
+        }
+        else if(sys_cb.cover_index == REMIND_SPORT_LAST_KCAL)
+        {
+            snprintf(title, sizeof(title), "%d", uteModuleSportMoreSportsGetLastHourKcal());
+        }
+        else if(sys_cb.cover_index == REMIND_SPORT_LAST_SPEED)
+        {
+            snprintf(title,sizeof(title),"%d%c%d%c",uteModuleSportMoreSportsGetLastKMPace() / 60,'\'',uteModuleSportMoreSportsGetLastKMPace() % 60,'"');
+        }
+#endif
+        else if(sys_cb.cover_index == REMIND_HEART_WARING)
+        {
+            snprintf(title,sizeof(title),"%d",uteModuleHeartGetHeartValue());
+        }
+        int res=0;
+        u8 cover_index_last = sys_cb.cover_index;
+
+        if(uteModuleSystemtime12HOn() && sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
+        {
+            res = msgbox(txt, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
+//            printf("clock=%s\n",txt);
+        }
+        else
+        {
+            res = msgbox(msg, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
+//            printf("1111=%s\n",msg);
+        }
+
+
+        if (res == MSGBOX_RES_REMIND_LATER)         //稍后提醒
+        {
+            if (cover_index_last == REMIND_COVER_ALARM)
+            {
+                // printf("COVER_ALARM MSGBOX_RES_REMIND_LATER\n");
+                //开启配置贪睡时钟 参数，点击稍后提醒进行贪睡功能处理
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                ute_moduleSystemtimeAlarmRepeatRemindHandle(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+#endif
+                //关闭 喇叭 马达
+                printf("%s,%d\n", __func__, __LINE__);
+                uteDrvMotorStop();
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
+                co_timer_del(&alarm_clock_timer);
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                uteModuleLocalRingtoneStopRing();
+#endif
+            }
+        }
+        else if (res == MSGBOX_RES_EXIT)                   //强制退出弹窗
+        {
+            if (cover_index_last == REMIND_COVER_ALARM)
+            {
+                //printf("COVER_ALARM MSGBOX_RES_EXIT\n");
+                //关闭 喇叭 马达
+                //printf("%s,%d\n", __func__, __LINE__);
+                uteDrvMotorStop();
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
+                co_timer_del(&alarm_clock_timer);
+                if(uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) == 0x80)
+                {
+                    uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(),false);
+                }
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                uteModuleLocalRingtoneStopRing();
+#endif
+            }
+        }
+        else if (res == MSGBOX_RES_TIMEOUT_EXIT)            //提醒界面超时退出
+        {
+            if (cover_index_last == REMIND_COVER_ALARM)
+            {
+                //printf("COVER_ALARM MSGBOX_RES_TIMEOUT_EXIT\n");
+                //开启配置贪睡时钟 参数，响铃自动结束后进行贪睡功能处理
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                ute_moduleSystemtimeAlarmRepeatRemindHandle(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+#endif
+                //关闭 喇叭 马达
+                //printf("%s,%d\n", __func__, __LINE__);
+                uteDrvMotorStop();
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
+                co_timer_del(&alarm_clock_timer);
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                uteModuleLocalRingtoneStopRing();
+#endif
+            }
+        }
+        else if(res == MSGBOX_RES_NONE) //增加闹钟提醒界面按键退出
+        {
+            if (cover_index_last == REMIND_COVER_ALARM)
+            {
+                uteDrvMotorStop();
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
+                co_timer_del(&alarm_clock_timer);
+                if(uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) == 0x80)
+                {
+                    uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(),false);
+                }
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                uteModuleLocalRingtoneStopRing();
+#endif
+            }
+        }
+        else if(res == MSGBOX_RES_OK)
+        {
+            if (cover_index_last == REMIND_COVER_TIMER_FINISH)
+            {
+                sys_cb.timer_left_sec = sys_cb.timer_total_sec;
+                sys_cb.timer_sta = TIMER_STA_WORKING;
+                extern bool mini_comp_timer_start;
+                mini_comp_timer_start = true;
+                uteTaskGuiStartScreen(FUNC_TIMER, 0, __func__);
+            }
+        }
+        else if(res == MSGBOX_RES_DELETE)
+        {
+            if (cover_index_last == REMIND_COVER_TIMER_FINISH)
+            {
+                extern co_timer_t timer_timer;
+                co_timer_del(&timer_timer);
+                sys_cb.timer_sta = 0;
+                sys_cb.timer_left_sec = sys_cb.timer_total_sec = 0;
+                if (func_cb.sta == FUNC_TIMER)
+                    msg_enqueue(MSG_CHECK_LANGUAGE);
+            }
+            else if (cover_index_last == REMIND_COVER_ALARM)
+            {
+                uteDrvMotorStop();
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
+                co_timer_del(&alarm_clock_timer);
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                uteModuleLocalRingtoneStopRing();
+#endif
+                if(uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) == 0x80)
+                {
+                    uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(),false);
+                }
+            }
+        }
+        else
+        {
+            if (cover_index_last == REMIND_COVER_ALARM)
+            {
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                //关闭闹钟，关闭重复提醒，清除重复提醒信息
+                alarm_p->alarmRepeat.isRepeatRemindOpen = false;
+                alarm_p->alarmRepeat.repeatRemindHour = 0;
+                alarm_p->alarmRepeat.repeatRemindMin = 0;
+                if (alarm_p->isSingle)
+                {
+                    alarm_p->isOpen = false;
+                }
+                alarm_p->alarmRepeat.repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;//所有闹钟在响铃时关闭闹钟，重复提醒次数恢复默认次数
+#endif
+                uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+                if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了取消后，显示闹钟为关闭状态
+                {
+                    uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(), false);
+                }
+#endif
+                //关闭 喇叭 马达
+                printf("%s,%d\n", __func__, __LINE__);
+                uteDrvMotorStop();
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
+                co_timer_del(&alarm_clock_timer);
+#if UTE_MODULE_LOCAL_RINGTONE_ALARM_SUPPORT
+                uteModuleLocalRingtoneStopRing();
+#endif
+            }
+        }
+
+    }
+
+    ab_free(alarm_p);
+}

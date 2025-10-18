@@ -1,0 +1,248 @@
+#include "include.h"
+#include "ute_drv_screen_common.h"
+#include "ute_module_log.h"
+#include "ute_module_gui_common.h"
+#include "ute_application_common.h"
+
+#define TRACE_EN                1
+
+#if TRACE_EN
+#define TRACE(...)              printf(__VA_ARGS__)
+#else
+#define TRACE(...)
+#endif
+
+//推屏缓存大小(双份)
+#define GUI_LINES_BUF_SIZE              (GUI_SCREEN_WIDTH * GUI_LINES_CNT * 2 * 2)
+
+//以下缓存大小一般情况下不需要修改
+#define GUI_ELE_BUF_SIZE                (4096 + 2096 )                   //element缓存
+#define GUI_WGT_BUF_SIZE                (16384 + 1024 + 2048 + 2048 + 2048 + 2048)    // widget缓存
+#define GUI_MAXSIZE_TEMPBUF             0x7000                  //中间临时计算缓存14k
+#define GUI_MAXSIZE_PARBUF              8096                    //PAR解码缓存
+#define GUI_MAX_FONT_SIZE               128                     //单个字最大尺寸
+
+static u8 gui_lines_buf[GUI_LINES_BUF_SIZE] AT(.disp.buf);      //推屏缓存(双份)
+static u8 gui_temp_buf[GUI_MAXSIZE_TEMPBUF] AT(.disp.buf);      //中间计算缓存
+static u8 gui_element_buf[GUI_ELE_BUF_SIZE] AT(.disp.buf);      //Element Buf
+static u8 gui_widget_buf[GUI_WGT_BUF_SIZE] AT(.disp.buf);       //Widgets Buf
+
+//GUI初始化配置表
+static const gui_init_param_t tbl_gui_init_param =
+{
+    .screen_width = GUI_SCREEN_WIDTH,
+    .screen_height = GUI_SCREEN_HEIGHT,
+    .element_buf = gui_element_buf,
+    .widget_buf = gui_widget_buf,
+    .element_buf_size = GUI_ELE_BUF_SIZE,
+    .widget_buf_size = GUI_WGT_BUF_SIZE,
+    .temp_buf = gui_temp_buf,
+    .temp_buf_size = GUI_MAXSIZE_TEMPBUF,
+    .lines_buf = gui_lines_buf,
+    .lines_buf_size = GUI_LINES_BUF_SIZE,
+    .lines_count = GUI_LINES_CNT,
+    .maxsize_parbuf = GUI_MAXSIZE_PARBUF,
+    .font_res_addr = UI_BUF_FONT_SYS,
+    .max_font_size = GUI_MAX_FONT_SIZE,
+    .font_wspace = GUI_FONT_W_SPACE,
+    .font_hspace = GUI_FONT_H_SPACE,
+};
+
+#if (CTP_SELECT == CTP_SPT5113C) && UTE_DRV_CTP_SPT5113C_REUSE_SCREEN_RESET_SUPPORT
+static co_timer_t tp_init_delay_timer;
+static void tp_init_delay_timer_callback(co_timer_t *timer, void *param)
+{
+    ctp_init();
+}
+#endif
+
+//GUI相关初始化
+void gui_init(void)
+{
+    power_gate_3v3_on();
+#if (CTP_SELECT == CTP_SPT5113C) && UTE_DRV_CTP_SPT5113C_REUSE_SCREEN_RESET_SUPPORT
+    tft_init();
+    ctp_init();
+#else
+    ctp_init();
+    tft_init();
+#endif
+    // uteDrvScreenCommonInit();
+#if FLASH_EXTERNAL_EN
+    bsp_spi1flash_init();
+#endif
+    os_gui_init(&tbl_gui_init_param);
+    compos_init();
+    sys_cb.sleep_en = 1;            //允许进休眠
+    sys_cb.gui_sleep_sta = 0;
+    uteModuleGuiCommonDisplayOff(false);
+}
+
+void gui_sleep(void)
+{
+    if (!sys_cb.gui_sleep_sta)
+    {
+        os_gui_draw_w4_done();      //关tft前要等当前帧刷完
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+        if(uteModuleGuiCommonIsInScreenSaver() && uteApplicationCommonIsPowerOn())
+        {
+#if !UTE_MODULE_SCREENS_SET_BACK_LIGHT_AFTER_IDLE_MODE_SUPPORT
+            uteDrvScreenCommonIdleMode(true);
+#endif
+            ctp_sleep();
+            extern void sleep_power_gate_keep_open(bool on);
+            sleep_power_gate_keep_open(true);
+        }
+        else
+#endif
+        {
+            tft_exit();
+            ctp_exit();
+            power_gate_3v3_off();
+        }
+        sys_cb.gui_sleep_sta = 1;
+        tft_cb.tft_bglight_first_set = false;
+        sys_cb.gui_need_wakeup = false;
+        uteModuleGuiCommonDisplayOff(true);
+
+        if (sys_cb.stopwatch_sta && (uteModuleGuiCommonGetCurrentScreenId() == FUNC_STOPWATCH))
+        {
+            func_cb.sta = FUNC_CLOCK;
+            task_stack_push(func_cb.sta);
+        }
+
+#if (!GUI_AUTO_POWER_EN && UTE_DRV_DYNAMIC_FREQUENCY_SWITCH_SUPPORT)
+        sys_clk_set(SYS_24M);
+#endif
+        printf("gui_sleep\n");
+    }
+}
+
+void gui_wakeup(void)
+{
+    if (sys_cb.gui_sleep_sta)
+    {
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+        bool isScreenSaver = false;
+        if (uteModuleGuiCommonIsInScreenSaver())
+        {
+            if (uteModuleGuiCommonGetTempScreenId())
+            {
+                func_cb.sta = uteModuleGuiCommonGetTempScreenId();
+                uteModuleGuiCommonSetTempScreenId(FUNC_NULL);
+            }
+            else
+            {
+                func_directly_back_to();
+            }
+            isScreenSaver = true;
+            uteModuleGuiCommonSetInScreenSaver(false);
+        }
+#endif
+        power_gate_3v3_on();
+#if (CTP_SELECT == CTP_SPT5113C) && UTE_DRV_CTP_SPT5113C_REUSE_SCREEN_RESET_SUPPORT
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+        if (isScreenSaver)
+        {
+            PORT_CTP_RST_H();
+            delay_ms(10);
+            PORT_CTP_RST_L();
+            delay_ms(12);
+            PORT_CTP_RST_H();
+            delay_ms(12);
+            ctp_init();
+        }
+        else
+#endif
+        {
+            co_timer_set(&tp_init_delay_timer, 200, TIMER_ONE_SHOT, LEVEL_LOW_PRI, tp_init_delay_timer_callback, NULL);
+        }
+        tft_init();
+#else
+        ctp_init();
+        tft_init();
+#endif
+        gui_widget_refresh();
+        // uteDrvScreenCommonInit();
+        sys_cb.gui_sleep_sta = 0;
+        uteModuleGuiCommonDisplayOff(false);
+#if (!GUI_AUTO_POWER_EN && UTE_DRV_DYNAMIC_FREQUENCY_SWITCH_SUPPORT)
+        sys_clk_set(SYS_192M);
+#endif
+        printf("gui_wakeup\n");
+    }
+}
+
+AT(.com_text.gui)
+bool gui_get_auto_power_en(void)
+{
+
+    return GUI_AUTO_POWER_EN;
+}
+
+////是否打开字库打印
+//bool unicode_show_info(void)
+//{
+//    return true;
+//}
+
+bool gui_font_get_align_top(void)
+{
+    return true;
+}
+
+bool qr_encode_use_malloc(void)
+{
+    return true;
+}
+
+//蓝屏
+AT(.com_text.hwio)
+void gui_halt(u32 halt_no)
+{
+    int i;
+    tft_bglight_en();               //打开背光
+    tft_frame_end();
+    for (i=0; i<20000; i++)
+    {
+        asm("nop");                  //足够的延时，保证前面SPI推完
+    }
+    tft_frame_start();
+    for (i=0; i<GUI_SCREEN_HEIGHT; i++)
+    {
+        de_fill_rgb565(gui_lines_buf, COLOR_BLUE, GUI_SCREEN_WIDTH);
+        if (i >= GUI_SCREEN_CENTER_Y - 5 && i < GUI_SCREEN_CENTER_Y + 5)
+        {
+            de_fill_num(gui_lines_buf + GUI_SCREEN_CENTER_X * 2 - 96, halt_no, i - (GUI_SCREEN_CENTER_Y - 5));
+        }
+        tft_spi_send(gui_lines_buf, GUI_SCREEN_WIDTH * 2);
+    }
+    tft_frame_end();
+}
+
+#if 0 //UTE_LOG_GUI_LVL
+//打印刷屏时长
+AT(.com_text.gui)
+bool gui_get_tick(void)
+{
+    return true;
+}
+#endif
+
+// zzn add 20240401
+void gui_clear_screen(uint16_t color,uint32_t size)
+{
+    uint32_t section = size/GUI_SCREEN_WIDTH;
+    uint32_t lastPix = size%GUI_SCREEN_WIDTH;
+    for(uint32_t i=0; i<section; i++)
+    {
+        de_fill_rgb565(gui_lines_buf, color, GUI_SCREEN_WIDTH);
+        tft_spi_send(gui_lines_buf, GUI_SCREEN_WIDTH * 2);
+    }
+    if(lastPix!=0)
+    {
+        de_fill_rgb565(gui_lines_buf, color, lastPix);
+        tft_spi_send(gui_lines_buf, lastPix * 2);
+    }
+}
+// zzn add 20240401

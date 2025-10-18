@@ -4,7 +4,7 @@
  * @Date: 2022-10-09 15:19:57
  * @LastEditTime: 2024-03-28 10:32:12
  * @LastEditors: Tse
- * @Description: 
+ * @Description:
  **********************************************************************************************/
 //!!!!!!注意：本头文件不允许用户自己包含及调用相关的API,仅允许vc30fx_driver.c包含,避免出错或者是产生的ROM占用
 //!!!!!!注意：本头文件不允许用户自己包含及调用相关的API,仅允许vc30fx_driver.c包含,避免出错或者是产生的ROM占用
@@ -61,13 +61,13 @@ extern int (*vc30fx_dbglog_user)(const char *, ...);
 /*============================================================================
  * IC resources marco
  ===========================================================================*/
- /* VC30Fx IC type ID(30FS,30FC)* */
+/* VC30Fx IC type ID(30FS,30FC)* */
 #define VC30FS_DEV_REV_ID 0x25
 #define VC30FS_FDY_VER_ID0 0x10 /* TSMC version */
 #define VC30FS_FDY_VER_ID1 0x30 /* NexChip version(jinghe) */
 
 #define VC30FC_DEV_REV_ID 0x27
-#define VC30FC_FDY_VER_ID0 0x10	/* TSMC version */
+#define VC30FC_FDY_VER_ID0 0x10 /* TSMC version */
 #define VC30FC_FDY_VER_ID1 0x30 /* NexChip version(jinghe) */
 
 #define VC30FS_FDY_VER_CHECK(fdy_ver_id) ( VC30FS_FDY_VER_ID0==(fdy_ver_id)||VC30FS_FDY_VER_ID1==(fdy_ver_id) )
@@ -259,9 +259,9 @@ static inline int core30fx_set_enable_config(VC30Fx_PPG_SLOT_I slot_index, VC30F
     return __core30fx_set_slot_enable_config(slot_index, config_enable);
 }
 
-static inline int core30fx_set_slot_fix_param_config(VC30Fx_PPG_SLOT_I slot_index, unsigned char rxgain, VC30Fx_PPG_TXCH_I txslot, VC30Fx_CFG_FUNC deps_en , unsigned char oversample_psdirturb, VC30Fx_SAMPLE_TIM sample_tim, unsigned char ic_type, unsigned char ic_ficv )
+static inline int core30fx_set_slot_fix_param_config(VC30Fx_PPG_SLOT_I slot_index, unsigned char rxgain, VC30Fx_PPG_TXCH_I txslot, VC30Fx_CFG_FUNC deps_en, unsigned char oversample_psdirturb, VC30Fx_SAMPLE_TIM sample_tim, unsigned char ic_type, unsigned char ic_ficv )
 {
-   return  __core30fx_set_slot_fix_param_config(slot_index, rxgain, txslot, deps_en, oversample_psdirturb, sample_tim, ic_type, ic_ficv);
+    return  __core30fx_set_slot_fix_param_config(slot_index, rxgain, txslot, deps_en, oversample_psdirturb, sample_tim, ic_type, ic_ficv);
 }
 static inline int core30fx_set_psslot_storefifo_config(VC30Fx_STORE_FIFO infifo)
 {
@@ -290,7 +290,7 @@ static inline int core30fx_set_ppgslot_resistance(VC30Fx_PPG_SLOT_I slot_index, 
 static inline int core30fx_set_common_config( vc30fx_sample_info_t *psample_ret )
 {
     VC30Fx_CFG_FUNC enable_cfg = (psample_ret->fifo_enable) ? VC30Fx_CFG_ENABLE : VC30Fx_CFG_DISABLE;
-    return __core30fx_set_common_config( psample_ret, VC30Fx_CFG_ENABLE, enable_cfg, 0, 0);    
+    return __core30fx_set_common_config( psample_ret, VC30Fx_CFG_ENABLE, enable_cfg, 0, 0);
 }
 /* 频率设置相关API */
 /****************************************************************************
@@ -322,11 +322,11 @@ static inline int core30fx_set_threshold_config(unsigned char ppgth_h, unsigned 
 static inline int core30fx_set_interrupt_config(unsigned char evt_en)
 {
 #if (VC30Fx_CFG_IRQPIN_MODE==VC30Fx_CFG_IRQPIN_PUSHPULL_3V3DOWN)
-		return __core30fx_set_interrupt_config(VC30Fx_IO_PUSH_PULL, VC30Fx_IO_DIR_DOWN_EDGE, VC30Fx_CFG_IRQPIN_PULSE_TIM, evt_en);
+    return __core30fx_set_interrupt_config(VC30Fx_IO_PUSH_PULL, VC30Fx_IO_DIR_DOWN_EDGE, VC30Fx_CFG_IRQPIN_PULSE_TIM, evt_en);
 #elif (VC30Fx_CFG_IRQPIN_MODE==VC30Fx_CFG_IRQPIN_OPENDRAIN_1V8DOWN)
-		return __core30fx_set_interrupt_config(VC30Fx_IO_OPEN_DRAIN, VC30Fx_IO_DIR_DOWN_EDGE, VC30Fx_CFG_IRQPIN_PULSE_TIM, evt_en);
+    return __core30fx_set_interrupt_config(VC30Fx_IO_OPEN_DRAIN, VC30Fx_IO_DIR_DOWN_EDGE, VC30Fx_CFG_IRQPIN_PULSE_TIM, evt_en);
 #else
-		return __core30fx_set_interrupt_config(VC30Fx_IO_PUSH_PULL, VC30Fx_IO_DIR_UP_EDGE, VC30Fx_CFG_IRQPIN_PULSE_TIM, evt_en);
+    return __core30fx_set_interrupt_config(VC30Fx_IO_PUSH_PULL, VC30Fx_IO_DIR_UP_EDGE, VC30Fx_CFG_IRQPIN_PULSE_TIM, evt_en);
 #endif
 }
 /* 2023.30FS,bio_time[7-3]~f1,[2]~f2,[1]~f3,[0]~f4. */
@@ -344,32 +344,32 @@ static inline int core30fx_set_bioslot_config(vc30fx_sample_info_t *psample_info
     }
     if( VC30Fx_CFG_ENABLE==psample_info->extra_result.biomode_work )
     {
-#if (VC30Fx_PS_WORK_FREQUENCY_CONFIG==1) 
-    bio_time = 3; /* (ps=(25/13)hz~520ms,ps_div=13,fifo_div=1) 5200us */
+#if (VC30Fx_PS_WORK_FREQUENCY_CONFIG==1)
+        bio_time = 3; /* (ps=(25/13)hz~520ms,ps_div=13,fifo_div=1) 5200us */
 #else
         switch (psample_info->ps_div)
         {
-        /*********5hz ~ 4000us **********/
-        case 5: /* ppg=25，ps=5 */
-            bio_time = 4;
-            break;
-        case 10:/* ppg=50，ps=5 */
-            bio_time = 3;
-            break;
-        case 20:/* ppg=100，ps=5 */
-            bio_time = 2;
-            break;
-				case 40:
-            bio_time = 2;
-            break;
-        case 80:
-            bio_time = 1;
-        default:
-            break;
+            /*********5hz ~ 4000us **********/
+            case 5: /* ppg=25，ps=5 */
+                bio_time = 4;
+                break;
+            case 10:/* ppg=50，ps=5 */
+                bio_time = 3;
+                break;
+            case 20:/* ppg=100，ps=5 */
+                bio_time = 2;
+                break;
+            case 40:
+                bio_time = 2;
+                break;
+            case 80:
+                bio_time = 1;
+            default:
+                break;
         }
 #endif
     }
-	if( VC30FS_FDY_VER_ID1==psample_info->ic_FICV && psample_info->ic_type==VC30Fx_IC_TYPE_VC30FS ) bio_time++; 
+    if( VC30FS_FDY_VER_ID1==psample_info->ic_FICV && psample_info->ic_type==VC30Fx_IC_TYPE_VC30FS ) bio_time++;
     return __core30fx_set_bioslot_config((VC30Fx_CFG_FUNC)psample_info->extra_result.bioinn_enwork,
                                          (VC30Fx_CFG_FUNC)psample_info->extra_result.bioext_enwork,
                                          (VC30Fx_STORE_FIFO)psample_info->extra_result.biodata_storefifo,
@@ -394,8 +394,8 @@ static inline int core30fx_set_temperature_config(vc30fx_sample_info_t *psample_
         return 0;
     }
     return __core30fx_set_temperature_config((VC30Fx_CFG_FUNC)psample_info->extra_result.tempext_enwork,
-                                             (VC30Fx_CFG_FUNC)psample_info->extra_result.tempinn_enwork,
-                                             psample_info->extra_result.tempext_setcur);
+            (VC30Fx_CFG_FUNC)psample_info->extra_result.tempinn_enwork,
+            psample_info->extra_result.tempext_setcur);
 }
 
 /****************************************************************************
@@ -460,12 +460,12 @@ static inline int core30fx_sample_psslot2_config(vc30fx_sample_info_t *psample_i
     {
         deps_dirturb=3;
     }
-		/* 新增VC30FS_FDY_VER_ID1[30FS-G]支持PS通道采集PPG */
+    /* 新增VC30FS_FDY_VER_ID1[30FS-G]支持PS通道采集PPG */
     if (2==psample_info->slot_result[2].slot_enwork || ( 1==psample_info->slot_result[2].slot_enwork && VC30FS_FDY_VER_ID1==psample_info->ic_FICV ) )
     {
         core30fx_set_ppgslot_current(VC30Fx_PPG_SLOT_2, psample_info->slot_result[2].slot_current);
         core30fx_set_ppgslot_resistance(VC30Fx_PPG_SLOT_2, psample_info->slot_result[2].slot_resistance, 0, psample_info->ic_type);
-		core30fx_set_slot_fix_param_config(VC30Fx_PPG_SLOT_2, rxgain, VC30Fx_PPG_TXCH_2 /*storefifo,reserved*/, VC30Fx_CFG_ENABLE, deps_dirturb /*EnDePSDirturb*/, sampletime, psample_info->ic_type, psample_info->ic_FICV);
+        core30fx_set_slot_fix_param_config(VC30Fx_PPG_SLOT_2, rxgain, VC30Fx_PPG_TXCH_2 /*storefifo,reserved*/, VC30Fx_CFG_ENABLE, deps_dirturb /*EnDePSDirturb*/, sampletime, psample_info->ic_type, psample_info->ic_FICV);
         core30fx_set_psslot_storefifo_config((VC30Fx_STORE_FIFO)psample_info->slot_result[2].slot_storefifo);
         core30fx_set_enable_config(VC30Fx_PPG_SLOT_2, VC30Fx_CFG_ENABLE);
     }
@@ -473,13 +473,13 @@ static inline int core30fx_sample_psslot2_config(vc30fx_sample_info_t *psample_i
 }
 static inline int core30fx_reset_slot2ppg_config(VC30Fx_PPG_TXCH_I slot2_tx, VC30Fx_PPG_TXCH_I anti_tx, unsigned char slot2_isppg, unsigned char oversample )
 {
-	extern CORE30Fx_FUNC_RAM_SECTION int __core30fx_reset_slot2ppg_config(VC30Fx_PPG_TXCH_I slot2_tx, VC30Fx_PPG_TXCH_I anti_tx, unsigned char slot2_isppg, unsigned char oversample );
-	return __core30fx_reset_slot2ppg_config( slot2_tx, anti_tx, slot2_isppg, oversample );
+    extern CORE30Fx_FUNC_RAM_SECTION int __core30fx_reset_slot2ppg_config(VC30Fx_PPG_TXCH_I slot2_tx, VC30Fx_PPG_TXCH_I anti_tx, unsigned char slot2_isppg, unsigned char oversample );
+    return __core30fx_reset_slot2ppg_config( slot2_tx, anti_tx, slot2_isppg, oversample );
 }
 static inline int core30fx_disable_depsdirturb_config( unsigned char ic_type, unsigned char ic_ficv )
 {
-	extern CORE30Fx_FUNC_RAM_SECTION int __core30fx_disable_depsdirturb_config( unsigned char ic_type, unsigned char ic_ficv );
-	return __core30fx_disable_depsdirturb_config( ic_type, ic_ficv );
+    extern CORE30Fx_FUNC_RAM_SECTION int __core30fx_disable_depsdirturb_config( unsigned char ic_type, unsigned char ic_ficv );
+    return __core30fx_disable_depsdirturb_config( ic_type, ic_ficv );
 }
 
 /*=====================================================================================================================================*/
